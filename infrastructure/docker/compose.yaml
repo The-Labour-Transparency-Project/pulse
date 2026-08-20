@@ -1,0 +1,6 @@
+services:
+  pulse-api:
+    image: mcr.microsoft.com/dotnet/aspnet:8.0
+    profiles: [placeholder]
+    working_dir: /app
+    command: ["/bin/sh", "-c", "echo 'Build the Pulse API image before enabling this service' && sleep infinity"]

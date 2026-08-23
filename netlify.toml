@@ -1,5 +1,5 @@
 [build]
-  command = "pnpm --filter @pulse/pulse-respondent build"
+  command = "pnpm install && pnpm --filter @pulse/pulse-respondent build"
   publish = "apps/pulse-respondent/dist"
 
 [[redirects]]

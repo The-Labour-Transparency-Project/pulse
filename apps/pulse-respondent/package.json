@@ -6,6 +6,22 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "typecheck": "vue-tsc --noEmit"
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "@fontsource/inter": "^5.3.0",
+    "@vitejs/plugin-vue": "latest",
+    "@vueuse/core": "^14.4.0",
+    "typescript": "^5.9.3",
+    "vite": "latest",
+    "vue": "latest",
+    "vue-tsc": "latest",
+    "vuetify": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "vitest": "^4.1.11"
   }
 }

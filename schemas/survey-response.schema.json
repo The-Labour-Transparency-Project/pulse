@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://labourtransparency.com/schemas/survey-response.schema.json",
+  "title": "JSON Survey Response Standard",
+  "type": "object",
+  "required": [
+    "responseSchemaVersion",
+    "submissionId",
+    "surveyId",
+    "surveyVersion",
+    "submittedAt",
+    "answers",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "responseSchemaVersion": {
+      "type": "string",
+      "enum": [
+        "1.0.0"
+      ]
+    },
+    "submissionId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "surveyId": {
+      "type": "string"
+    },
+    "surveyVersion": {
+      "type": "string"
+    },
+    "wave": {
+      "type": "string"
+    },
+    "submittedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completionStatus": {
+      "enum": [
+        "complete",
+        "partial",
+        "abandoned"
+      ]
+    },
+    "longitudinalToken": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional persistent token; never a direct identifier and never required for a response."
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/answer"
+      }
+    },
+    "metadata": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metadata"
+      }
+    },
+    "consents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/consent"
+      }
+    }
+  },
+  "$defs": {
+    "answer": {
+      "type": "object",
+      "required": [
+        "id",
+        "itemId",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "itemId": {
+          "type": "string"
+        },
+        "rowId": {
+          "type": "string"
+        },
+        "value": {},
+        "selectedOptionIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "numericValue": {
+          "type": "number"
+        },
+        "textValue": {
+          "type": "string"
+        },
+        "optionSemantics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "presented": {
+          "type": "boolean"
+        },
+        "skippedReason": {
+          "enum": [
+            "notPresented",
+            "unanswered",
+            "notApplicable",
+            "preferNotToSay"
+          ]
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "target",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "target": {
+          "$ref": "#/$defs/target"
+        },
+        "value": {}
+      },
+      "patternProperties": {
+        "^type$": {
+          "enum": [
+            "comment",
+            "platform",
+            "sampling",
+            "quality"
+          ]
+        }
+      }
+    },
+    "target": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "answerId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "itemId": {
+          "type": "string"
+        },
+        "rowId": {
+          "type": "string"
+        },
+        "optionId": {
+          "type": "string"
+        }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "required": [
+        "id",
+        "granted",
+        "scope"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "granted": {
+          "type": "boolean"
+        },
+        "scope": {
+          "enum": [
+            "research",
+            "aggregateReporting",
+            "playback",
+            "followUpContact"
+          ]
+        },
+        "recordedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

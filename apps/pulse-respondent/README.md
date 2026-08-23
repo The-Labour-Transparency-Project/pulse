@@ -8,3 +8,7 @@ Planned stack: Vue 3, TypeScript, and Vuetify.
 
 Survey definitions are consumed from `packages/survey-schema`; response
 ownership, validation, and persistence are enforced by `apps/pulse-api`.
+
+Each survey item may provide localized `instruction` and `description` text.
+The respondent UI renders both independently below the localized item title,
+using the active locale and falling back to the first available translation.

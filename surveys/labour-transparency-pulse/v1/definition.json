@@ -1,0 +1,3818 @@
+{
+  "$schema": "https://labourtransparency.com/schemas/survey-definition.schema.json",
+  "schemaVersion": "1.0.0",
+  "id": "ltp.labour-transparency-pulse",
+  "version": "1.0.2",
+  "title": {
+    "en-NZ": "Confidence in Labour Supply Chains 2026"
+  },
+  "defaultLocale": "en-NZ",
+  "locales": [
+    "en-NZ"
+  ],
+  "status": "draft",
+  "sourceTraceability": {
+    "sourceDescription": "Reconciled against Survey—Confidence in Labour Supply Chains (Labour Transparency Pulse) PDF respondent instrument.",
+    "sourceLocator": "Referenced conversation 6a8753ce-12ec-83ec-b00d-f231b352ad1b; recovered audit and synthetic field map.",
+    "unresolved": [
+      "Q17 source context is unresolved: the event or circumstance respondents are reacting to is not present in the recovered source.",
+      "Exact respondent-facing wording for some stems was not present in the recovered source artifacts; item IDs, answer semantics, and option labels are preserved without inventing missing prose.",
+      "Exact labels for dynamic no-primary options were not supplied; the explicit noPrimary semantics are retained and labels are provisional source-preserving placeholders."
+    ]
+  },
+  "versioning": {
+    "wave": "2026",
+    "priorVersion": null,
+    "changeSummary": "Reconciled survey definition with PDF instrument; added missing activities, sectors, regions, respondent context questions and corrected question semantics. Replaced ordinal item IDs with stable section-prefixed semantic IDs. Reordered sector options and corrected mixed multi-select and exclusive selection behavior for the sector question.",
+    "compatibility": "newSeries"
+  },
+  "privacy": {
+    "inheritance": "restrictOnly",
+    "minimumGroupSize": 10,
+    "suppressBelowMinimum": true,
+    "preventComplementaryDisclosure": true,
+    "failClosed": true,
+    "freeText": {
+      "verbatimPublication": "prohibited",
+      "analysisAllowed": true,
+      "redactBeforeRelease": true,
+      "allowedOutputs": [
+        "themeFrequency",
+        "summary",
+        "classification"
+      ]
+    },
+    "piiRedaction": {
+      "action": "redact",
+      "detect": [
+        "personName",
+        "emailAddress",
+        "phoneNumber",
+        "physicalAddress",
+        "organisationName",
+        "url",
+        "directIdentifier",
+        "quasiIdentifier"
+      ]
+    }
+  },
+  "reporting": {
+    "classification": "aggregate",
+    "analysisPolicy": "allowed",
+    "publicationPolicy": "aggregateOnly",
+    "denominator": "applicableRespondents",
+    "excludeSemantics": [
+      "unanswered",
+      "notApplicable"
+    ],
+    "includeSemantics": [
+      "dontKnow",
+      "preferNotToSay"
+    ],
+    "minimumGroupSize": 10,
+    "allowedStatistics": [
+      "count",
+      "distribution",
+      "mean",
+      "median",
+      "proportion",
+      "changeOverTime",
+      "difference"
+    ]
+  },
+  "optionSets": [
+    {
+      "id": "activity",
+      "options": [
+        {
+          "id": "activity.0",
+          "label": {
+            "en-NZ": "Grower or producer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": [
+            "primaryActivityEligible"
+          ],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.1",
+          "label": {
+            "en-NZ": "Direct employer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.2",
+          "label": {
+            "en-NZ": "RSE employer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.3",
+          "label": {
+            "en-NZ": "Packhouse or post-harvest operator"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.4",
+          "label": {
+            "en-NZ": "Labour provider or labour-hire business"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.5",
+          "label": {
+            "en-NZ": "Contractor or subcontractor"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.6",
+          "label": {
+            "en-NZ": "Processor or manufacturer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.7",
+          "label": {
+            "en-NZ": "Exporter or marketer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.8",
+          "label": {
+            "en-NZ": "Retailer or buyer"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.9",
+          "label": {
+            "en-NZ": "Industry body"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.10",
+          "label": {
+            "en-NZ": "Government agency"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.11",
+          "label": {
+            "en-NZ": "Assurance, audit or certification provider"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.12",
+          "label": {
+            "en-NZ": "Worker representative / advocacy organisation"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.13",
+          "label": {
+            "en-NZ": "Professional adviser or service provider"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.14",
+          "label": {
+            "en-NZ": "Research or academic organisation"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["primaryActivityEligible"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.15",
+          "label": {
+            "en-NZ": "Other"
+          },
+          "semantics": {
+            "kind": "other"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "activity.16",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "sector",
+      "options": [
+        {
+          "id": "sector.0",
+          "label": {"en-NZ": "Kiwifruit"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.1",
+          "label": {"en-NZ": "Apples or pears"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.2",
+          "label": {"en-NZ": "Viticulture or wine"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.3",
+          "label": {"en-NZ": "Berries"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.4",
+          "label": {"en-NZ": "Vegetables"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.5",
+          "label": {"en-NZ": "Summerfruit"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.11",
+          "label": {"en-NZ": "Hops"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.12",
+          "label": {"en-NZ": "Arable"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.6",
+          "label": {"en-NZ": "Dairy"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.7",
+          "label": {"en-NZ": "Sheep or beef"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.8",
+          "label": {"en-NZ": "Forestry"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.13",
+          "label": {"en-NZ": "Seafood"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.9",
+          "label": {"en-NZ": "Food processing"},
+          "semantics": {"kind": "substantive"},
+          "tags": ["primarySectorEligible"],
+          "selection": {"exclusive": false}
+        },
+        {
+          "id": "sector.10",
+          "label": {"en-NZ": "Other agriculture or horticulture"},
+          "semantics": {"kind": "other"},
+          "selection": {"exclusive": true}
+        },
+        {
+          "id": "sector.14",
+          "label": {"en-NZ": "Not directly involved in a production sector"},
+          "semantics": {"kind": "substantive"},
+          "selection": {"exclusive": true}
+        }
+      ]
+    },
+    {
+      "id": "region",
+      "options": [
+        {
+          "id": "region.13",
+          "label": {
+            "en-NZ": "Northland"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.3",
+          "label": {
+            "en-NZ": "Auckland"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.4",
+          "label": {
+            "en-NZ": "Waikato"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.0",
+          "label": {
+            "en-NZ": "Bay of Plenty"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.14",
+          "label": {
+            "en-NZ": "Gisborne"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.1",
+          "label": {
+            "en-NZ": "Hawke’s Bay"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.15",
+          "label": {
+            "en-NZ": "Taranaki"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.8",
+          "label": {
+            "en-NZ": "Manawatū-Whanganui"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.9",
+          "label": {
+            "en-NZ": "Wellington"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.5",
+          "label": {
+            "en-NZ": "Tasman"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.18",
+          "label": {
+            "en-NZ": "Nelson"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.19",
+          "label": {
+            "en-NZ": "Marlborough"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.17",
+          "label": {
+            "en-NZ": "West Coast"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.2",
+          "label": {
+            "en-NZ": "Canterbury"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.6",
+          "label": {
+            "en-NZ": "Otago"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.7",
+          "label": {
+            "en-NZ": "Southland"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "tags": ["newZealandRegion"],
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.10",
+          "label": {
+            "en-NZ": "Across New Zealand"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.11",
+          "label": {
+            "en-NZ": "Outside New Zealand"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "region.12",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "size",
+      "options": [
+        {
+          "id": "size.8",
+          "label": {
+            "en-NZ": "None"
+          },
+          "semantics": {
+            "kind": "none"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.0",
+          "label": {
+            "en-NZ": "1–9"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.1",
+          "label": {
+            "en-NZ": "10–49"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.2",
+          "label": {
+            "en-NZ": "50–99"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.3",
+          "label": {
+            "en-NZ": "100–249"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.4",
+          "label": {
+            "en-NZ": "250–499"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.9",
+          "label": {
+            "en-NZ": "500–999"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.10",
+          "label": {
+            "en-NZ": "1,000 or more"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.6",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.11",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "size.12",
+          "label": {
+            "en-NZ": "Explain more"
+          },
+          "semantics": {
+            "kind": "explainMore"
+          },
+          "selection": {
+            "exclusive": false
+          },
+          "detailInput": {
+            "type": "longText",
+            "answerRequired": false,
+            "reporting": {
+              "classification": "qualitative",
+              "analysisPolicy": "allowed",
+              "publicationPolicy": "qualitativeOnly",
+              "denominator": "allPresentedRespondents"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "yesNoDontKnow",
+      "options": [
+        {
+          "id": "yn.0",
+          "label": {
+            "en-NZ": "Yes, regularly"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "yn.1",
+          "label": {
+            "en-NZ": "Yes, occasionally"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "yn.2",
+          "label": {
+            "en-NZ": "No"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "yn.3",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "yn.4",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "yn.5",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "yesNoDontKnowNotApplicable",
+      "options": [
+        {
+          "id": "ynna.0",
+          "label": {
+            "en-NZ": "Yes"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "ynna.1",
+          "label": {
+            "en-NZ": "No"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "ynna.2",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "ynna.3",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "ynna.4",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "familiarity",
+      "options": [
+        {
+          "id": "fam.0",
+          "label": {
+            "en-NZ": "Never heard of it"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "fam.1",
+          "label": {
+            "en-NZ": "Heard of it"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "fam.2",
+          "label": {
+            "en-NZ": "General understanding"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "fam.3",
+          "label": {
+            "en-NZ": "Understand it well"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "options": [
+        {
+          "id": "risk.0",
+          "label": {
+            "en-NZ": "No meaningful risk"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "risk.1",
+          "label": {
+          "en-NZ": "Low"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "risk.2",
+          "label": {
+          "en-NZ": "Moderate"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "risk.3",
+          "label": {
+          "en-NZ": "High"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "risk.4",
+          "label": {
+          "en-NZ": "Very High"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "risk.5",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "confidence",
+      "options": [
+        {
+          "id": "conf.0",
+          "label": {
+            "en-NZ": "Not at all confident"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.1",
+          "label": {
+            "en-NZ": "Slightly confident"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.2",
+          "label": {
+            "en-NZ": "Moderately confident"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.3",
+          "label": {
+            "en-NZ": "Very confident"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.4",
+          "label": {
+            "en-NZ": "Completely confident"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.5",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.6",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "conf.7",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "confidenceNoPrefer",
+      "options": [
+        {
+          "id": "confnp.0",
+          "label": { "en-NZ": "Not at all confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.1",
+          "label": { "en-NZ": "Slightly confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.2",
+          "label": { "en-NZ": "Moderately confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.3",
+          "label": { "en-NZ": "Very confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.4",
+          "label": { "en-NZ": "Completely confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.5",
+          "label": { "en-NZ": "Don’t know" },
+          "semantics": { "kind": "dontKnow" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "confnp.6",
+          "label": { "en-NZ": "Not applicable" },
+          "semantics": { "kind": "notApplicable" },
+          "selection": { "exclusive": true }
+        }
+      ]
+    },
+    {
+      "id": "visibilityConfidence",
+      "options": [
+        {
+          "id": "visconf.0",
+          "label": { "en-NZ": "Not confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "visconf.1",
+          "label": { "en-NZ": "Somewhat confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "visconf.2",
+          "label": { "en-NZ": "Very confident" },
+          "semantics": { "kind": "substantive" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "visconf.3",
+          "label": { "en-NZ": "Don’t know" },
+          "semantics": { "kind": "dontKnow" },
+          "selection": { "exclusive": true }
+        },
+        {
+          "id": "visconf.4",
+          "label": { "en-NZ": "N/A" },
+          "semantics": { "kind": "notApplicable" },
+          "selection": { "exclusive": true }
+        }
+      ]
+    },
+    {
+      "id": "agreement",
+      "options": [
+        {
+          "id": "agree.0",
+          "label": {
+            "en-NZ": "Strongly disagree"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.1",
+          "label": {
+            "en-NZ": "Disagree"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.2",
+          "label": {
+            "en-NZ": "Neither agree nor disagree"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.3",
+          "label": {
+            "en-NZ": "Agree"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.4",
+          "label": {
+            "en-NZ": "Strongly agree"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.5",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.6",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "agree.7",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "definitionForcedLabour",
+      "options": [
+        {
+          "id": "forceddef.0",
+          "label": {
+            "en-NZ": "Work performed under threat, coercion or circumstances where a person is not genuinely free to leave"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "forceddef.1",
+          "label": {
+            "en-NZ": "Any work where employment standards are breached"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "forceddef.2",
+          "label": {
+            "en-NZ": "Work that is physically demanding or poorly paid"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "forceddef.3",
+          "label": {
+            "en-NZ": "Work performed by someone on a temporary visa"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "forceddef.4",
+          "label": {
+            "en-NZ": "I am unsure"
+          },
+          "semantics": {
+            "kind": "unsure"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "definitionTrafficking",
+      "options": [
+        {
+          "id": "traffickdef.0",
+          "label": {
+            "en-NZ": "Recruiting, moving, receiving or controlling a person for the purpose of exploitation, including within a country"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "traffickdef.1",
+          "label": {
+            "en-NZ": "Illegally crossing an international border"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "traffickdef.2",
+          "label": {
+            "en-NZ": "Employing someone without the correct visa"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "traffickdef.3",
+          "label": {
+            "en-NZ": "Organised migration for seasonal work"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "traffickdef.4",
+          "label": {
+            "en-NZ": "I am unsure"
+          },
+          "semantics": {
+            "kind": "unsure"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "top3HiddenRisk",
+      "options": [
+        {
+          "id": "hidden.7",
+          "label": {
+            "en-NZ": "Direct employment"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.1",
+          "label": {
+            "en-NZ": "Labour-hire arrangements"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.0",
+          "label": {
+            "en-NZ": "Contractor or subcontractor arrangements"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.6",
+          "label": {
+            "en-NZ": "Informal recruitment"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.2",
+          "label": {
+            "en-NZ": "Offshore recruitment"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.3",
+          "label": {
+            "en-NZ": "Worker accommodation"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.8",
+          "label": {
+            "en-NZ": "Transport arrangements"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.5",
+          "label": {
+            "en-NZ": "Payroll and deductions"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.4",
+          "label": {
+            "en-NZ": "Small or isolated worksites"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.9",
+          "label": {
+            "en-NZ": "Large worksites"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "hidden.10",
+          "label": {
+            "en-NZ": "I do not believe it is likely to be hidden"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "hidden.12",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "hidden.11",
+          "label": {
+            "en-NZ": "Other"
+          },
+          "semantics": {
+            "kind": "other"
+          },
+          "selection": {
+            "exclusive": false
+          },
+          "detailInput": {
+            "type": "text",
+            "answerRequired": false,
+            "reporting": {
+              "classification": "qualitative",
+              "analysisPolicy": "allowed",
+              "publicationPolicy": "qualitativeOnly",
+              "denominator": "allPresentedRespondents"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "trust",
+      "options": [
+        { "id": "trust.0", "label": { "en-NZ": "Personal relationship" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.1", "label": { "en-NZ": "Previous experience with the business" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.2", "label": { "en-NZ": "Reputation in the industry" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.3", "label": { "en-NZ": "Recommendation from another business" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.4", "label": { "en-NZ": "Contracts and other formal commitments" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.5", "label": { "en-NZ": "Government approval or accreditation" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.6", "label": { "en-NZ": "Certification or assurance programme" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.7", "label": { "en-NZ": "Independent audit" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.8", "label": { "en-NZ": "Documents supplied by the business" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.9", "label": { "en-NZ": "Digital employment, payroll or workforce records" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.10", "label": { "en-NZ": "Information provided directly by workers" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.11", "label": { "en-NZ": "Independent verification of specific information" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "trust.12", "label": { "en-NZ": "Don’t know" }, "semantics": { "kind": "dontKnow" }, "selection": { "exclusive": true } },
+        { "id": "trust.13", "label": { "en-NZ": "Not applicable" }, "semantics": { "kind": "notApplicable" }, "selection": { "exclusive": true } },
+        { "id": "trust.14", "label": { "en-NZ": "Other" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } }
+      ]
+    },
+    {
+      "id": "trustChange",
+      "options": [
+        {
+          "id": "trustchange.0",
+          "label": {
+            "en-NZ": "My confidence would remain about the same"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.1",
+          "label": {
+            "en-NZ": "My confidence would reduce somewhat"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.2",
+          "label": {
+            "en-NZ": "My confidence would reduce significantly"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.3",
+          "label": {
+            "en-NZ": "I would need to reassess the relationship before continuing"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.4",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.5",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trustchange.6",
+          "label": {
+            "en-NZ": "I would no longer be comfortable using the provider"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "frequency",
+      "options": [
+        {
+          "id": "freq.0",
+          "label": {
+            "en-NZ": "Always"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.1",
+          "label": {
+            "en-NZ": "Usually"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.2",
+          "label": {
+            "en-NZ": "Sometimes"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.3",
+          "label": {
+            "en-NZ": "Rarely"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.4",
+          "label": {
+            "en-NZ": "Never"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.5",
+          "label": {
+            "en-NZ": "Very often"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.6",
+          "label": {
+            "en-NZ": "Don’t know"
+          },
+          "semantics": {
+            "kind": "dontKnow"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.7",
+          "label": {
+            "en-NZ": "Not applicable"
+          },
+          "semantics": {
+            "kind": "notApplicable"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "freq.8",
+          "label": {
+            "en-NZ": "Prefer not to say"
+          },
+          "semantics": {
+            "kind": "preferNotToSay"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "barriers",
+      "options": [
+        { "id": "barrier.0", "label": { "en-NZ": "Different definitions or requirements" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.10", "label": { "en-NZ": "Different customer questionnaires" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.1", "label": { "en-NZ": "Information held in separate systems" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.9", "label": { "en-NZ": "Paper-based processes" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.7", "label": { "en-NZ": "Difficulty knowing who employs a worker" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.6", "label": { "en-NZ": "Contractors or subcontractors not being declared" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.2", "label": { "en-NZ": "Information becoming out of date" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.3", "label": { "en-NZ": "Difficulty checking whether information is accurate" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.8", "label": { "en-NZ": "Commercial sensitivity" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.5", "label": { "en-NZ": "Privacy concerns" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.11", "label": { "en-NZ": "Lack of trust between organisations" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.4", "label": { "en-NZ": "Cost or administrative burden" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.12", "label": { "en-NZ": "Existing checks or assurance not being accepted by others" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": false } },
+        { "id": "barrier.13", "label": { "en-NZ": "Don’t know" }, "semantics": { "kind": "dontKnow" }, "selection": { "exclusive": true } },
+        {
+          "id": "barrier.14",
+          "label": { "en-NZ": "Other" },
+          "semantics": { "kind": "other" },
+          "selection": { "exclusive": false },
+          "detailInput": {
+            "type": "text",
+            "answerRequired": false,
+            "reporting": {
+              "classification": "qualitative",
+              "analysisPolicy": "allowed",
+              "publicationPolicy": "qualitativeOnly",
+              "denominator": "allPresentedRespondents"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "sharingFrequency",
+      "options": [
+        { "id": "sharefreq.0", "label": { "en-NZ": "Always or usually" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "sharefreq.1", "label": { "en-NZ": "Sometimes" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "sharefreq.2", "label": { "en-NZ": "Rarely or never" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "sharefreq.3", "label": { "en-NZ": "Don’t know" }, "semantics": { "kind": "dontKnow" }, "selection": { "exclusive": true } },
+        { "id": "sharefreq.4", "label": { "en-NZ": "N/A" }, "semantics": { "kind": "notApplicable" }, "selection": { "exclusive": true } }
+      ]
+    },
+    {
+      "id": "requestFrequency",
+      "options": [
+        { "id": "requestfreq.0", "label": { "en-NZ": "Never" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.1", "label": { "en-NZ": "Rarely" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.2", "label": { "en-NZ": "Sometimes" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.3", "label": { "en-NZ": "Often" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.4", "label": { "en-NZ": "Very often" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.5", "label": { "en-NZ": "Don’t know" }, "semantics": { "kind": "dontKnow" }, "selection": { "exclusive": true } },
+        { "id": "requestfreq.6", "label": { "en-NZ": "Not applicable" }, "semantics": { "kind": "notApplicable" }, "selection": { "exclusive": true } }
+      ]
+    },
+    {
+      "id": "agreementNoPreferNoNA",
+      "options": [
+        { "id": "agree2.0", "label": { "en-NZ": "Strongly disagree" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "agree2.1", "label": { "en-NZ": "Disagree" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "agree2.2", "label": { "en-NZ": "Neither agree nor disagree" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "agree2.3", "label": { "en-NZ": "Agree" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "agree2.4", "label": { "en-NZ": "Strongly agree" }, "semantics": { "kind": "substantive" }, "selection": { "exclusive": true } },
+        { "id": "agree2.5", "label": { "en-NZ": "Don’t know" }, "semantics": { "kind": "dontKnow" }, "selection": { "exclusive": true } }
+      ]
+    },
+    {
+      "id": "traceability",
+      "options": [
+        {
+          "id": "trace.0",
+          "label": {
+            "en-NZ": "Labour should be capable of being traced through the supply chain in much the same way as products are traced"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trace.1",
+          "label": {
+            "en-NZ": "Labour relationships should be traceable where there is greater risk"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trace.2",
+          "label": {
+            "en-NZ": "Existing employment and assurance records provide enough visibility"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trace.3",
+          "label": {
+            "en-NZ": "Greater labour traceability would create more problems than it solves"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trace.4",
+          "label": {
+            "en-NZ": "I need more information before forming a view"
+          },
+          "semantics": {
+            "kind": "insufficientInformation"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "trace.6",
+          "label": {
+            "en-NZ": "Other"
+          },
+          "semantics": {
+            "kind": "other"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "benefits",
+      "options": [
+        {
+          "id": "benefit.0",
+          "label": {
+            "en-NZ": "Earlier identification of exploitation"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.1",
+          "label": {
+            "en-NZ": "Faster investigation of concerns"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.2",
+          "label": {
+            "en-NZ": "Clearer legal accountability"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.3",
+          "label": {
+            "en-NZ": "Better contractor oversight"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.4",
+          "label": {
+            "en-NZ": "Less duplicate reporting"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.5",
+          "label": {
+            "en-NZ": "More targeted audits"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.6",
+          "label": {
+            "en-NZ": "Greater worker confidence"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "benefit.7",
+          "label": {
+            "en-NZ": "Better protection for responsible employers"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "concerns",
+      "options": [
+        {
+          "id": "concern.0",
+          "label": {
+            "en-NZ": "Worker privacy"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.1",
+          "label": {
+            "en-NZ": "Commercial sensitivity"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.2",
+          "label": {
+            "en-NZ": "Unauthorised sharing"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.3",
+          "label": {
+            "en-NZ": "Inaccurate records"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.4",
+          "label": {
+            "en-NZ": "Additional compliance cost"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.5",
+          "label": {
+            "en-NZ": "Cybersecurity"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.6",
+          "label": {
+            "en-NZ": "Unclear governance"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "concern.7",
+          "label": {
+            "en-NZ": "Information being used outside its original purpose"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "priorities",
+      "options": [
+        {
+          "id": "priority.0",
+          "label": {
+            "en-NZ": "Better education about worker rights and labour exploitation"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.1",
+          "label": {
+            "en-NZ": "Stronger enforcement"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.2",
+          "label": {
+            "en-NZ": "Better support and complaint channels for workers"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.3",
+          "label": {
+            "en-NZ": "Clearer accountability for contractors and subcontractors"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.4",
+          "label": {
+            "en-NZ": "Stronger oversight of labour providers"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.5",
+          "label": {
+            "en-NZ": "Common industry definitions and standards"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.6",
+          "label": {
+            "en-NZ": "Better sharing of information that has already been checked"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.7",
+          "label": {
+            "en-NZ": "Better workforce traceability"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.8",
+          "label": {
+            "en-NZ": "More independent assurance or audits"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.9",
+          "label": {
+            "en-NZ": "Stronger buyer or exporter requirements"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.10",
+          "label": {
+            "en-NZ": "A small industry pilot to test new approaches"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.11",
+          "label": {
+            "en-NZ": "Further research"
+          },
+          "semantics": {
+            "kind": "substantive"
+          },
+          "selection": {
+            "exclusive": false
+          }
+        },
+        {
+          "id": "priority.12",
+          "label": { "en-NZ": "Other" },
+          "semantics": { "kind": "other" },
+          "selection": { "exclusive": false }
+        }
+      ]
+    },
+    {
+      "id": "special",
+      "options": [
+        {
+          "id": "special.none",
+          "label": {
+            "en-NZ": "None of these"
+          },
+          "semantics": {
+            "kind": "none"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "special.no-primary",
+          "label": {
+            "en-NZ": "No single option is primary"
+          },
+          "semantics": {
+            "kind": "noPrimary"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "special.no-primary-region",
+          "label": {
+            "en-NZ": "No single region is the main focus"
+          },
+          "semantics": {
+            "kind": "noPrimary"
+          },
+          "selection": {
+            "exclusive": true
+          }
+        },
+        {
+          "id": "special.other",
+          "label": {
+            "en-NZ": "Other"
+          },
+          "semantics": {
+            "kind": "other"
+          },
+          "selection": {
+            "exclusive": false
+          },
+          "detailInput": {
+            "type": "text",
+            "answerRequired": false,
+            "reporting": {
+              "classification": "qualitative",
+              "analysisPolicy": "allowed",
+              "publicationPolicy": "qualitativeOnly",
+              "denominator": "allPresentedRespondents"
+            }
+          }
+        },
+        {
+          "id": "special.explain-more",
+          "label": {
+            "en-NZ": "Explain more"
+          },
+          "semantics": {
+            "kind": "explainMore"
+          },
+          "selection": {
+            "exclusive": false
+          },
+          "detailInput": {
+            "type": "longText",
+            "answerRequired": false,
+            "reporting": {
+              "classification": "qualitative",
+              "analysisPolicy": "allowed",
+              "publicationPolicy": "qualitativeOnly",
+              "denominator": "allPresentedRespondents"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "id": "context",
+      "title": {
+        "en-NZ": "About you and your organisation"
+      },
+      "description": {
+        "en-NZ": "These questions help us understand the different parts of the industry represented in the survey. We recognise that many organisations operate across more than one activity, sector or region."
+      },
+      "itemIds": [
+        "context.activity",
+        "context.primary-activity",
+        "context.seasonal-workers",
+        "context.rse-employer",
+        "context.sector",
+        "context.primary-sector",
+        "context.region",
+        "context.primary-region",
+        "context.seasonal-worker-count",
+        "context.supplied-labour"
+      ]
+    },
+    {
+      "id": "awareness-risk",
+      "title": {
+        "en-NZ": "Awareness and perceived risk"
+      },
+      "itemIds": [
+        "awareness-risk.familiarity",
+        "awareness-risk.forced-labour-definition",
+        "awareness-risk.people-trafficking-definition",
+        "awareness-risk.risk",
+        "awareness-risk.hidden-risk"
+      ]
+    },
+    {
+      "id": "confidence",
+      "title": {
+        "en-NZ": "Confidence and visibility"
+      },
+      "description": {
+        "en-NZ": "For the following questions, confidence means having enough reliable information to form a reasonable view, rather than relying only on assumptions or personal relationships."
+      },
+      "itemIds": [
+        "confidence.organisation-confidence",
+        "confidence.visibility-24h",
+        "confidence.worker-voice",
+        "confidence.overall-confidence",
+        "confidence.expected-confidence"
+      ]
+    },
+    {
+      "id": "trust-information",
+      "title": {
+        "en-NZ": "What creates confidence?"
+      },
+      "itemIds": [
+        "trust-information.trust-sources",
+        "trust-information.relationship-change"
+      ]
+    },
+    {
+      "id": "assurance-action",
+      "title": {
+        "en-NZ": "Sharing and verifying labour information"
+      },
+      "itemIds": [
+        "assurance-action.provider-information",
+        "assurance-action.duplicate-requests",
+        "assurance-action.information-confidence",
+        "assurance-action.assurance-barriers",
+        "assurance-action.reusable-assurance"
+      ]
+    },
+    {
+      "id": "traceability-action",
+      "title": {
+        "en-NZ": "Workforce traceability and action"
+      },
+      "description": {
+        "en-NZ": "Being able to establish who employed a worker, who supplied them, and where they worked is sometimes called workforce traceability."
+      },
+      "itemIds": [
+        "traceability-action.traceability",
+        "traceability-action.priority-actions",
+        "traceability-action.additional-comment"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "id": "context.activity",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "Which activities describe your organisation?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "activity",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.activity",
+        "construct": "respondent activity"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      },
+      "validation": {
+        "minSelections": 0
+      }
+    },
+    {
+      "id": "context.primary-activity",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which of these best describes your organisation's main activity?"
+      },
+      "answerRequired": false,
+      "optionSource": {
+        "type": "selectedOptions",
+        "itemId": "context.activity",
+        "filter": {
+          "operator": "equals",
+          "tag": "primaryActivityEligible"
+        },
+        "appendOptionIds": [
+          "special.no-primary"
+        ],
+        "failClosed": true
+      },
+      "visibleWhen": {
+        "operator": "greaterThan",
+        "arguments": [
+          {
+            "operator": "selectedCount",
+            "itemId": "context.activity"
+          },
+          1
+        ]
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.primary-activity",
+        "construct": "primary organisation activity"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "context.rse-employer",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Is your organisation an RSE employer?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "yesNoDontKnowNotApplicable",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "organisation.rseEmployer",
+        "construct": "RSE employer"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      }
+    },
+    {
+      "id": "context.sector",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "Which sectors is your organisation involved in?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "sector",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.sector",
+        "construct": "sector"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "context.primary-sector",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which sector is your organisation most involved in?"
+      },
+      "answerRequired": false,
+      "optionSource": {
+        "type": "selectedOptions",
+        "itemId": "context.sector",
+        "filter": {
+          "operator": "equals",
+          "tag": "primarySectorEligible"
+        },
+        "appendOptionIds": [
+          "special.no-primary"
+        ],
+        "failClosed": true
+      },
+      "visibleWhen": {
+        "operator": "greaterThan",
+        "arguments": [
+          {
+            "operator": "selectedCount",
+            "itemId": "context.sector"
+          },
+          1
+        ]
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.primary-sector",
+        "construct": "primary sector"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "context.region",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "Which regions does your organisation operate in?"
+      },
+      "instruction": {
+        "en-NZ": "Select all that apply."
+      },
+      "answerRequired": false,
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.region",
+        "construct": "region"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      },
+      "optionSetRef": "region",
+      "validation": {
+        "minSelections": 0
+      }
+    },
+    {
+      "id": "context.primary-region",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which region is the main focus of your organisation's work?"
+      },
+      "instruction": {
+        "en-NZ": "Select one."
+      },
+      "answerRequired": true,
+      "optionSource": {
+        "type": "selectedOptions",
+        "itemId": "context.region",
+        "filter": {
+          "operator": "equals",
+          "tag": "newZealandRegion"
+        },
+        "appendOptionIds": [
+          "special.no-primary-region"
+        ],
+        "failClosed": true
+      },
+      "visibleWhen": {
+        "operator": "greaterThan",
+        "arguments": [
+          {
+            "operator": "selectedCount",
+            "itemId": "context.region",
+            "tag": "newZealandRegion"
+          },
+          1
+        ]
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.primary-region",
+        "construct": "primary region"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      }
+    },
+    {
+      "id": "context.seasonal-workers",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Does your organisation directly employ seasonal workers?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "yesNoDontKnowNotApplicable",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.direct-seasonal-employment",
+        "construct": "direct seasonal employment"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "context.seasonal-worker-count",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Approximately how many seasonal workers does your organisation employ or engage over a typical year?"
+      },
+      "description": {
+        "en-NZ": "Include seasonal workers employed directly by your organisation and seasonal workers supplied to your organisation by labour providers, contractors or subcontractors."
+      },
+      "answerRequired": false,
+      "optionSetRef": "size",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.seasonal-worker-count",
+        "construct": "typical annual seasonal worker count"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "context.supplied-labour",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Does your organisation use workers supplied by another business, such as a labour provider, contractor or subcontractor?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "yesNoDontKnow",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "respondent.supplied-labour",
+        "construct": "supplied labour use"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "awareness-risk.familiarity",
+      "kind": "matrixSingleSelect",
+      "title": {
+        "en-NZ": "Before today, how familiar were you with each of these terms?"
+      },
+      "answerRequired": false,
+      "rows": [
+        {
+          "id": "awareness-risk.worker-exploitation",
+          "label": {
+            "en-NZ": "Worker exploitation"
+          },
+          "optionSetRef": "familiarity"
+        },
+        {
+          "id": "awareness-risk.forced-labour",
+          "label": {
+            "en-NZ": "Forced labour"
+          },
+          "optionSetRef": "familiarity"
+        },
+        {
+          "id": "awareness-risk.people-trafficking",
+          "label": {
+            "en-NZ": "People trafficking"
+          },
+          "optionSetRef": "familiarity"
+        },
+        {
+          "id": "awareness-risk.modern-slavery",
+          "label": {
+            "en-NZ": "Modern slavery"
+          },
+          "optionSetRef": "familiarity"
+        }
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "awareness.term-familiarity",
+        "construct": "term familiarity"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "row"
+      }
+    },
+    {
+      "id": "awareness-risk.forced-labour-definition",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which statement comes closest to your understanding of forced labour?"
+      },
+      "instruction": {
+        "en-NZ": "Select one."
+      },
+      "answerRequired": false,
+      "optionSetRef": "definitionForcedLabour",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "understanding.forced-labour-definition",
+        "construct": "forced labour definition recognition"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "awareness-risk.people-trafficking-definition",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which statement comes closest to your understanding of people trafficking?"
+      },
+      "instruction": {
+        "en-NZ": "Select one."
+      },
+      "answerRequired": false,
+      "optionSetRef": "definitionTrafficking",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "understanding.people-trafficking-definition",
+        "construct": "people trafficking definition recognition"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "awareness-risk.risk",
+      "kind": "matrixSingleSelect",
+      "title": {
+        "en-NZ": "How significant do you believe the risk of the following is within New Zealand?"
+      },
+      "answerRequired": false,
+      "rows": [
+        {
+          "id": "awareness-risk.underpayment",
+          "label": {
+            "en-NZ": "Underpayment or unlawful deductions"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.worker-accommodation",
+          "label": {
+            "en-NZ": "Unsafe or substandard accommodation"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.recruitment-debt",
+          "label": {
+            "en-NZ": "Recruitment-related debt"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.immigration-threats",
+          "label": {
+            "en-NZ": "Threats connected to immigration status"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.unable-to-leave",
+          "label": {
+            "en-NZ": "Workers being unable to leave an employer freely"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.undeclared-subcontracting",
+          "label": {
+            "en-NZ": "Undeclared subcontracting"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.forced-labour",
+          "label": {
+            "en-NZ": "Forced labour"
+          },
+          "optionSetRef": "risk"
+        },
+        {
+          "id": "awareness-risk.people-trafficking",
+          "label": {
+            "en-NZ": "People trafficking"
+          },
+          "optionSetRef": "risk"
+        }
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "perceived-risk.pathways",
+        "construct": "perceived labour risk"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "row"
+      }
+    },
+    {
+      "id": "awareness-risk.hidden-risk",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "Where do you believe serious worker exploitation is most likely to remain hidden?"
+      },
+      "instruction": {
+        "en-NZ": "Select up to three."
+      },
+      "answerRequired": false,
+      "optionSetRef": "top3HiddenRisk",
+      "validation": {
+        "maxSelections": 3
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "perceived-risk.hidden-locations",
+        "construct": "perceived hidden risk locations"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "confidence.organisation-confidence",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "How confident are you that your organisation could identify serious worker exploitation if it were occurring?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "confidenceNoPrefer",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.organisation-identification",
+        "construct": "organisation confidence"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "excludeSemantics": [
+          "unanswered",
+          "notApplicable"
+        ],
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "confidence.visibility-24h",
+      "kind": "matrixSingleSelect",
+      "title": {
+        "en-NZ": "If a serious labour concern arose tomorrow, how confident are you that your organisation could establish the following within 24 hours?"
+      },
+      "answerRequired": false,
+      "rows": [
+        {
+          "id": "confidence.workers",
+          "label": {
+            "en-NZ": "Who the affected workers are"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.employer",
+          "label": {
+            "en-NZ": "Who legally employs them"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.provider",
+          "label": {
+            "en-NZ": "Which labour provider, contractor or subcontractor is involved"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.worksite",
+          "label": {
+            "en-NZ": "Where and when they worked"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.records",
+          "label": {
+            "en-NZ": "The relevant employment, time and wage records"
+          },
+          "optionSetRef": "visibilityConfidence"
+        }
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "visibility.within-24-hours",
+        "construct": "24-hour visibility"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "excludeSemantics": [
+          "unanswered",
+          "notApplicable"
+        ],
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "row"
+      }
+    },
+    {
+      "id": "confidence.worker-voice",
+      "kind": "matrixSingleSelect",
+      "title": {
+        "en-NZ": "How confident are you that workers in your organisation or supply chain can safely:"
+      },
+      "answerRequired": false,
+      "rows": [
+        {
+          "id": "confidence.raise-concern",
+          "label": {
+            "en-NZ": "Raise a concern without retaliation"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.complain-without-retaliation",
+          "label": {
+            "en-NZ": "Understand who employs them and any deductions from their pay"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.access-support",
+          "label": {
+            "en-NZ": "Access independent support"
+          },
+          "optionSetRef": "visibilityConfidence"
+        },
+        {
+          "id": "confidence.leave-safely",
+          "label": {
+            "en-NZ": "Leave an exploitative situation safely"
+          },
+          "optionSetRef": "visibilityConfidence"
+        }
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "worker-voice.readiness",
+        "construct": "worker voice and readiness"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "row"
+      }
+    },
+    {
+      "id": "confidence.overall-confidence",
+      "kind": "integerScale",
+      "title": {
+        "en-NZ": "Overall, how confident are you that forced labour or people trafficking would be identified early enough to prevent serious harm within your part of the industry?"
+      },
+      "answerRequired": false,
+      "scale": {
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "minLabel": {
+          "en-NZ": "Not at all confident"
+        },
+        "maxLabel": {
+          "en-NZ": "Completely confident"
+        }
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.overall",
+        "construct": "overall confidence",
+        "minimumComparableWaves": 2,
+        "anchor": true
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "answeredRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1,
+        "allowedStatistics": [
+          "mean",
+          "median",
+          "changeOverTime"
+        ]
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "confidence.expected-confidence",
+      "kind": "integerScale",
+      "title": {
+        "en-NZ": "What level of confidence do you believe the industry should reasonably be able to achieve?"
+      },
+      "answerRequired": false,
+      "scale": {
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "minLabel": {
+          "en-NZ": "No confidence is realistically possible"
+        },
+        "maxLabel": {
+          "en-NZ": "Very strong confidence"
+        }
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.expected",
+        "construct": "expected confidence",
+        "minimumComparableWaves": 2,
+        "anchor": true
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "answeredRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1,
+        "allowedStatistics": [
+          "mean",
+          "median",
+          "changeOverTime"
+        ]
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "trust-information.trust-sources",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "What currently gives your organisation the greatest confidence that another labour-related business can be trusted?"
+      },
+      "instruction": {
+        "en-NZ": "Select up to three."
+      },
+      "answerRequired": false,
+      "optionSetRef": "trust",
+      "validation": {
+        "maxSelections": 3
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "trust.sources",
+        "construct": "trust sources"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "trust-information.relationship-change",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "What would happen to your confidence?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "trustChange",
+      "longitudinal": {
+        "comparable": false,
+        "seriesId": "trust.relationship-change",
+        "construct": "trust resilience scenario",
+        "reason": "sourceContextUnresolved"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "assurance-action.provider-information",
+      "kind": "matrixSingleSelect",
+      "title": {
+        "en-NZ": "When workers are supplied by another organisation, how often can your organisation establish the following from the information available to it?"
+      },
+      "answerRequired": false,
+      "rows": [
+        { "id": "assurance-action.employer", "label": { "en-NZ": "Who legally employs the workers" }, "optionSetRef": "sharingFrequency" },
+        { "id": "assurance-action.provider", "label": { "en-NZ": "Which labour provider supplied them" }, "optionSetRef": "sharingFrequency" },
+        { "id": "assurance-action.contractor", "label": { "en-NZ": "Whether a contractor or subcontractor is involved" }, "optionSetRef": "sharingFrequency" },
+        { "id": "assurance-action.right-to-work", "label": { "en-NZ": "That workers have the right to work in New Zealand" }, "optionSetRef": "sharingFrequency" },
+        { "id": "assurance-action.worked", "label": { "en-NZ": "Where and when the workers worked" }, "optionSetRef": "sharingFrequency" },
+        { "id": "assurance-action.records", "label": { "en-NZ": "That relevant employment, time and wage records exist" }, "optionSetRef": "sharingFrequency" }
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "visibility.provider-information",
+        "construct": "routine provider information visibility"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "assurance-action.duplicate-requests",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "How often do you receive substantially the same information request?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "requestFrequency",
+      "longitudinal": {
+        "comparable": false,
+        "seriesId": "information.duplicate-requests",
+        "construct": "repeated information requests",
+        "reason": "definitionNeedsExample"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "assurance-action.information-confidence",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "How confident are you that labour information supplied by another organisation is current, complete and accurate?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "confidenceNoPrefer",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "information.quality-confidence",
+        "construct": "information quality confidence"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "assurance-action.assurance-barriers",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "What are the biggest barriers to sharing and relying on labour information?"
+      },
+      "instruction": {
+        "en-NZ": "Select up to five."
+      },
+      "answerRequired": false,
+      "optionSetRef": "barriers",
+      "validation": {
+        "maxSelections": 5
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "assurance.barriers",
+        "construct": "assurance barriers"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "assurance-action.reusable-assurance",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "If labour information has already been independently checked, should other authorised businesses be able to rely on that check, where appropriate, rather than asking for the same evidence again?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "agreementNoPreferNoNA",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "assurance.reuse-support",
+        "construct": "support for reusable assurance"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "traceability-action.traceability",
+      "kind": "singleSelect",
+      "title": {
+        "en-NZ": "Which statement is closest to your view?"
+      },
+      "answerRequired": false,
+      "optionSetRef": "traceability",
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "traceability.view",
+        "construct": "labour traceability view"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "traceability-action.priority-actions",
+      "kind": "multiSelect",
+      "layout": "list",
+      "title": {
+        "en-NZ": "What should receive the highest priority over the next three years?"
+      },
+      "instruction": {
+        "en-NZ": "Select up to five."
+      },
+      "answerRequired": false,
+      "optionSetRef": "priorities",
+      "validation": {
+        "maxSelections": 5
+      },
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "readiness.priority-actions",
+        "construct": "priority actions"
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    },
+    {
+      "id": "traceability-action.additional-comment",
+      "kind": "longText",
+      "title": {
+        "en-NZ": "What is the biggest weakness in the way New Zealand agriculture and horticulture currently identifies or prevents serious worker exploitation?"
+      },
+      "answerRequired": false,
+      "longitudinal": {
+        "comparable": false,
+        "seriesId": "qualitative.additional-comment",
+        "construct": "open response",
+        "reason": "freeTextNotLongitudinalMeasure"
+      },
+      "reporting": {
+        "classification": "qualitative",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "qualitativeOnly",
+        "denominator": "allPresentedRespondents",
+        "minimumGroupSize": 10
+      },
+      "comments": {
+        "supported": true,
+        "metadataType": "comment",
+        "targetGranularity": "answer"
+      }
+    }
+  ],
+  "derivedMetrics": [
+    {
+      "id": "metric.confidence.overall.mean",
+      "type": "mean",
+      "formula": "mean(confidence.overall-confidence.numericValue)",
+      "inputs": [
+        "confidence.overall-confidence"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.overall.mean",
+        "construct": "overall confidence mean",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "answeredRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    },
+    {
+      "id": "metric.confidence.expected.mean",
+      "type": "mean",
+      "formula": "mean(confidence.expected-confidence.numericValue)",
+      "inputs": [
+        "confidence.expected-confidence"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.expected.mean",
+        "construct": "expected confidence mean",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "answeredRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    },
+    {
+      "id": "metric.confidence.gap",
+      "type": "difference",
+      "formula": "metric.confidence.expected.mean - metric.confidence.overall.mean",
+      "inputs": [
+        "metric.confidence.expected.mean",
+        "metric.confidence.overall.mean"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "confidence.gap",
+        "construct": "expected minus current confidence",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "answeredRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    },
+    {
+      "id": "metric.assurance.reuse-support",
+      "type": "combinedResponseRate",
+      "formula": "count(assurance-action.reusable-assurance in [agree,stronglyAgree]) / count(allPresentedRespondents)",
+      "inputs": [
+        "assurance-action.reusable-assurance"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "assurance.reuse-support",
+        "construct": "agree plus strongly agree",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    },
+    {
+      "id": "metric.visibility.dont-know.provider-24h",
+      "type": "proportion",
+      "formula": "count(confidence.visibility-24h.row(provider) has semantics dontKnow) / count(confidence.visibility-24h.row(provider) presented)",
+      "inputs": [
+        "confidence.visibility-24h"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "visibility.dont-know.provider-24h",
+        "construct": "provider visibility uncertainty",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "allPresentedRespondents",
+        "includeSemantics": [
+          "dontKnow"
+        ],
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    },
+    {
+      "id": "metric.risk.high-or-very-high.forced-labour",
+      "type": "proportion",
+      "formula": "count(awareness-risk.risk.row(forced-labour) in [highRisk,veryHighRisk]) / count(applicableRespondents)",
+      "inputs": [
+        "awareness-risk.risk"
+      ],
+      "longitudinal": {
+        "comparable": true,
+        "seriesId": "perceived-risk.forced-labour.high",
+        "construct": "high or very high perceived forced-labour risk",
+        "minimumComparableWaves": 2
+      },
+      "reporting": {
+        "classification": "aggregate",
+        "analysisPolicy": "allowed",
+        "publicationPolicy": "aggregateOnly",
+        "denominator": "applicableRespondents",
+        "minimumGroupSize": 10,
+        "precision": 1
+      }
+    }
+  ]
+}

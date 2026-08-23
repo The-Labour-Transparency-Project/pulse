@@ -1,0 +1,861 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://labourtransparency.com/schemas/survey-definition.schema.json",
+  "title": "JSON Survey Definition Standard",
+  "description": "A versioned, longitudinally safe survey definition. Privacy and reporting policies are normative and inherit restrict-only.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "defaultLocale",
+    "items",
+    "privacy",
+    "reporting",
+    "derivedMetrics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]+$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "defaultLocale": {
+      "type": "string"
+    },
+    "locales": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "published",
+        "retired"
+      ]
+    },
+    "sourceTraceability": {
+      "$ref": "#/$defs/sourceTraceability"
+    },
+    "versioning": {
+      "$ref": "#/$defs/versioning"
+    },
+    "optionSets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/optionSet"
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    },
+    "privacy": {
+      "$ref": "#/$defs/privacyPolicy"
+    },
+    "reporting": {
+      "$ref": "#/$defs/reportingPolicy"
+    },
+    "derivedMetrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/derivedMetric"
+      }
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "patternProperties": {
+    "^title$": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "^items$": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/item"
+      },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "localized": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "sourceTraceability": {
+      "type": "object",
+      "required": [
+        "sourceDescription",
+        "unresolved"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "sourceDescription": {
+          "type": "string"
+        },
+        "sourceLocator": {
+          "type": "string"
+        },
+        "unresolved": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "versioning": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "wave": {
+          "type": "string"
+        },
+        "priorVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "changeSummary": {
+          "type": "string"
+        },
+        "compatibility": {
+          "enum": [
+            "newSeries",
+            "comparable",
+            "partiallyComparable",
+            "notComparable"
+          ]
+        }
+      }
+    },
+    "option": {
+      "type": "object",
+      "required": [
+        "id",
+        "label",
+        "semantics",
+        "selection"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9.-]+$"
+        },
+        "label": {
+          "$ref": "#/$defs/localized"
+        },
+        "value": {
+          "type": [
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "semantics": {
+          "$ref": "#/$defs/optionSemantics"
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "detailInput": {
+          "$ref": "#/$defs/detailInput"
+        },
+        "longitudinal": {
+          "$ref": "#/$defs/longitudinal"
+        }
+      }
+    },
+    "optionSemantics": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "substantive",
+            "dontKnow",
+            "notApplicable",
+            "preferNotToSay",
+            "other",
+            "none",
+            "noPrimary",
+            "explainMore",
+            "unsure",
+            "insufficientInformation",
+            "nonResponse"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "countsAsSubstantive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "selection": {
+      "type": "object",
+      "required": [
+        "exclusive"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "exclusive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "detailInput": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "answerRequired": {
+          "type": "boolean"
+        },
+        "reporting": {
+          "$ref": "#/$defs/reportingPolicy"
+        }
+      },
+      "patternProperties": {
+        "^type$": {
+          "enum": [
+            "text",
+            "longText"
+          ]
+        }
+      }
+    },
+    "optionSet": {
+      "type": "object",
+      "required": [
+        "id",
+        "options"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/option"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "itemIds"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "itemIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      },
+      "patternProperties": {
+        "^(title|description)$": {
+          "$ref": "#/$defs/localized"
+        }
+      }
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "title",
+        "answerRequired",
+        "longitudinal",
+        "reporting"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9.-]+$"
+        },
+        "kind": {
+          "enum": [
+            "content",
+            "singleSelect",
+            "multiSelect",
+            "matrixSingleSelect",
+            "integerScale",
+            "longText"
+          ]
+        },
+        "layout": {
+          "description": "Optional answer presentation configuration; it does not change answer semantics.",
+          "enum": [
+            "list",
+            "matrix"
+          ]
+        },
+        "contentStatus": {
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "answerRequired": {
+          "type": "boolean"
+        },
+        "instruction": {
+          "$ref": "#/$defs/localized"
+        },
+        "optionSetRef": {
+          "type": "string"
+        },
+        "rowIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/row"
+          }
+        },
+        "scale": {
+          "$ref": "#/$defs/scale"
+        },
+        "validation": {
+          "$ref": "#/$defs/validation"
+        },
+        "visibleWhen": {
+          "$ref": "#/$defs/expression"
+        },
+        "optionSource": {
+          "$ref": "#/$defs/optionSource"
+        },
+        "longitudinal": {
+          "$ref": "#/$defs/longitudinal"
+        },
+        "reporting": {
+          "$ref": "#/$defs/reportingPolicy"
+        },
+        "comments": {
+          "$ref": "#/$defs/commentCapability"
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "kind",
+              "layout"
+            ],
+            "properties": {
+              "kind": {
+                "const": "multiSelect"
+              },
+              "layout": {
+                "const": "matrix"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "rows"
+            ],
+            "properties": {
+              "rows": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "row": {
+      "type": "object",
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "$ref": "#/$defs/localized"
+        },
+        "optionSetRef": {
+          "type": "string"
+        },
+        "longitudinal": {
+          "$ref": "#/$defs/longitudinal"
+        },
+        "reporting": {
+          "$ref": "#/$defs/reportingPolicy"
+        }
+      },
+      "patternProperties": {
+        "^(title|description)$": {
+          "$ref": "#/$defs/localized"
+        }
+      }
+    },
+    "scale": {
+      "type": "object",
+      "required": [
+        "min",
+        "max",
+        "step"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        },
+        "step": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "minLabel": {
+          "$ref": "#/$defs/localized"
+        },
+        "maxLabel": {
+          "$ref": "#/$defs/localized"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minSelections": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxSelections": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "min": {
+          "type": "integer"
+        },
+        "max": {
+          "type": "integer"
+        }
+      }
+    },
+    "expression": {
+      "type": "object",
+      "required": [
+        "operator"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "operator": {
+          "enum": [
+            "and",
+            "or",
+            "not",
+            "equals",
+            "in",
+            "selectedCount",
+            "hasOption",
+            "answered",
+            "greaterThan",
+            "lessThan"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {}
+        },
+        "itemId": {
+          "type": "string"
+        },
+        "optionId": {
+          "type": "string"
+        },
+        "value": {},
+        "tag": {
+          "type": "string"
+        }
+      }
+    },
+    "optionSource": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "itemId": {
+          "type": "string"
+        },
+        "filter": {
+          "$ref": "#/$defs/expression"
+        },
+        "appendOptionIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceId": {
+          "type": "string"
+        },
+        "failClosed": {
+          "enum": [
+            true
+          ]
+        }
+      },
+      "patternProperties": {
+        "^type$": {
+          "enum": [
+            "static",
+            "selectedOptions",
+            "external"
+          ]
+        }
+      }
+    },
+    "longitudinal": {
+      "type": "object",
+      "required": [
+        "comparable",
+        "seriesId"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "comparable": {
+          "type": "boolean"
+        },
+        "seriesId": {
+          "type": "string"
+        },
+        "construct": {
+          "type": "string"
+        },
+        "minimumComparableWaves": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "type": "string"
+        },
+        "anchor": {
+          "type": "boolean"
+        }
+      }
+    },
+    "commentCapability": {
+      "type": "object",
+      "required": [
+        "supported",
+        "metadataType"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "supported": {
+          "enum": [
+            true
+          ]
+        },
+        "metadataType": {
+          "enum": [
+            "comment"
+          ]
+        },
+        "targetGranularity": {
+          "enum": [
+            "item",
+            "row",
+            "answer"
+          ]
+        }
+      }
+    },
+    "privacyPolicy": {
+      "type": "object",
+      "required": [
+        "inheritance",
+        "minimumGroupSize",
+        "suppressBelowMinimum",
+        "preventComplementaryDisclosure",
+        "failClosed",
+        "freeText"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "inheritance": {
+          "enum": [
+            "restrictOnly"
+          ]
+        },
+        "minimumGroupSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "suppressBelowMinimum": {
+          "enum": [
+            true
+          ]
+        },
+        "preventComplementaryDisclosure": {
+          "enum": [
+            true
+          ]
+        },
+        "failClosed": {
+          "enum": [
+            true
+          ]
+        },
+        "freeText": {
+          "$ref": "#/$defs/freeTextPolicy"
+        },
+        "piiRedaction": {
+          "$ref": "#/$defs/piiRedaction"
+        }
+      }
+    },
+    "freeTextPolicy": {
+      "type": "object",
+      "required": [
+        "verbatimPublication",
+        "analysisAllowed",
+        "redactBeforeRelease"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "verbatimPublication": {
+          "enum": [
+            "prohibited"
+          ]
+        },
+        "analysisAllowed": {
+          "type": "boolean"
+        },
+        "redactBeforeRelease": {
+          "enum": [
+            true
+          ]
+        },
+        "allowedOutputs": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "themeFrequency",
+              "summary",
+              "classification"
+            ]
+          }
+        }
+      }
+    },
+    "piiRedaction": {
+      "type": "object",
+      "required": [
+        "action",
+        "detect"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "redact"
+          ]
+        },
+        "detect": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "personName",
+              "emailAddress",
+              "phoneNumber",
+              "physicalAddress",
+              "organisationName",
+              "url",
+              "directIdentifier",
+              "quasiIdentifier"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "reportingPolicy": {
+      "type": "object",
+      "required": [
+        "classification",
+        "analysisPolicy",
+        "publicationPolicy",
+        "denominator"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "classification": {
+          "enum": [
+            "aggregate",
+            "qualitative",
+            "restricted",
+            "notReportable"
+          ]
+        },
+        "allowedStatistics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "analysisPolicy": {
+          "enum": [
+            "allowed",
+            "restricted",
+            "prohibited"
+          ]
+        },
+        "publicationPolicy": {
+          "enum": [
+            "aggregateOnly",
+            "qualitativeOnly",
+            "restricted",
+            "prohibited"
+          ]
+        },
+        "denominator": {
+          "enum": [
+            "allPresentedRespondents",
+            "applicableRespondents",
+            "answeredRespondents",
+            "substantiveRespondents",
+            "custom"
+          ]
+        },
+        "excludeSemantics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "includeSemantics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "minimumGroupSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "precision": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "derivedMetric": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "formula",
+        "inputs",
+        "longitudinal",
+        "reporting"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "formula": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "longitudinal": {
+          "$ref": "#/$defs/longitudinal"
+        },
+        "reporting": {
+          "$ref": "#/$defs/reportingPolicy"
+        }
+      },
+      "patternProperties": {
+        "^type$": {
+          "enum": [
+            "mean",
+            "proportion",
+            "combinedResponseRate",
+            "difference",
+            "changeOverTime",
+            "themeFrequency"
+          ]
+        }
+      }
+    }
+  }
+}

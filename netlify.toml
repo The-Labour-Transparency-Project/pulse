@@ -1,0 +1,8 @@
+[build]
+  command = "pnpm --filter @pulse/pulse-respondent build"
+  publish = "apps/pulse-respondent/dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

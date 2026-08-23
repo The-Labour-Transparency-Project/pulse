@@ -27,12 +27,20 @@ function onKeydown(event: KeyboardEvent) {
 
 <style scoped>
 .panel-resize-handle {
-  align-items: center;
-  cursor: col-resize;
-  display: flex;
-  justify-content: center;
-  touch-action: none;
-  user-select: none;
+    align-items: center;
+    cursor: col-resize;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    z-index: 2;
+}
+
+.panel-resize-handle::before {
+    content: "";
+    inset: 0 -2px;
+    position: absolute;
 }
 
 .panel-resize-handle span {

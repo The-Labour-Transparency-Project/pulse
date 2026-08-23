@@ -13,12 +13,34 @@ const experience = useSurveyExperience();
 const showTip = ref(true);
 const { resizing, gridTemplateColumns, questionNavigatorHidden, startResize, nudge } = useResizablePanels();
 const {
-  survey, answers, detailAnswers, itemsById, sectionIndex, questionIndex, viewMode,
+  survey,
+  answers,
+  detailAnswers,
+  itemsById,
+  sectionIndex,
+  questionIndex,
+  viewMode,
   visitedQuestionIds,
-  leftOpen, rightOpen, copied, isDark, visibleItems, answeredCount, currentSection,
-  currentQuestion, sectionAnswered, sectionVisibleCount, itemNumber, answerOptions,
-  rowAnswerOptions, sectionNavigationRequest, selectSection, selectQuestion, setCurrentQuestionById, moveQuestion, toggleTheme,
-  findNextUnanswered, copySerializedResponse,
+  leftOpen,
+  rightOpen,
+  copied,
+  isDark,
+  visibleItems,
+  answeredCount,
+  currentSection,
+  currentQuestion,
+  sectionAnswered,
+  sectionVisibleCount,
+  itemNumber,
+  answerOptions,
+  rowAnswerOptions,
+  sectionNavigationRequest,
+  selectSection,
+  selectQuestion,
+  setCurrentQuestionById,
+  moveQuestion,
+  toggleTheme,
+  findNextUnanswered,
 } = experience;
 </script>
 
@@ -33,14 +55,17 @@ const {
                                :section-index="sectionIndex" :survey="survey" :visible-items="visibleItems"
                                :visited-question-ids="visitedQuestionIds"
                                @select-question="selectQuestion" @select-section="selectSection" />
-      <div :class="['workspace-grid', { 'is-resizing': resizing }]" :style="{ gridTemplateColumns: questionNavigatorHidden ? gridTemplateColumns.replace(/\d+px$/, '48px') : gridTemplateColumns }">
+      <div :class="['workspace-grid', { 'is-resizing': resizing }]"
+           :style="{ gridTemplateColumns: questionNavigatorHidden ? gridTemplateColumns.replace(/\d+px$/, '48px') : gridTemplateColumns }">
         <SectionRail :answers="answers" :section-answered="sectionAnswered" :section-index="sectionIndex"
                      :section-visible-count="sectionVisibleCount" :survey="survey" :view-mode="viewMode"
                      @select-section="selectSection" @update-view="viewMode = $event" />
         <PanelResizeHandle :resizing="resizing === 'left'" side="left"
                            @nudge="nudge('left', $event)" @resize="startResize('left', $event)" />
-        <QuestionCanvas :answer-options="answerOptions" :answers="answers" :can-go-previous="visibleItems.findIndex((item) => item.id === currentQuestion?.id) > 0"
-                        :current-question-id="currentQuestion?.id" :default-locale="survey.defaultLocale" :detail-answers="detailAnswers"
+        <QuestionCanvas :answer-options="answerOptions" :answers="answers"
+                        :can-go-previous="visibleItems.findIndex((item) => item.id === currentQuestion?.id) > 0"
+                        :current-question-id="currentQuestion?.id" :default-locale="survey.defaultLocale"
+                        :detail-answers="detailAnswers"
                         :item-number="itemNumber" :items-by-id="itemsById" :question-index="questionIndex"
                         :row-answer-options="rowAnswerOptions" :section="currentSection"
                         :section-navigation-request="sectionNavigationRequest"
@@ -51,9 +76,9 @@ const {
                         @question-in-view="setCurrentQuestionById" />
         <PanelResizeHandle :resizing="resizing === 'right'" side="right"
                            @nudge="nudge('right', $event)" @resize="startResize('right', $event)" />
-        <QuestionNavigator :answers="answers" :current-question-id="currentQuestion?.id" :items-by-id="itemsById"
-                           :survey="survey" :visible-items="visibleItems" :visited-question-ids="visitedQuestionIds"
-                           v-model:hidden="questionNavigatorHidden"
+        <QuestionNavigator v-model:hidden="questionNavigatorHidden" :answers="answers" :current-question-id="currentQuestion?.id"
+                           :items-by-id="itemsById" :survey="survey" :visible-items="visibleItems"
+                           :visited-question-ids="visitedQuestionIds"
                            @select-question="selectQuestion" />
       </div>
       <v-alert v-if="showTip" v-model="showTip" class="survey-tip" closable color="primary"

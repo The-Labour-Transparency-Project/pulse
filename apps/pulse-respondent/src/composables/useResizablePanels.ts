@@ -4,13 +4,15 @@ import { useDisplay } from "vuetify";
 
 export type PanelSide = "left" | "right";
 export type PanelBreakpoint = "xs" | "sm" | "md" | "lg" | "xl";
+export type PanelWidthLimits = { min: number; max: number };
+export type PanelLimits = { left: PanelWidthLimits; right: PanelWidthLimits };
 
 const MIN_LEFT_WIDTH = 240;
-const MAX_LEFT_WIDTH = 440;
+const MAX_LEFT_WIDTH = 660;
 const MIN_RIGHT_WIDTH = 280;
-const MAX_RIGHT_WIDTH = 480;
+const MAX_RIGHT_WIDTH = 980;
 
-export function panelDefaultsForBreakpoint(breakpoint: PanelBreakpoint) {
+export function panelDefaultsForBreakpoint(breakpoint: PanelBreakpoint | string) {
     switch (breakpoint) {
         case "xs":
         case "sm":
@@ -18,26 +20,50 @@ export function panelDefaultsForBreakpoint(breakpoint: PanelBreakpoint) {
         case "md":
             return { left: 280, right: 300 };
         case "lg":
-            return { left: 312, right: 340 };
+            return { left: 412, right: 640 };
         case "xl":
-            return { left: 360, right: 380 };
+        case "xxl":
+            return { left: 660, right: 980 };
+        default:
+            // Vuetify can briefly expose an unrecognised value while its
+            // display service is initialising. Keep the panel layout usable
+            // until a supported breakpoint is available.
+            return { left: 248, right: 280 };
     }
 }
 
-function panelLimitsForBreakpoint(breakpoint: PanelBreakpoint) {
-    if (breakpoint !== "lg" && breakpoint !== "xl") {
-        return { left: 248, right: 280 };
+function normalizePanelBreakpoint(breakpoint: string): PanelBreakpoint {
+    switch (breakpoint) {
+        case "xs":
+        case "sm":
+        case "md":
+        case "lg":
+        case "xl":
+            return breakpoint;
+        case "xxl":
+            // Vuetify has a display breakpoint above xl, but panel sizing
+            // intentionally uses the same desktop profile for both.
+            return "xl";
+        default:
+            return "xs";
     }
-    if (breakpoint === "lg") {
-        return { left: 312, right: 340 };
-    }
-    return { left: MAX_LEFT_WIDTH, right: MAX_RIGHT_WIDTH };
+}
+
+const PANEL_LIMITS: Record<PanelBreakpoint, PanelLimits> = {
+    xs: { left: { min: 248, max: 248 }, right: { min: 280, max: 280 } },
+    sm: { left: { min: 248, max: 248 }, right: { min: 280, max: 280 } },
+    md: { left: { min: 280, max: 280 }, right: { min: 300, max: 300 } },
+    lg: { left: { min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH }, right: { min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH } },
+    xl: { left: { min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH }, right: { min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH } },
+};
+
+export function panelLimitsForBreakpoint(breakpoint: PanelBreakpoint | string): PanelLimits {
+    return PANEL_LIMITS[normalizePanelBreakpoint(breakpoint)];
 }
 
 export function useResizablePanels() {
     const { name: displayBreakpoint, lgAndUp } = useDisplay();
-    const breakpoint = computed(() => displayBreakpoint.value as PanelBreakpoint);
-    const initialDefaults = panelDefaultsForBreakpoint(breakpoint.value);
+    const breakpoint = computed(() => normalizePanelBreakpoint(displayBreakpoint.value));
     const leftWidths = useLocalStorage<Record<PanelBreakpoint, number>>("pulse-respondent-left-panel-widths", {
         xs: 248, sm: 248, md: 280, lg: 312, xl: 360,
     });
@@ -59,19 +85,25 @@ export function useResizablePanels() {
     const dragStartWidth = ref(0);
 
     const leftWidth = computed({
-        get: () => leftWidths.value[breakpoint.value] ?? initialDefaults.left,
+        get: () => leftWidths.value[breakpoint.value] ?? panelDefaultsForBreakpoint(breakpoint.value).left,
         set: (value: number) => { leftWidths.value[breakpoint.value] = value; },
     });
     const rightWidth = computed({
-        get: () => rightWidths.value[breakpoint.value] ?? initialDefaults.right,
+        get: () => rightWidths.value[breakpoint.value] ?? panelDefaultsForBreakpoint(breakpoint.value).right,
         set: (value: number) => { rightWidths.value[breakpoint.value] = value; },
     });
     const questionNavigatorHidden = computed({
         get: () => questionNavigatorHiddenByBreakpoint.value[breakpoint.value] ?? !lgAndUp.value,
         set: (value: boolean) => { questionNavigatorHiddenByBreakpoint.value[breakpoint.value] = value; },
     });
-    const effectiveLeftWidth = computed(() => Math.min(leftWidth.value, panelLimitsForBreakpoint(breakpoint.value).left));
-    const effectiveRightWidth = computed(() => Math.min(rightWidth.value, panelLimitsForBreakpoint(breakpoint.value).right));
+    const effectiveLeftWidth = computed(() => {
+        const limits = panelLimitsForBreakpoint(breakpoint.value);
+        return Math.min(limits.left.max, Math.max(limits.left.min, leftWidth.value));
+    });
+    const effectiveRightWidth = computed(() => {
+        const limits = panelLimitsForBreakpoint(breakpoint.value);
+        return Math.min(limits.right.max, Math.max(limits.right.min, rightWidth.value));
+    });
     const gridTemplateColumns = computed(() =>
         `${effectiveLeftWidth.value}px 8px minmax(0, 1fr) 8px ${effectiveRightWidth.value}px`,
     );
@@ -92,9 +124,9 @@ export function useResizablePanels() {
         const delta = event.clientX - dragStartX.value;
         const limits = panelLimitsForBreakpoint(breakpoint.value);
         if (resizing.value === "left") {
-            leftWidth.value = Math.min(limits.left, Math.max(MIN_LEFT_WIDTH, dragStartWidth.value + delta));
+            leftWidth.value = Math.min(limits.left.max, Math.max(limits.left.min, dragStartWidth.value + delta));
         } else {
-            rightWidth.value = Math.min(limits.right, Math.max(MIN_RIGHT_WIDTH, dragStartWidth.value - delta));
+            rightWidth.value = Math.min(limits.right.max, Math.max(limits.right.min, dragStartWidth.value - delta));
         }
     });
 
@@ -106,10 +138,10 @@ export function useResizablePanels() {
         const limits = panelLimitsForBreakpoint(breakpoint.value);
         if (side === "left") {
             leftWidthCustomized.value[breakpoint.value] = true;
-            leftWidth.value = Math.min(limits.left, Math.max(MIN_LEFT_WIDTH, effectiveLeftWidth.value + delta));
+            leftWidth.value = Math.min(limits.left.max, Math.max(limits.left.min, effectiveLeftWidth.value + delta));
         } else {
             rightWidthCustomized.value[breakpoint.value] = true;
-            rightWidth.value = Math.min(limits.right, Math.max(MIN_RIGHT_WIDTH, effectiveRightWidth.value + delta));
+            rightWidth.value = Math.min(limits.right.max, Math.max(limits.right.min, effectiveRightWidth.value + delta));
         }
     }
 

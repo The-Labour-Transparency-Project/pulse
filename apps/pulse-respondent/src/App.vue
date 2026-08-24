@@ -76,7 +76,8 @@ const {
                         @question-in-view="setCurrentQuestionById" />
         <PanelResizeHandle :resizing="resizing === 'right'" side="right"
                            @nudge="nudge('right', $event)" @resize="startResize('right', $event)" />
-        <QuestionNavigator v-model:hidden="questionNavigatorHidden" :answers="answers" :current-question-id="currentQuestion?.id"
+        <QuestionNavigator v-model:hidden="questionNavigatorHidden" :answers="answers"
+                           :current-question-id="currentQuestion?.id"
                            :items-by-id="itemsById" :survey="survey" :visible-items="visibleItems"
                            :visited-question-ids="visitedQuestionIds"
                            @select-question="selectQuestion" />
@@ -90,3 +91,12 @@ const {
     <v-snackbar v-model="copied" color="success">Response copied</v-snackbar>
   </v-app>
 </template>
+
+<style scoped>
+/*noinspection CssUnusedSymbol*/
+.survey-tip :deep(.v-alert__prepend),
+  /*noinspection CssUnusedSymbol*/
+.survey-tip :deep(.v-alert__close) {
+  align-self: center;
+}
+</style>

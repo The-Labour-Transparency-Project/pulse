@@ -34,13 +34,17 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [x] Keep question navigation controls fixed below independently scrolling question content
 - [ ] Keep the dismissible tip banner as a full-width bottom overlay
 - [x] Represent the Introduction as a navigable survey destination
+- [x] Explain the survey scope, repeat-wave purpose, optional questions, and valid “Don’t know” responses in the Introduction
 - [x] Start new respondent sessions on the Introduction and preserve the working position
 - [x] Provide a navigable Outro destination after the final question
 - [x] Provide optional Review & submit navigation with partial submission support
+- [x] Tell respondents they can return to and review answers at any time
+- [ ] Allow respondents to add a separate comment to each answer
 - [x] Provide an optional Tips & Guidance rail with semantic guidance types
 - [x] Keep survey guidance separate from contextual warnings and errors
-- [x] Hide and show the question navigator panel
-- [x] Allow desktop users to resize the left and right navigation panels
+- [ ] Hide and show the question navigator panel
+- [x] Allow desktop users to resize the left, right, and Tips & Guidance panels
+- [x] Remember panel widths independently for each breakpoint
 - [x] Show answered, unanswered, and not-visited status
 - [x] Show partial and complete progress for matrix answer rows in all navigation views
 - [x] Keep unavailable dependent questions in the navigator as disabled entries
@@ -57,6 +61,7 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [ ] Jump directly to a section or question (including from url)
 - [ ] Preserve the current position while navigating
 - [ ] Restore the respondent's last position when reopening
+- [x] Restore the Introduction, Review & submit, and Outro destination after refresh
 - [x] Save a recoverable local draft and support resuming
 - [x] Hydrate saved answers and progress after a browser refresh
 - [ ] Support keyboard- and screen-reader-friendly navigation
@@ -84,6 +89,10 @@ the current respondent renderer registry and the types present in v1.
 - [ ] Add consent capture and review-before-submit
 - [x] Serialize answers to `survey-response.schema.json`
 - [ ] Add submit, retry, success, and failure states
+- [x] Require a persisted signed-token email verification before response submission
+- [x] Allow verified respondents to clear verification with a duplicate-submission warning
+- [x] Allow respondents to clear all answers without clearing verification
+- [x] Allow verified respondents to clear verification from Review & submit and Outro
 - [x] Preserve a recoverable draft locally
 
 ## API and data stewardship
@@ -106,6 +115,7 @@ the current respondent renderer registry and the types present in v1.
 ## Published intelligence
 
 - [ ] Define approved aggregate metrics for the 2026 wave
+- [ ] Give respondents access to anonymity-protected comparisons with aggregate results when enough responses have been received
 - [ ] Build a reproducible analysis/reporting pipeline
 - [ ] Scaffold the public insights application
 - [ ] Publish methodology, scope, limitations, and dataset provenance

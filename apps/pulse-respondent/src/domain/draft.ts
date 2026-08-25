@@ -1,4 +1,5 @@
 import type { Answers, DetailAnswers, AnswerValue, SurveyDefinition } from "./survey";
+import type { SurveyDestination } from "./navigation";
 
 /** JSON storage for object drafts. Invalid legacy values are discarded safely. */
 export interface JsonStorageSerializer<T> {
@@ -71,6 +72,26 @@ export function draftStorageKey(survey: SurveyDefinition): string {
 
 export function positionStorageKey(survey: SurveyDefinition): string {
     return `pulse-respondent-position:${survey.id}:${survey.version}`;
+}
+
+export function destinationStorageKey(survey: SurveyDefinition): string {
+    return `pulse-respondent-destination:${survey.id}:${survey.version}`;
+}
+
+export function parseSurveyDestination(value: unknown, survey: SurveyDefinition): SurveyDestination | null {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+    const candidate = value as Partial<SurveyDestination>;
+    if (candidate.type === "introduction" || candidate.type === "review" || candidate.type === "outro") {
+        return { type: candidate.type };
+    }
+    if (candidate.type !== "question" || typeof candidate.sectionId !== "string") return null;
+    const section = survey.sections.find((item) => item.id === candidate.sectionId);
+    if (!section) return null;
+    return {
+        type: "question",
+        sectionId: section.id,
+        ...(typeof candidate.questionId === "string" ? { questionId: candidate.questionId } : {}),
+    };
 }
 
 export function parseSurveyPosition(value: unknown, survey: SurveyDefinition): SurveyPosition | null {

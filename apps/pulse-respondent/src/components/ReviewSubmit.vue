@@ -1,6 +1,28 @@
 <script lang="ts" setup>
-defineProps<{ answeredCount: number; visibleCount: number; showReturnButton: boolean }>();
-defineEmits<{ submit: []; returnToSurvey: [] }>();
+import ClearAnswersAction from "./ClearAnswersAction.vue";
+import VerificationForm from "./VerificationForm.vue";
+import VerificationStatus from "./VerificationStatus.vue";
+
+const props = defineProps<{
+  answeredCount: number;
+  visibleCount: number;
+  showReturnButton: boolean;
+  email: string;
+  code: string;
+  requested: boolean;
+  verified: boolean;
+  verificationError: string;
+}>();
+defineEmits<{
+  submit: [];
+  returnToSurvey: [];
+  clearVerification: [];
+  clearAnswers: [];
+  "update:email": [value: string];
+  "update:code": [value: string];
+  requestCode: [];
+  confirmCode: []
+}>();
 </script>
 
 <template>
@@ -22,12 +44,32 @@ defineEmits<{ submit: []; returnToSurvey: [] }>();
                variant="tonal">
         Some questions are unanswered. You may return to them, or submit now with a partial response.
       </v-alert>
+      <div v-if="props.verified" class="review-verification-panel mb-8">
+        <VerificationStatus @clear="$emit('clearVerification')" />
+      </div>
+      <VerificationForm v-else class="mb-8" :code="props.code" :email="props.email"
+                        :requested="props.requested" :verification-error="props.verificationError"
+                        @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')" />
       <div class="d-flex flex-wrap ga-3">
-        <v-btn color="primary" @click="$emit('submit')">
-          Submit response
-        </v-btn>
+        <div class="d-flex align-center ga-2">
+
+          <v-badge
+              bordered
+              color="tertiary"
+              content="Coming Soon"
+              location="top end"
+              min-height="25"
+              offset-x="20">
+            <v-btn color="primary" disabled min-width="250" @click="$emit('submit')">
+              Submit response
+            </v-btn>
+          </v-badge>
+        </div>
         <v-spacer />
-        <v-btn v-if="showReturnButton" variant="outlined" @click="$emit('returnToSurvey')">Return to survey</v-btn>
+        <ClearAnswersAction :has-answers="props.answeredCount > 0" :inline="true" :verified="props.verified"
+                            @clear="$emit('clearAnswers')" />
+        <v-btn v-if="showReturnButton" variant="text" @click="$emit('returnToSurvey')">Return to survey</v-btn>
       </div>
     </div>
   </section>
@@ -51,6 +93,14 @@ defineEmits<{ submit: []; returnToSurvey: [] }>();
   color: rgba(var(--v-theme-on-surface), .88);
   font-size: 18px;
   line-height: 1.5;
+}
+
+.review-verification-panel {
+  --verification-success-bg: color-mix(in srgb, rgb(var(--v-theme-success)) 8%, rgb(var(--v-theme-surface)) 92%);
+  border: 1px solid rgba(var(--v-theme-success), .18);
+  border-radius: 7px;
+  padding: 12px 16px;
+  background: var(--verification-success-bg);
 }
 
 @media (max-width: 959px) {

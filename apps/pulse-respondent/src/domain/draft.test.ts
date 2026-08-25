@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import definitionJson from "../../../../surveys/labour-transparency-pulse/v1/definition.json";
 import {
     draftStorageKey,
+    destinationStorageKey,
     createJsonStorageSerializer,
     isViewMode,
     parseSurveyDraft,
+    parseSurveyDestination,
     parseSurveyPosition,
     positionStorageKey,
 } from "./draft";
@@ -22,6 +24,15 @@ describe("survey drafts", () => {
     });
     it("uses a survey and version scoped position key", () => {
         expect(positionStorageKey(survey)).toBe(`pulse-respondent-position:${survey.id}:${survey.version}`);
+    });
+
+    it("stores and validates non-question destinations by survey version", () => {
+        expect(destinationStorageKey(survey)).toBe(`pulse-respondent-destination:${survey.id}:${survey.version}`);
+        expect(parseSurveyDestination({ type: "review" }, survey)).toEqual({ type: "review" });
+        expect(parseSurveyDestination({ type: "question", sectionId: survey.sections[0].id }, survey)).toEqual({
+            type: "question", sectionId: survey.sections[0].id,
+        });
+        expect(parseSurveyDestination({ type: "question", sectionId: "missing" }, survey)).toBeNull();
     });
 
     it("accepts positions within the instrument and rejects invalid positions", () => {

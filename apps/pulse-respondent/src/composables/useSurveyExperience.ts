@@ -7,8 +7,10 @@ import {
     draftStorageKey,
     draftStorageSerializer,
     createJsonStorageSerializer,
+    destinationStorageKey,
     isViewMode,
     parseSurveyDraft,
+    parseSurveyDestination,
     parseSurveyPosition,
     positionStorageKey,
     type SurveyDraft,
@@ -25,6 +27,7 @@ import {
     validateSurveyDefinition,
 } from "../domain/survey";
 import { introductionFor, outroFor, type SurveyDestination } from "../domain/navigation";
+import { useVerification } from "./useVerification";
 
 export type ViewMode = "continuous" | "sections" | "question";
 export type SectionNavigationRequest = { index: number; token: number };
@@ -35,6 +38,12 @@ export function useSurveyExperience() {
     const theme = useTheme();
     const { xs } = useDisplay();
     const survey = validateSurveyDefinition(definitionJson);
+    const verification = useVerification(survey.id, survey.version);
+    const verificationEmail = verification.email;
+    const verificationCode = verification.code;
+    const verificationRequested = verification.requested;
+    const verificationError = verification.error;
+    const verificationVerified = verification.verified;
     const answers = reactive<Answers>({});
     const detailAnswers = reactive<DetailAnswers>({});
     const storedDraft = useLocalStorage<SurveyDraft | null>(draftStorageKey(survey), null, {
@@ -46,6 +55,14 @@ export function useSurveyExperience() {
         positionStorageKey(survey),
         null,
         { serializer: createJsonStorageSerializer<{ sectionIndex: number; questionIndex: number }>() },
+    );
+    const storedDestination = useLocalStorage<SurveyDestination | null>(destinationStorageKey(survey), null, {
+        serializer: createJsonStorageSerializer<SurveyDestination>(),
+    });
+    const storedSubmission = useLocalStorage<ReturnType<typeof serializeSurveyResponse> | null>(
+        `pulse-respondent-submission:${survey.id}:${survey.version}`,
+        null,
+        { serializer: createJsonStorageSerializer<ReturnType<typeof serializeSurveyResponse>>() },
     );
     const preferredViewMode = isViewMode(storedViewMode.value)
         ? storedViewMode.value
@@ -72,7 +89,12 @@ export function useSurveyExperience() {
     const leftOpen = ref(false);
     const rightOpen = ref(false);
     const tipsOpen = ref(false);
-    const submission = ref<ReturnType<typeof serializeSurveyResponse> | null>(null);
+    const submission = ref<ReturnType<typeof serializeSurveyResponse> | null>(storedSubmission.value);
+    const restoredDestination = parseSurveyDestination(storedDestination.value, survey);
+    if (restoredDestination) {
+        destination.value = restoredDestination;
+        showIntroductionInContinuous.value = restoredDestination.type === "introduction";
+    }
     const sectionNavigationRequest = ref<SectionNavigationRequest | null>(null);
     let sectionNavigationToken = 0;
     const { copy, copied, isSupported } = useClipboard();
@@ -126,6 +148,10 @@ export function useSurveyExperience() {
     watch([sectionIndex, questionIndex], ([section, question]) => {
         storedPosition.value = { sectionIndex: section, questionIndex: question };
     }, { immediate: true });
+
+    watch(destination, (value) => {
+        storedDestination.value = value;
+    }, { deep: true, immediate: true });
 
     watch(
         () => currentQuestion.value?.id,
@@ -250,11 +276,24 @@ export function useSurveyExperience() {
     }
 
     function submitResponse() {
+        if (!verification.verified.value) return null;
         submission.value = serializeSurveyResponse(survey, answers, detailAnswers, {
             completionStatus: answeredCount.value === visibleItems.value.length ? "complete" : "partial",
         });
+        storedSubmission.value = submission.value;
         selectOutro();
         return submission.value;
+    }
+
+    function setVerificationEmail(value: string) { verification.email.value = value; }
+    function setVerificationCode(value: string) { verification.code.value = value; }
+
+    function clearAnswers() {
+        Object.keys(answers).forEach((id) => delete answers[id]);
+        Object.keys(detailAnswers).forEach((id) => delete detailAnswers[id]);
+        visitedQuestionIds.clear();
+        submission.value = null;
+        storedSubmission.value = null;
     }
 
     useEventListener("keydown", (event) => {
@@ -296,6 +335,7 @@ export function useSurveyExperience() {
     watch([answers, detailAnswers], () => {
         if (!submission.value) return;
         submission.value = null;
+        storedSubmission.value = null;
         if (destination.value.type === "outro") selectReview();
     }, { deep: true });
 
@@ -319,6 +359,10 @@ export function useSurveyExperience() {
         tipsOpen, submission, showIntroductionInContinuous,
         currentQuestion, sectionAnswered, sectionVisibleCount, itemNumber, answerOptions, sectionNavigationRequest,
         rowAnswerOptions, selectSection, selectIntroduction, selectReview, selectOutro, startSurvey, selectQuestion, setCurrentQuestionById, moveQuestion, moveNext, submitResponse, toggleTheme,
+        verification,
+        verificationEmail, verificationCode, verificationRequested, verificationError, verificationVerified,
+        setVerificationEmail, setVerificationCode,
+        clearAnswers,
         findNextUnanswered: () => moveQuestion(1, true), copySerializedResponse,
     };
 }

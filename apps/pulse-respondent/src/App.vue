@@ -11,7 +11,7 @@ import TipsGuidanceRail from "./components/layout/TipsGuidanceRail.vue";
 import { useResizablePanels } from "./composables/useResizablePanels";
 
 const experience = useSurveyExperience();
-const { resizing, gridTemplateColumns, questionNavigatorHidden, startResize, nudge } = useResizablePanels();
+const { resizing, gridTemplateColumns, tipsWidth, startResize, nudge } = useResizablePanels();
 const {
   survey,
   answers,
@@ -53,10 +53,13 @@ const {
   startSurvey,
   moveNext,
   submitResponse,
+  verification,
+  verificationEmail, verificationCode, verificationRequested, verificationError, verificationVerified,
+  setVerificationEmail, setVerificationCode,
+  clearAnswers,
 } = experience;
 const workspaceColumns = computed(() => {
-  const columns = questionNavigatorHidden.value ? gridTemplateColumns.value.replace(/\d+px$/, "48px") : gridTemplateColumns.value;
-  return tipsOpen.value ? columns.replace(/(\d+)px$/, "$1px 280px") : columns;
+  return tipsOpen.value ? `${gridTemplateColumns.value} 8px ${tipsWidth.value}px` : gridTemplateColumns.value;
 });
 </script>
 
@@ -99,15 +102,29 @@ const workspaceColumns = computed(() => {
                         @next="moveNext" @previous="moveQuestion(-1)"
                         @next-unanswered="findNextUnanswered" @previous-unanswered="moveQuestion(-1, true)"
                         @question-in-view="setCurrentQuestionById" @start="startSurvey"
+                        :verification-email="verificationEmail" :verification-code="verificationCode"
+                        :verification-requested="verificationRequested" :verification-error="verificationError"
+                        :verification-verified="verificationVerified"
+                        @update:email="setVerificationEmail" @update:code="setVerificationCode"
+                        @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                        @clear-verification="verification.clearVerification()"
+                        @clear-answers="clearAnswers"
                         @return-to-survey="startSurvey" @submit="submitResponse" />
         <PanelResizeHandle :resizing="resizing === 'right'" side="right"
                            @nudge="nudge('right', $event)" @resize="startResize('right', $event)" />
-        <QuestionNavigator v-model:hidden="questionNavigatorHidden" :answers="answers"
+        <QuestionNavigator :answers="answers"
                            :current-question-id="currentQuestion?.id"
                            :items-by-id="itemsById" :survey="survey" :visible-items="visibleItems"
                            :visited-question-ids="visitedQuestionIds"
                            @select-question="selectQuestion" />
-        <TipsGuidanceRail v-if="tipsOpen" />
+        <PanelResizeHandle v-if="tipsOpen" :resizing="resizing === 'tips'" side="tips"
+                           @nudge="nudge('tips', $event)" @resize="startResize('tips', $event)" />
+        <TipsGuidanceRail v-if="tipsOpen" :verification-code="verificationCode"
+                          :verification-email="verificationEmail" :verification-error="verificationError"
+                          :verification-requested="verificationRequested" :verification-verified="verificationVerified"
+                          @update:email="setVerificationEmail" @update:code="setVerificationCode"
+                          @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                          @clear-verification="verification.clearVerification()" />
       </div>
     </v-main>
     <v-snackbar v-model="copied" color="success">Response copied</v-snackbar>

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type { SurveyIntroduction } from "../domain/navigation";
+import ClearAnswersAction from "./ClearAnswersAction.vue";
 
-defineProps<{ introduction: SurveyIntroduction; hasProgress: boolean }>();
-defineEmits<{ start: [] }>();
+const props = defineProps<{ introduction: SurveyIntroduction; hasProgress: boolean; verified: boolean }>();
+defineEmits<{ start: []; clearAnswers: [] }>();
 </script>
 
 <template>
@@ -39,10 +40,22 @@ defineEmits<{ start: [] }>();
         <v-icon class="mr-1" icon="mdi-information-outline" size="18" />
         {{ introduction.autosave }}
       </p>
-      <v-btn color="primary" min-width="190" size="large" @click="$emit('start')">
-        {{ hasProgress ? "Continue survey" : "Start survey" }}
-        <v-icon end icon="mdi-arrow-right" />
-      </v-btn>
+      <div class="d-flex align-center justify-space-between flex-wrap ga-3">
+        <v-badge
+            bordered
+            color="tertiary"
+            content="Preview only"
+            location="top end"
+            min-height="30"
+            offset-x="30">
+          <v-btn append-icon="mdi-arrow-right" color="primary" min-width="250" @click="$emit('start')">
+            {{ hasProgress ? "Continue survey" : "Start survey" }}
+          </v-btn>
+        </v-badge>
+
+        <ClearAnswersAction :has-answers="props.hasProgress" :inline="true" :verified="props.verified"
+                            @clear="$emit('clearAnswers')" />
+      </div>
     </div>
   </section>
 </template>

@@ -22,8 +22,6 @@ const props = defineProps<{
   visitedQuestionIds: ReadonlySet<string>;
 }>();
 defineEmits<{ selectQuestion: [section: number, item: number] }>();
-const navigatorHidden = defineModel<boolean>("hidden", { default: false });
-
 const questionElements = ref(new Map<string, HTMLElement>());
 const navigatorFilter = ref<QuestionNavigatorFilter>("All questions");
 
@@ -88,22 +86,12 @@ function isNavigatorItem(id: string) {
 </script>
 
 <template>
-  <aside :class="['question-rail navigation-surface d-none d-lg-flex flex-column', { 'question-rail--hidden': navigatorHidden }]">
-    <div :class="['navigator-heading d-flex justify-space-between align-center', navigatorHidden ? 'question-rail-hidden-heading' : 'pa-4 mb-4']">
+  <aside class="question-rail navigation-surface d-none d-lg-flex flex-column">
+    <div class="navigator-heading d-flex justify-space-between align-center pa-4 mb-4">
       <span>Question navigator</span>
-      <v-btn
-          :aria-expanded="(!navigatorHidden).toString()"
-          class="hide-button"
-          size="small"
-          variant="text"
-          @click="navigatorHidden = !navigatorHidden"
-      >
-        {{ navigatorHidden ? "Show" : "Hide" }}
-      </v-btn>
     </div>
 
-    <template v-if="!navigatorHidden">
-      <div class="navigator-content d-flex flex-column px-4 pb-4">
+    <div class="navigator-content d-flex flex-column px-4 pb-4">
       <v-select
           v-model="navigatorFilter"
           :items="['All questions', 'Unanswered only']"
@@ -175,8 +163,7 @@ function isNavigatorItem(id: string) {
         <span><v-icon color="primary" size="16">mdi-circle-outline</v-icon> Unanswered</span>
         <span><v-icon color="grey-lighten-1" size="16">mdi-circle-outline</v-icon> Not visited</span>
       </div>
-      </div>
-    </template>
+    </div>
   </aside>
 </template>
 
@@ -186,25 +173,6 @@ function isNavigatorItem(id: string) {
   background: var(--pulse-navigation-bg);
   min-height: 0;
   overflow: hidden;
-}
-
-.question-rail--hidden {
-  align-items: center;
-}
-
-.question-rail-hidden-heading {
-  justify-content: center;
-  width: 100%;
-  padding: 8px 4px;
-}
-
-.question-rail-hidden-heading > span {
-  display: none;
-}
-
-.question-rail-hidden-heading .hide-button {
-  min-width: 40px;
-  padding-inline: 4px;
 }
 
 .navigator-content {
@@ -217,13 +185,6 @@ function isNavigatorItem(id: string) {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -.01em;
-}
-
-.hide-button {
-  color: rgb(var(--v-theme-primary)) !important;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: none;
 }
 
 .navigator-filter {

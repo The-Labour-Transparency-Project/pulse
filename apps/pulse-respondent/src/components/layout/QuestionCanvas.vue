@@ -42,6 +42,11 @@ const props = defineProps<{
   sectionNavigationRequest: SectionNavigationRequest | null;
   itemNumber: (item: SurveyItem) => number;
   canGoPrevious: boolean
+  verificationEmail: string;
+  verificationCode: string;
+  verificationRequested: boolean;
+  verificationVerified: boolean;
+  verificationError: string;
 }>();
 const emit = defineEmits<{
   previous: [];
@@ -52,6 +57,12 @@ const emit = defineEmits<{
   returnToSurvey: [];
   submit: [];
   questionInView: [id: string];
+  "update:email": [value: string];
+  "update:code": [value: string];
+  requestCode: [];
+  confirmCode: [];
+  clearVerification: [];
+  clearAnswers: [];
 }>();
 const card = ref<ComponentPublicInstance | null>(null);
 const programmaticScroll = ref(false);
@@ -168,8 +179,8 @@ watch(() => props.destination.type, (type) => {
       <template v-if="viewMode === 'continuous'">
         <div v-if="showIntroductionInContinuous" class="continuous-destination"
              data-survey-destination="introduction">
-          <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction"
-                              @start="$emit('start')" />
+          <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction" :verified="verificationVerified"
+                              @start="$emit('start')" @clear-answers="$emit('clearAnswers')" />
         </div>
         <template v-for="surveySection in survey.sections" :key="surveySection.id">
           <SurveySection
@@ -187,22 +198,39 @@ watch(() => props.destination.type, (type) => {
         </template>
         <div v-if="!submitted" class="continuous-destination" data-survey-destination="review">
           <ReviewSubmit :answered-count="answeredCount" :show-return-button="false" :visible-count="visibleCount"
+                        :email="verificationEmail" :code="verificationCode" :requested="verificationRequested"
+                        :verified="verificationVerified" :verification-error="verificationError"
+                        @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                        @clear-verification="$emit('clearVerification')"
+                        @clear-answers="$emit('clearAnswers')"
                         @return-to-survey="$emit('returnToSurvey')" @submit="$emit('submit')" />
         </div>
         <div v-if="submitted" class="continuous-destination" data-survey-destination="outro">
           <SurveyOutro :answered-count="answeredCount" :outro="outro" :show-return-button="false" :submitted="submitted"
-                       :visible-count="visibleCount" @return-to-survey="$emit('returnToSurvey')" />
+                        :verified="verificationVerified" :visible-count="visibleCount"
+                       @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
+                       @clear-verification="$emit('clearVerification')" />
         </div>
       </template>
       <SurveyIntroduction v-else-if="destination.type === 'introduction'" :has-progress="hasProgress"
-                          :introduction="introduction" @start="$emit('start')" />
+                          :introduction="introduction" :verified="verificationVerified"
+                          @start="$emit('start')" @clear-answers="$emit('clearAnswers')" />
       <ReviewSubmit v-else-if="destination.type === 'review' && !submitted" :answered-count="answeredCount"
                     :show-return-button="true" :visible-count="visibleCount"
+                    :email="verificationEmail" :code="verificationCode" :requested="verificationRequested"
+                    :verified="verificationVerified" :verification-error="verificationError"
+                    @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
+                    @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                    @clear-verification="$emit('clearVerification')"
+                    @clear-answers="$emit('clearAnswers')"
                     @return-to-survey="$emit('returnToSurvey')"
                     @submit="$emit('submit')" />
       <SurveyOutro v-else-if="destination.type === 'outro' && submitted" :answered-count="answeredCount"
-                   :outro="outro" :show-return-button="true" :submitted="submitted" :visible-count="visibleCount"
-                   @return-to-survey="$emit('returnToSurvey')" />
+                   :outro="outro" :show-return-button="true" :submitted="submitted"
+                   :verified="verificationVerified" :visible-count="visibleCount"
+                   @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
+                   @clear-verification="$emit('clearVerification')" />
       <SurveySection
           v-else
           :answer-options="answerOptions"

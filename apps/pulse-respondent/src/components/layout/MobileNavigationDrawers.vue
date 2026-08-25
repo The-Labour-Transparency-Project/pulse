@@ -86,8 +86,14 @@ function isNavigatorItem(id: string) {
         <v-alert class="mb-3" color="primary" icon="mdi-lightbulb-on-outline" variant="tonal">You can answer questions
           in any order.
         </v-alert>
+        <v-alert class="mb-3" color="primary" icon="mdi-help-circle-outline" variant="tonal">“Don’t know” is a useful
+          answer, and you do not need to be an expert.
+        </v-alert>
         <v-alert class="mb-3" color="info" icon="mdi-content-save-outline" variant="tonal">Responses are saved
-          automatically.
+          automatically on this device, and you can review them at any time.
+        </v-alert>
+        <v-alert class="mb-3" color="info" icon="mdi-checkbox-marked-circle-outline" variant="tonal">All questions are
+          optional. You can submit a partial response.
         </v-alert>
         <v-alert color="warning" icon="mdi-shield-alert-outline" variant="tonal">Avoid including direct identifiers in
           free-text answers.

@@ -1,19 +1,25 @@
 <script lang="ts" setup>
-import { ref } from "vue";
-import { localized, type Answers, type SurveyDefinition } from "../../domain/survey";
+import { type Answers, localized, type SurveyDefinition } from "../../domain/survey";
 import type { ViewMode } from "../../composables/useSurveyExperience";
-
-const showAutosaveNotice = ref(true);
+import type { SurveyDestination } from "../../domain/navigation";
 
 defineProps<{
   survey: SurveyDefinition;
   answers: Answers;
   sectionIndex: number;
+  destination: SurveyDestination;
+  submitted: boolean;
   viewMode: ViewMode;
   sectionAnswered: (id: string) => number;
   sectionVisibleCount: (id: string) => number
 }>();
-defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
+defineEmits<{
+  selectSection: [index: number];
+  selectIntroduction: [];
+  selectReview: [];
+  selectOutro: [];
+  updateView: [mode: ViewMode]
+}>();
 </script>
 
 <template>
@@ -37,7 +43,14 @@ defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
     </div>
     <v-divider class="mb-2" />
     <v-list class="section-list bg-transparent pa-0">
-      <v-list-item v-for="(section, index) in survey.sections" :key="section.id" :active="index === sectionIndex"
+      <v-list-item :active="destination.type === 'introduction'"
+                   class="section-item survey-destination-item destination-introduction-item" rounded="lg"
+                   @click="$emit('selectIntroduction')">
+        <v-list-item-title class="section-nav-title text-wrap">Introduction</v-list-item-title>
+        <v-list-item-subtitle class="destination-subtitle">About this survey</v-list-item-subtitle>
+      </v-list-item>
+      <v-list-item v-for="(section, index) in survey.sections" :key="section.id"
+                   :active="destination.type === 'question' && index === sectionIndex"
                    class="section-item" rounded="lg" @click="$emit('selectSection', index)">
         <div class="section-label">
           <span class="section-number">{{ index + 1 }}</span>
@@ -54,12 +67,19 @@ defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
               color="primary" size="20" width="3" />
         </template>
       </v-list-item>
+      <v-list-item v-if="!submitted" :active="destination.type === 'review'"
+                   class="section-item survey-destination-item" rounded="lg"
+                   @click="$emit('selectReview')">
+        <v-list-item-title class="section-nav-title text-wrap">Review &amp; submit</v-list-item-title>
+        <v-list-item-subtitle class="destination-subtitle">Thank you</v-list-item-subtitle>
+      </v-list-item>
+      <v-list-item v-if="submitted" :active="destination.type === 'outro'"
+                   class="section-item survey-destination-item" rounded="lg"
+                   @click="$emit('selectOutro')">
+        <v-list-item-title class="section-nav-title text-wrap">Outro</v-list-item-title>
+        <v-list-item-subtitle class="destination-subtitle">Thank you</v-list-item-subtitle>
+      </v-list-item>
     </v-list>
-    <v-alert v-if="showAutosaveNotice" v-model="showAutosaveNotice" class="autosave-notice" closable
-             color="primary" icon="mdi-information-outline" variant="outlined">
-      <p>Your responses are saved automatically as you go.</p>
-      <p>Currently, you cannot submit your answers. Coming soon!</p>
-    </v-alert>
   </aside>
 </template>
 
@@ -137,6 +157,11 @@ defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
   color: rgba(var(--v-theme-on-surface), .8);
 }
 
+.survey-destination-item {
+  min-height: 52px;
+  padding-block: 8px;
+}
+
 .section-item :deep(.v-list-item__content) {
   padding: 0 8px;
 }
@@ -154,6 +179,11 @@ defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
   line-height: 1.45;
 }
 
+.section-item :deep(.destination-subtitle) {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
 .section-item :deep(.v-list-item__append) {
   align-self: center;
   gap: 8px;
@@ -167,6 +197,16 @@ defineEmits<{ selectSection: [index: number]; updateView: [mode: ViewMode] }>();
 .section-item.v-list-item--active {
   background: rgba(var(--v-theme-primary), .09);
   color: rgba(var(--v-theme-on-surface), .98);
+  border-inline-start: 0 !important;
+  box-shadow: none !important;
+}
+
+.section-item.v-list-item--active::before {
+  display: none;
+}
+
+.destination-introduction-item.v-list-item--active {
+  border-inline-start: 3px solid rgb(var(--v-theme-primary)) !important;
 }
 
 .section-item.v-list-item--active .section-number {

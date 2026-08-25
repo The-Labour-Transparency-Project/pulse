@@ -2,6 +2,9 @@
 import { nextTick, onMounted, ref, watch, type ComponentPublicInstance } from "vue";
 import { useDisplay } from "vuetify";
 import SurveySection from "../SurveySection.vue";
+import SurveyIntroduction from "../SurveyIntroduction.vue";
+import SurveyOutro from "../SurveyOutro.vue";
+import ReviewSubmit from "../ReviewSubmit.vue";
 import SurveyNavigationControls from "./SurveyNavigationControls.vue";
 import {
   type Answers,
@@ -13,11 +16,20 @@ import {
 } from "../../domain/survey";
 import type { ViewMode } from "../../composables/useSurveyExperience";
 import type { SectionNavigationRequest } from "../../composables/useSurveyExperience";
+import type { SurveyDestination, SurveyIntroduction as SurveyIntroductionContent, SurveyOutro as SurveyOutroContent } from "../../domain/navigation";
 
 const props = defineProps<{
   viewMode: ViewMode;
   survey: SurveyDefinition;
   section: SurveySectionDefinition;
+  destination: SurveyDestination;
+  introduction: SurveyIntroductionContent;
+  outro: SurveyOutroContent;
+  hasProgress: boolean;
+  answeredCount: number;
+  visibleCount: number;
+  submitted: boolean;
+  showIntroductionInContinuous: boolean;
   itemsById: Map<string, SurveyItem>;
   answers: Answers;
   detailAnswers: DetailAnswers;
@@ -36,6 +48,9 @@ const emit = defineEmits<{
   previousUnanswered: [];
   nextUnanswered: [];
   next: [];
+  start: [];
+  returnToSurvey: [];
+  submit: [];
   questionInView: [id: string];
 }>();
 const card = ref<ComponentPublicInstance | null>(null);
@@ -111,6 +126,18 @@ async function bringSelectedSectionIntoView(request: SectionNavigationRequest | 
   });
 }
 
+async function bringDestinationIntoView(destination: SurveyDestination) {
+  if (props.viewMode !== "continuous") return;
+  await nextTick();
+  const target = cardElement()?.querySelector<HTMLElement>(`[data-survey-destination="${destination.type}"]`);
+  if (!target) return;
+  programmaticScroll.value = true;
+  target.scrollIntoView({ block: "start", behavior: "auto" });
+  requestAnimationFrame(() => {
+    programmaticScroll.value = false;
+  });
+}
+
 onMounted(updateQuestionInView);
 watch(() => [props.currentQuestionId, props.viewMode], ([id, mode], previous) => {
   const [previousId, previousMode] = previous ?? [];
@@ -127,6 +154,11 @@ watch(() => [props.currentQuestionId, props.viewMode], ([id, mode], previous) =>
 watch(() => props.sectionNavigationRequest?.token, () => {
   bringSelectedSectionIntoView(props.sectionNavigationRequest);
 });
+watch(() => props.destination.type, (type) => {
+  if (type === "introduction" || type === "review" || type === "outro") {
+    bringDestinationIntoView(props.destination);
+  }
+});
 </script>
 
 <template>
@@ -134,21 +166,43 @@ watch(() => props.sectionNavigationRequest?.token, () => {
     <div class="question-card-shell" @click="updateQuestionFromInteraction" @focusin="updateQuestionFromInteraction">
       <v-card ref="card" class="question-card" elevation="1" rounded="lg" @scroll.passive="handleScroll">
       <template v-if="viewMode === 'continuous'">
-        <SurveySection
-            v-for="surveySection in survey.sections"
-            :key="surveySection.id"
-            :answer-options="answerOptions"
-            :answers="answers"
-            :default-locale="defaultLocale"
-            :detail-answers="detailAnswers"
-            :item-number="itemNumber"
-            :items-by-id="itemsById"
-            :row-answer-options="rowAnswerOptions"
-            :section="surveySection"
-            :survey="survey"
-            :visible-items="visibleItems"
-        />
+        <div v-if="showIntroductionInContinuous" class="continuous-destination"
+             data-survey-destination="introduction">
+          <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction"
+                              @start="$emit('start')" />
+        </div>
+        <template v-for="surveySection in survey.sections" :key="surveySection.id">
+          <SurveySection
+              :answer-options="answerOptions"
+              :answers="answers"
+              :default-locale="defaultLocale"
+              :detail-answers="detailAnswers"
+              :item-number="itemNumber"
+              :items-by-id="itemsById"
+              :row-answer-options="rowAnswerOptions"
+              :section="surveySection"
+              :survey="survey"
+              :visible-items="visibleItems"
+          />
+        </template>
+        <div v-if="!submitted" class="continuous-destination" data-survey-destination="review">
+          <ReviewSubmit :answered-count="answeredCount" :show-return-button="false" :visible-count="visibleCount"
+                        @return-to-survey="$emit('returnToSurvey')" @submit="$emit('submit')" />
+        </div>
+        <div v-if="submitted" class="continuous-destination" data-survey-destination="outro">
+          <SurveyOutro :answered-count="answeredCount" :outro="outro" :show-return-button="false" :submitted="submitted"
+                       :visible-count="visibleCount" @return-to-survey="$emit('returnToSurvey')" />
+        </div>
       </template>
+      <SurveyIntroduction v-else-if="destination.type === 'introduction'" :has-progress="hasProgress"
+                          :introduction="introduction" @start="$emit('start')" />
+      <ReviewSubmit v-else-if="destination.type === 'review' && !submitted" :answered-count="answeredCount"
+                    :show-return-button="true" :visible-count="visibleCount"
+                    @return-to-survey="$emit('returnToSurvey')"
+                    @submit="$emit('submit')" />
+      <SurveyOutro v-else-if="destination.type === 'outro' && submitted" :answered-count="answeredCount"
+                   :outro="outro" :show-return-button="true" :submitted="submitted" :visible-count="visibleCount"
+                   @return-to-survey="$emit('returnToSurvey')" />
       <SurveySection
           v-else
           :answer-options="answerOptions"
@@ -165,7 +219,7 @@ watch(() => props.sectionNavigationRequest?.token, () => {
       />
       </v-card>
     </div>
-    <SurveyNavigationControls :can-go-previous="canGoPrevious" @next="$emit('next')" @previous="$emit('previous')"
+    <SurveyNavigationControls v-if="destination.type === 'question'" :can-go-previous="canGoPrevious" @next="$emit('next')" @previous="$emit('previous')"
                               @next-unanswered="$emit('nextUnanswered')"
                               @previous-unanswered="$emit('previousUnanswered')" />
   </section>
@@ -200,6 +254,18 @@ watch(() => props.sectionNavigationRequest?.token, () => {
 
 .survey-tip {
   width: calc(100% - 8px);
+}
+
+.continuous-destination :deep(.introduction-canvas),
+.continuous-destination :deep(.review-canvas),
+.continuous-destination :deep(.outro-canvas) {
+  min-height: auto;
+}
+
+.continuous-destination :deep(.introduction-card),
+.continuous-destination :deep(.review-card),
+.continuous-destination :deep(.outro-card) {
+  margin-top: 0;
 }
 
 @media (max-width: 1279px) {

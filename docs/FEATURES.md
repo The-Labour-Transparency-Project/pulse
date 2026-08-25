@@ -32,7 +32,13 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [x] Keep the section navigator scrollable while keeping its autosave notice visible and closable
 - [x] Keep question navigation controls within the middle canvas and provide a dismissible navigation tip
 - [x] Keep question navigation controls fixed below independently scrolling question content
-- [x] Keep the dismissible tip banner as a full-width bottom overlay
+- [ ] Keep the dismissible tip banner as a full-width bottom overlay
+- [x] Represent the Introduction as a navigable survey destination
+- [x] Start new respondent sessions on the Introduction and preserve the working position
+- [x] Provide a navigable Outro destination after the final question
+- [x] Provide optional Review & submit navigation with partial submission support
+- [x] Provide an optional Tips & Guidance rail with semantic guidance types
+- [x] Keep survey guidance separate from contextual warnings and errors
 - [x] Hide and show the question navigator panel
 - [x] Allow desktop users to resize the left and right navigation panels
 - [x] Show answered, unanswered, and not-visited status

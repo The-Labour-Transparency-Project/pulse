@@ -24,6 +24,7 @@ import {
     surveyItemNumber,
     validateSurveyDefinition,
 } from "../domain/survey";
+import { introductionFor, outroFor, type SurveyDestination } from "../domain/navigation";
 
 export type ViewMode = "continuous" | "sections" | "question";
 export type SectionNavigationRequest = { index: number; token: number };
@@ -62,12 +63,16 @@ export function useSurveyExperience() {
     const itemsById = new Map(survey.items.map((item) => [item.id, item]));
     const sectionIndex = ref(preferredPosition?.sectionIndex ?? 0);
     const questionIndex = ref(preferredPosition?.questionIndex ?? 0);
+    const destination = ref<SurveyDestination>({ type: "introduction" });
+    const showIntroductionInContinuous = ref(true);
     const visitedQuestionIds = reactive(new Set<string>(hydratedDraft?.visitedQuestionIds ?? []));
     const viewMode = ref<ViewMode>(preferredViewMode ?? "question");
     const viewModeBeforeXs = ref<ViewMode>(viewMode.value);
     const xsModeForced = ref(false);
     const leftOpen = ref(false);
     const rightOpen = ref(false);
+    const tipsOpen = ref(false);
+    const submission = ref<ReturnType<typeof serializeSurveyResponse> | null>(null);
     const sectionNavigationRequest = ref<SectionNavigationRequest | null>(null);
     let sectionNavigationToken = 0;
     const { copy, copied, isSupported } = useClipboard();
@@ -107,6 +112,8 @@ export function useSurveyExperience() {
         .map((id) => itemsById.get(id))
         .filter((item): item is SurveyItem => !!item && visibleItems.value.includes(item)));
     const currentQuestion = computed(() => currentItems.value[questionIndex.value]);
+    const introduction = computed(() => introductionFor(survey));
+    const outro = computed(() => outroFor(survey));
 
     watch(currentItems, (items) => {
         if (!items.length) {
@@ -148,13 +155,52 @@ export function useSurveyExperience() {
     function selectSection(index: number) {
         sectionIndex.value = index;
         questionIndex.value = 0;
+        destination.value = { type: "question", sectionId: survey.sections[index]?.id ?? "" };
+        showIntroductionInContinuous.value = false;
         sectionNavigationRequest.value = { index, token: ++sectionNavigationToken };
         leftOpen.value = false;
+    }
+
+    function selectIntroduction() {
+        destination.value = { type: "introduction" };
+        showIntroductionInContinuous.value = true;
+        leftOpen.value = false;
+    }
+
+    function selectOutro() {
+        if (!submission.value) {
+            selectReview();
+            return;
+        }
+        destination.value = { type: "outro" };
+        showIntroductionInContinuous.value = false;
+        leftOpen.value = false;
+    }
+
+    function selectReview() {
+        destination.value = { type: "review" };
+        showIntroductionInContinuous.value = false;
+        leftOpen.value = false;
+    }
+
+    function startSurvey() {
+        showIntroductionInContinuous.value = false;
+        const firstUnanswered = visibleItems.value.find((item) => !isItemAnswered(item, answers[item.id]));
+        if (firstUnanswered) {
+            setCurrentQuestionById(firstUnanswered.id);
+        } else {
+            setQuestionPosition(sectionIndex.value, questionIndex.value);
+        }
     }
 
     function setQuestionPosition(section: number, item: number) {
         sectionIndex.value = section;
         questionIndex.value = item;
+        destination.value = {
+            type: "question",
+            sectionId: survey.sections[section]?.id ?? "",
+            questionId: survey.sections[section]?.itemIds[item],
+        };
     }
 
     function selectQuestion(section: number, item: number) {
@@ -194,6 +240,23 @@ export function useSurveyExperience() {
         return true;
     }
 
+    function moveNext() {
+        if (moveQuestion(1)) return true;
+        if (destination.value.type === "question") {
+            selectReview();
+            return true;
+        }
+        return false;
+    }
+
+    function submitResponse() {
+        submission.value = serializeSurveyResponse(survey, answers, detailAnswers, {
+            completionStatus: answeredCount.value === visibleItems.value.length ? "complete" : "partial",
+        });
+        selectOutro();
+        return submission.value;
+    }
+
     useEventListener("keydown", (event) => {
         if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
         const target = event.target as HTMLElement | null;
@@ -230,6 +293,12 @@ export function useSurveyExperience() {
 
     watch(answers, () => reconcileDependentAnswers(survey, answers), { deep: true, immediate: true });
 
+    watch([answers, detailAnswers], () => {
+        if (!submission.value) return;
+        submission.value = null;
+        if (destination.value.type === "outro") selectReview();
+    }, { deep: true });
+
     watch([answers, detailAnswers, sectionIndex, questionIndex, viewMode, () => [...visitedQuestionIds]], () => {
         storedDraft.value = {
             surveyId: survey.id,
@@ -244,11 +313,12 @@ export function useSurveyExperience() {
     }, { deep: true });
 
     return {
-        survey, answers, detailAnswers, itemsById, sectionIndex, questionIndex, viewMode,
+        survey, answers, detailAnswers, itemsById, sectionIndex, questionIndex, viewMode, destination, introduction, outro,
         visitedQuestionIds,
         leftOpen, rightOpen, copied, isDark, visibleItems, answeredCount, currentSection,
+        tipsOpen, submission, showIntroductionInContinuous,
         currentQuestion, sectionAnswered, sectionVisibleCount, itemNumber, answerOptions, sectionNavigationRequest,
-        rowAnswerOptions, selectSection, selectQuestion, setCurrentQuestionById, moveQuestion, toggleTheme,
+        rowAnswerOptions, selectSection, selectIntroduction, selectReview, selectOutro, startSurvey, selectQuestion, setCurrentQuestionById, moveQuestion, moveNext, submitResponse, toggleTheme,
         findNextUnanswered: () => moveQuestion(1, true), copySerializedResponse,
     };
 }

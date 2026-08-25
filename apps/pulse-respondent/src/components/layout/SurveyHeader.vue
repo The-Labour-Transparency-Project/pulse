@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { useDisplay } from "vuetify";
 
-defineProps<{ answeredCount: number; visibleCount: number; isDark: boolean }>();
-defineEmits<{ toggleTheme: []; openNavigation: [] }>();
+defineProps<{ answeredCount: number; visibleCount: number; isDark: boolean; tipsOpen: boolean }>();
+defineEmits<{ toggleTheme: []; openNavigation: []; toggleTips: [] }>();
 const { xs } = useDisplay();
 </script>
 
@@ -29,6 +29,10 @@ const { xs } = useDisplay();
       </div>
     </div>
     <v-spacer />
+    <v-btn :aria-pressed="tipsOpen" aria-label="Toggle Tips and Guidance" :class="['tips-toggle mr-1', { 'tips-toggle--active': tipsOpen }]"
+           prepend-icon="mdi-lightbulb-on-outline" variant="text" @click="$emit('toggleTips')">
+      <span class="d-none d-sm-inline">Tips &amp; Guidance</span>
+    </v-btn>
     <v-btn aria-label="Toggle colour theme" icon="mdi-theme-light-dark" variant="text" @click="$emit('toggleTheme')" />
     <v-btn aria-label="Open navigation" class="d-lg-none" icon="mdi-menu" variant="text"
            @click="$emit('openNavigation')" />
@@ -61,6 +65,11 @@ const { xs } = useDisplay();
 
 .v-app-bar {
   border-bottom-color: var(--pulse-navigation-border) !important;
+}
+
+.tips-toggle--active {
+  color: rgb(var(--v-theme-primary)) !important;
+  background: rgba(var(--v-theme-primary), .10);
 }
 
 @media (max-width: 599px) {

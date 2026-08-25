@@ -3411,7 +3411,7 @@
       "id": "trust-information.relationship-change",
       "kind": "singleSelect",
       "title": {
-        "en-NZ": "What would happen to your confidence?"
+        "en-NZ": "Thinking about your answers to the previous question, if one of the things you rely on was no longer available, what would happen to your confidence in that business?"
       },
       "answerRequired": false,
       "optionSetRef": "trustChange",
@@ -3474,7 +3474,7 @@
       "id": "assurance-action.duplicate-requests",
       "kind": "singleSelect",
       "title": {
-        "en-NZ": "How often do you receive substantially the same information request?"
+        "en-NZ": "How often is your organisation asked to provide substantially the same labour-related information more than once, either to the same organisation or to different organisations?"
       },
       "answerRequired": false,
       "optionSetRef": "requestFrequency",

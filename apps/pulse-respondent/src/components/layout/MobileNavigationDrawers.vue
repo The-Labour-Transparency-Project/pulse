@@ -10,6 +10,7 @@ import {
   type SurveyItem
 } from "../../domain/survey";
 import type { SurveyDestination } from "../../domain/navigation";
+import TipsGuidanceRail from "./TipsGuidanceRail.vue";
 
 const { lgAndUp } = useDisplay();
 const props = defineProps<{
@@ -19,10 +20,17 @@ const props = defineProps<{
   sectionIndex: number;
   currentQuestionId?: string;
   leftOpen: boolean;
+  leftWidth: number;
   rightOpen: boolean;
   tipsOpen: boolean;
+  tipsWidth: number;
   destination: SurveyDestination;
   submitted: boolean;
+  verificationEmail: string;
+  verificationCode: string;
+  verificationRequested: boolean;
+  verificationVerified: boolean;
+  verificationError: string;
   visitedQuestionIds: ReadonlySet<string>;
   visibleItems: SurveyItem[]
 }>();
@@ -35,6 +43,11 @@ defineEmits<{
   selectOutro: [];
   selectSection: [index: number];
   selectQuestion: [section: number, item: number]
+  'update:email': [value: string];
+  'update:code': [value: string];
+  requestCode: [];
+  confirmCode: [];
+  clearVerification: [];
 }>();
 
 function statusFor(id: string) {
@@ -54,7 +67,7 @@ function isNavigatorItem(id: string) {
 
 <template>
   <template v-if="!lgAndUp">
-    <v-navigation-drawer :model-value="leftOpen" class="d-lg-none" temporary
+    <v-navigation-drawer :model-value="leftOpen" class="d-lg-none" temporary :width="leftWidth"
                          @update:model-value="$emit('update:leftOpen', $event)">
       <v-list-item class="py-5" title="Survey navigation" />
       <v-divider />
@@ -78,27 +91,14 @@ function isNavigatorItem(id: string) {
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-navigation-drawer :model-value="tipsOpen" class="d-lg-none" location="right" temporary
+    <v-navigation-drawer :model-value="tipsOpen" class="d-lg-none" location="right" temporary :width="tipsWidth"
                          @update:model-value="$emit('update:tipsOpen', $event)">
-      <v-list-item class="py-5" title="Tips & Guidance" />
-      <v-divider />
-      <v-list class="pa-4">
-        <v-alert class="mb-3" color="primary" icon="mdi-lightbulb-on-outline" variant="tonal">You can answer questions
-          in any order.
-        </v-alert>
-        <v-alert class="mb-3" color="primary" icon="mdi-help-circle-outline" variant="tonal">“Don’t know” is a useful
-          answer, and you do not need to be an expert.
-        </v-alert>
-        <v-alert class="mb-3" color="info" icon="mdi-content-save-outline" variant="tonal">Responses are saved
-          automatically on this device, and you can review them at any time.
-        </v-alert>
-        <v-alert class="mb-3" color="info" icon="mdi-checkbox-marked-circle-outline" variant="tonal">All questions are
-          optional. You can submit a partial response.
-        </v-alert>
-        <v-alert color="warning" icon="mdi-shield-alert-outline" variant="tonal">Avoid including direct identifiers in
-          free-text answers.
-        </v-alert>
-      </v-list>
+      <TipsGuidanceRail :verification-code="verificationCode" :verification-email="verificationEmail"
+                        :verification-error="verificationError" :verification-requested="verificationRequested"
+                        :verification-verified="verificationVerified"
+                        @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                        @clear-verification="$emit('clearVerification')" />
     </v-navigation-drawer>
     <v-navigation-drawer :model-value="rightOpen" class="d-lg-none" location="right" temporary
                          @update:model-value="$emit('update:rightOpen', $event)">

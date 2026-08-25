@@ -3,9 +3,9 @@ import { panelDefaultsForBreakpoint, panelLimitsForBreakpoint } from "./useResiz
 
 describe("panel defaults", () => {
     it.each([
-        ["xs", { left: 248, right: 280, tips: 280 }],
-        ["sm", { left: 248, right: 280, tips: 280 }],
-        ["md", { left: 280, right: 300, tips: 320 }],
+        ["xs", { left: 420, right: 280, tips: 420 }],
+        ["sm", { left: 420, right: 280, tips: 500 }],
+        ["md", { left: 280, right: 300, tips: 500 }],
         ["lg", { left: 412, right: 340, tips: 360 }],
         ["xl", { left: 660, right: 380, tips: 420 }],
     ] as const)("uses the %s Vuetify breakpoint settings", (breakpoint, expected) => {
@@ -22,8 +22,9 @@ describe("panel defaults", () => {
 
 describe("panel limits", () => {
     it.each([
-        ["xs", { left: { min: 248, max: 248 }, right: { min: 280, max: 280 }, tips: { min: 280, max: 280 } }],
-        ["md", { left: { min: 280, max: 280 }, right: { min: 300, max: 300 }, tips: { min: 320, max: 320 } }],
+        ["xs", { left: { min: 420, max: 420 }, right: { min: 280, max: 280 }, tips: { min: 420, max: 420 } }],
+        ["sm", { left: { min: 420, max: 420 }, right: { min: 280, max: 280 }, tips: { min: 500, max: 500 } }],
+        ["md", { left: { min: 280, max: 280 }, right: { min: 300, max: 300 }, tips: { min: 500, max: 500 } }],
         ["lg", { left: { min: 240, max: 660 }, right: { min: 280, max: 980 }, tips: { min: 280, max: 720 } }],
         ["xl", { left: { min: 240, max: 660 }, right: { min: 280, max: 980 }, tips: { min: 280, max: 760 } }],
         ["xxl", { left: { min: 240, max: 660 }, right: { min: 280, max: 980 }, tips: { min: 280, max: 760 } }],

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed, ref } from "vue";
 import { guidanceItems, type GuidanceKind } from "../../domain/navigation";
 import VerificationForm from "../VerificationForm.vue";
 import VerificationStatus from "../VerificationStatus.vue";
@@ -26,17 +25,11 @@ const iconFor: Record<GuidanceKind, string> = {
   warning: "mdi-shield-alert-outline",
   error: "mdi-alert-circle-outline",
 };
-const showAll = ref(false);
-const featuredIds = ["order", "autosave", "why"];
-const featuredItems = computed(() => featuredIds
-    .map((id) => guidanceItems.find((item) => item.id === id))
-    .filter((item): item is (typeof guidanceItems)[number] => Boolean(item)));
-const generalItems = computed(() => guidanceItems.filter((item) => item.id !== "required"));
-const visibleItems = computed(() => showAll.value ? generalItems.value : featuredItems.value);
+const visibleItems = guidanceItems.filter((item) => item.id !== "required");
 </script>
 
 <template>
-  <aside class="tips-rail navigation-surface d-none d-lg-flex flex-column pa-3">
+  <aside class="tips-rail navigation-surface d-flex flex-column pa-3">
     <section class="rail-section tips-card">
       <div class="tips-heading d-flex align-center justify-space-between px-3 py-2">
         <div class="d-flex align-center ga-2">
@@ -53,19 +46,8 @@ const visibleItems = computed(() => showAll.value ? generalItems.value : feature
             <div class="guidance-body">{{ item.body }}</div>
           </div>
         </div>
-        <v-btn class="view-tips px-0" color="primary" size="small" variant="text"
-               @click="showAll = !showAll">
-          {{ showAll ? "Show fewer tips" : "View all tips" }}
-        </v-btn>
       </div>
     </section>
-
-    <!--    <section class="rail-section required-section mt-3">-->
-    <!--      <v-alert class="required-alert" color="warning" icon="mdi-alert-outline" variant="tonal">-->
-    <!--        <div class="font-weight-medium">Some questions are required</div>-->
-    <!--        <div>Questions marked with * must be answered before you can submit.</div>-->
-    <!--      </v-alert>-->
-    <!--    </section>-->
 
     <section class="rail-section verification-section mt-3 pa-3"
              :class="{ 'verification-section--verified': props.verificationVerified }">
@@ -97,6 +79,9 @@ const visibleItems = computed(() => showAll.value ? generalItems.value : feature
 }
 
 .tips-card {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
   min-height: 0;
 }
 
@@ -117,6 +102,7 @@ const visibleItems = computed(() => showAll.value ? generalItems.value : feature
 }
 
 .tips-list {
+  flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
 }
@@ -152,13 +138,6 @@ const visibleItems = computed(() => showAll.value ? generalItems.value : feature
   color: rgba(var(--v-theme-on-surface), .58);
 }
 
-.view-tips {
-  min-width: 0;
-  height: 24px;
-  font-size: 12px !important;
-  text-transform: none;
-}
-
 .verification-section {
   border-top: 1px solid rgba(var(--v-theme-on-surface), .08);
 }
@@ -187,8 +166,4 @@ const visibleItems = computed(() => showAll.value ? generalItems.value : feature
   font-weight: 600;
 }
 
-.required-alert {
-  font-size: 13px;
-  line-height: 1.45;
-}
 </style>

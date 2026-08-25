@@ -29,13 +29,15 @@ const { xs } = useDisplay();
       </div>
     </div>
     <v-spacer />
-    <v-btn :aria-pressed="tipsOpen" aria-label="Toggle Tips and Guidance" :class="['tips-toggle mr-1', { 'tips-toggle--active': tipsOpen }]"
-           prepend-icon="mdi-lightbulb-on-outline" variant="text" @click="$emit('toggleTips')">
-      <span class="d-none d-sm-inline">Tips &amp; Guidance</span>
-    </v-btn>
-    <v-btn aria-label="Toggle colour theme" icon="mdi-theme-light-dark" variant="text" @click="$emit('toggleTheme')" />
-    <v-btn aria-label="Open navigation" class="d-lg-none" icon="mdi-menu" variant="text"
-           @click="$emit('openNavigation')" />
+    <div class="header-actions d-flex align-center ga-1">
+      <v-btn :aria-pressed="tipsOpen" aria-label="Toggle Tips and Guidance" :class="['tips-toggle', { 'tips-toggle--active': tipsOpen }]"
+             prepend-icon="mdi-lightbulb-on-outline" variant="text" @click="$emit('toggleTips')">
+        <span class="d-none d-lg-inline">Tips &amp; Guidance</span>
+      </v-btn>
+      <v-btn aria-label="Toggle colour theme" icon="mdi-theme-light-dark" variant="text" @click="$emit('toggleTheme')" />
+      <v-btn aria-label="Open navigation" class="d-lg-none" icon="mdi-menu" variant="text"
+             @click="$emit('openNavigation')" />
+    </div>
   </v-app-bar>
 </template>
 
@@ -111,6 +113,39 @@ const { xs } = useDisplay();
 
   .progress-header .progress-bar {
     height: 6px !important;
+  }
+
+  .tips-toggle {
+    min-width: 40px !important;
+    width: 40px;
+    padding-inline: 0 !important;
+  }
+
+  .tips-toggle :deep(.v-btn__prepend) {
+    margin-inline: 0;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1279px) {
+  .header-copy {
+    max-width: 250px;
+  }
+
+  .progress-header {
+    position: static;
+    width: min(220px, 28vw);
+    margin: 0 8px 0 auto;
+    transform: none;
+  }
+
+  .tips-toggle {
+    min-width: 40px !important;
+    width: 40px;
+    padding-inline: 0 !important;
+  }
+
+  .tips-toggle :deep(.v-btn__prepend) {
+    margin-inline: 0;
   }
 }
 </style>

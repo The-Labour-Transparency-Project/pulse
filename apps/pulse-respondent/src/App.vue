@@ -11,7 +11,7 @@ import TipsGuidanceRail from "./components/layout/TipsGuidanceRail.vue";
 import { useResizablePanels } from "./composables/useResizablePanels";
 
 const experience = useSurveyExperience();
-const { resizing, gridTemplateColumns, tipsWidth, startResize, nudge } = useResizablePanels();
+const { resizing, gridTemplateColumns, leftWidth, tipsWidth, startResize, nudge } = useResizablePanels();
 const {
   survey,
   answers,
@@ -66,17 +66,24 @@ const workspaceColumns = computed(() => {
 <template>
   <v-app>
     <SurveyHeader :answered-count="answeredCount" :is-dark="isDark" :tips-open="tipsOpen" :visible-count="visibleItems.length"
-                  @open-navigation="leftOpen = true"
+                  @open-navigation="leftOpen = !leftOpen"
                   @toggle-tips="tipsOpen = !tipsOpen"
                   @toggle-theme="toggleTheme" />
     <v-main class="workspace-bg workspace-shell">
-      <MobileNavigationDrawers v-model:left-open="leftOpen" v-model:right-open="rightOpen" :answers="answers"
-                               v-model:tips-open="tipsOpen" :destination="destination" :submitted="Boolean(submission)"
+      <MobileNavigationDrawers v-model:left-open="leftOpen" :left-width="leftWidth" v-model:right-open="rightOpen" :answers="answers"
+                               v-model:tips-open="tipsOpen" :tips-width="tipsWidth" :destination="destination"
+                               :submitted="Boolean(submission)"
+                               :verification-email="verificationEmail" :verification-code="verificationCode"
+                               :verification-requested="verificationRequested" :verification-error="verificationError"
+                               :verification-verified="verificationVerified"
                                :current-question-id="currentQuestion?.id" :items-by-id="itemsById"
                                :section-index="sectionIndex" :survey="survey" :visible-items="visibleItems"
                                :visited-question-ids="visitedQuestionIds"
                                @select-introduction="selectIntroduction" @select-review="selectReview" @select-outro="selectOutro"
-                               @select-question="selectQuestion" @select-section="selectSection" />
+                               @select-question="selectQuestion" @select-section="selectSection"
+                               @update:email="setVerificationEmail" @update:code="setVerificationCode"
+                               @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                               @clear-verification="verification.clearVerification()" />
       <div :class="['workspace-grid', { 'is-resizing': resizing }]"
            :style="{ gridTemplateColumns: workspaceColumns }">
         <SectionRail :answers="answers" :section-answered="sectionAnswered" :section-index="sectionIndex"

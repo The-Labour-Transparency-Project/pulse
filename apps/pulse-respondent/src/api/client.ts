@@ -48,6 +48,21 @@ export async function requestToken(waveId: string, surveyId: string, surveyVersi
     }
 }
 
+export async function refreshToken(token: string, email: string): Promise<{token: string; iat: number; exp: number}> {
+    let response: Response;
+    try {
+        response = await fetch(endpoint("/token"), {
+            method: "POST",
+            headers: {"content-type": "application/json"},
+            body: JSON.stringify({token, email}),
+        });
+    } catch {
+        throw new ApiError(0, "We could not reach the respondent service. Check your connection and try again.");
+    }
+    if (!response.ok) throw await responseError(response);
+    return await response.json() as {token: string; iat: number; exp: number};
+}
+
 export async function saveResponse(token: string, responseDocument: SurveyResponse): Promise<{
     responseVersion: string;
     receivedAt: string

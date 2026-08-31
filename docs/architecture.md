@@ -8,8 +8,13 @@ POST /token
   waveId + surveyId + surveyVersion + normalised email
     -> HMAC(identity key), then compact checksum
     -> survey-scoped respondentId checksum
-    -> long-lived HMAC-signed bearer credential
+    -> seven-day HMAC-signed respondent access token
     -> SES access link
+
+POST /token
+  unexpired token + matching normalised email
+    -> replacement HMAC-signed respondent access token
+    -> direct JSON response
 
 PUT /response and GET /response/latest
   bearer credential
@@ -19,8 +24,9 @@ PUT /response and GET /response/latest
 
 ## Boundaries
 
-- `Core` owns deterministic email normalisation, HMAC respondent identity,
-  compact two-part bearer token signing/validation, and bounded response document rules.
+- `Domain` owns deterministic email normalisation, HMAC respondent identity,
+  compact two-part bearer token signing/validation with Unix issue and expiry
+  timestamps, and bounded response document rules.
 - `Infrastructure` owns AWS S3 and SES adapters. S3 keys are built only
   from validated token claims and a server-generated ULID.
 - `Api` owns HTTP transport, configuration composition, Lambda hosting,
@@ -62,20 +68,21 @@ must persist across deployment and infrastructure replacement; changing it
 changes every deterministic respondent namespace. The production Terraform
 state and plan artifacts therefore require secret-level protection.
 
-The API does not use a database, Cognito, client S3 credentials, or expiring
-sessions. Shared mailboxes intentionally provide shared access, and a changed
+The API does not use a database, Cognito, client S3 credentials, or server-side
+sessions. Access tokens expire after the configured lifetime, which defaults to
+seven days. Shared mailboxes intentionally provide shared access, and a changed
 email address is a new identity until a future explicit administrative linking
 workflow is designed.
 
-The SES link carries the long-lived signed credential as the `t` query
-parameter. Its signed payload contains only `w` (wave ID) and `r` (a compact
-16-character hexadecimal checksum of the keyed respondent identity). The
-respondent app consumes it on entry, stores it in
-survey/version-scoped browser storage, and uses it as the bearer credential for
-response access. It immediately rewrites browser history to remove `t` from
-the visible URL. The credential grants access to the respondent's survey
-material; it must be treated as sensitive and never logged or stored in a
-response document.
+The SES link carries the signed credential as the `t` query parameter. Its
+compact positional payload is `[waveId, respondentHash, iat, exp]`, where `iat`
+and `exp` are Unix timestamps. An unexpired token can be refreshed by posting
+it with the matching email address to `/token`; the replacement token is
+returned directly. The respondent app consumes the link on entry, stores the
+token and timestamps in survey/version-scoped browser storage, and immediately
+rewrites browser history to remove `t` from the visible URL. The credential
+grants access to the respondent's survey material; it must be treated as
+sensitive and never logged or stored in a response document.
 
 ## Next infrastructure increment
 

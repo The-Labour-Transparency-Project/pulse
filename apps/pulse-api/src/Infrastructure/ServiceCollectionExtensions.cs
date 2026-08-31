@@ -16,9 +16,15 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddPulseServices(PulseSettings settings)
         {
             services.AddSingleton(settings);
+            services.AddSingleton<TimeProvider>(TimeProvider.System);
+            services.AddSingleton<ITokenLifetimePolicy>(_ =>
+                new TokenLifetimePolicy(TimeSpan.FromDays(settings.TokenLifetimeDays)));
             services.AddSingleton<IRespondentIdentityService>(_ =>
                 new RespondentIdentityService(settings.RespondentIdentityKey));
-            services.AddSingleton<ITokenService>(_ => new TokenService(settings.TokenSigningKey));
+            services.AddSingleton<ITokenService>(provider => new TokenService(
+                settings.TokenSigningKey,
+                provider.GetRequiredService<ITokenLifetimePolicy>(),
+                provider.GetRequiredService<TimeProvider>()));
             services.AddSingleton(new ResponseDocumentValidator(settings.MaximumResponseBytes));
             services.AddSingleton<IResponseRepository>(provider =>
                 new S3ResponseRepository(

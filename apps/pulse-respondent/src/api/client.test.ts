@@ -1,5 +1,5 @@
 import {beforeEach, describe, expect, it, vi} from "vitest";
-import {requestToken, saveResponse} from "./client";
+import {refreshToken, requestToken, saveResponse} from "./client";
 
 describe("respondent API client", () => {
     beforeEach(() => {
@@ -28,6 +28,16 @@ describe("respondent API client", () => {
             method: "PUT",
             headers: expect.objectContaining({authorization: "Bearer signed-token"}),
             body: JSON.stringify(document),
+        }));
+    });
+
+    it("refreshes a token with the token and email", async () => {
+        vi.mocked(fetch).mockResolvedValue(Response.json({token: "new-token", iat: 10, exp: 20}));
+
+        await expect(refreshToken("old-token", "respondent@example.com")).resolves.toEqual({token: "new-token", iat: 10, exp: 20});
+        expect(fetch).toHaveBeenCalledWith("https://api.example.test/token", expect.objectContaining({
+            method: "POST",
+            body: JSON.stringify({token: "old-token", email: "respondent@example.com"}),
         }));
     });
 });

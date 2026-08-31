@@ -1,10 +1,11 @@
-import { computed, ref, watch } from "vue";
+import {computed, onUnmounted, ref, watch} from "vue";
 import { useLocalStorage } from "@vueuse/core";
-import { requestToken } from "../api/client";
+import {refreshToken, requestToken} from "../api/client";
 import {
     consumeVerificationTokenUrl,
     isValidVerificationEmail,
     parseVerificationRecord,
+    tokenTimes,
     SignedTokenVerificationStrategy,
     type VerificationRecord,
     verificationStorageKey,
@@ -40,11 +41,33 @@ export function useVerification(
     const error = ref("");
     const requesting = ref(false);
     const verified = computed(() => Boolean(stored.value));
+    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+
+    async function refresh() {
+        if (!email.value || !code.value) return;
+        try {
+            const result = await refreshToken(code.value, email.value);
+            code.value = result.token;
+            stored.value = {email: email.value.trim(), code: result.token, issuedAt: result.iat, expiresAt: result.exp};
+            scheduleRefresh(result.exp);
+        } catch {
+            // The existing credential remains usable until expiry; a later load or
+            // user action can retry the refresh.
+        }
+    }
+
+    function scheduleRefresh(expiresAt?: number) {
+        if (refreshTimer) clearTimeout(refreshTimer);
+        if (!expiresAt || !email.value || !code.value) return;
+        const delay = Math.max(0, (expiresAt - Math.floor(Date.now() / 1000)) * 600);
+        refreshTimer = setTimeout(refresh, delay);
+    }
 
     // Keep a valid entered code available when the respondent leaves and returns
     // to Review & submit, including when they do not click Confirm first.
     watch([email, code], ([currentEmail, currentCode]) => {
-        const record = parseVerificationRecord({ email: currentEmail, code: currentCode }, strategy);
+        const times = tokenTimes(currentCode);
+        const record = parseVerificationRecord({email: currentEmail, code: currentCode, ...times ? {issuedAt: times.issuedAt, expiresAt: times.expiresAt} : {}}, strategy);
         stored.value = record;
     });
 
@@ -67,7 +90,9 @@ export function useVerification(
         }
 
         code.value = consumed.token;
-        stored.value = { email: email.value.trim(), code: consumed.token };
+        const times = tokenTimes(consumed.token);
+        stored.value = {email: email.value.trim(), code: consumed.token, ...(times ? {issuedAt: times.issuedAt, expiresAt: times.expiresAt} : {})};
+        scheduleRefresh(times?.expiresAt);
         requested.value = false;
         error.value = "";
         return true;
@@ -106,8 +131,10 @@ export function useVerification(
             error.value = "Enter the email address used for verification.";
             return false;
         }
-        const record = { email: email.value.trim(), code: code.value.trim() };
+        const times = tokenTimes(code.value.trim());
+        const record = {email: email.value.trim(), code: code.value.trim(), ...(times ? {issuedAt: times.issuedAt, expiresAt: times.expiresAt} : {})};
         stored.value = record;
+        scheduleRefresh(record.expiresAt);
         return true;
     }
 
@@ -117,6 +144,9 @@ export function useVerification(
         requested.value = false;
         error.value = "";
     }
+
+    scheduleRefresh(stored.value?.expiresAt ?? tokenTimes(code.value)?.expiresAt);
+    onUnmounted(() => { if (refreshTimer) clearTimeout(refreshTimer); });
 
     return { email, code, requested, requesting, error, verified, requestCode, confirmCode, clearVerification };
 }

@@ -58,7 +58,7 @@ defineEmits<{
       </v-alert>
       <div class="d-flex flex-wrap ga-3">
         <div class="d-flex align-center ga-2">
-          <v-btn :loading="props.submitting" :disabled="props.submitting" color="primary" min-width="250"
+          <v-btn :loading="props.submitting" :min-width="120" :disabled="props.submitting || !props.verified" color="primary"
                  @click="$emit('submit')">
             {{ props.submitting ? "Saving response…" : "Submit response" }}
           </v-btn>

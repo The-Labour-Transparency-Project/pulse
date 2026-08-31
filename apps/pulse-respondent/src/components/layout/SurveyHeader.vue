@@ -1,9 +1,31 @@
 <script lang="ts" setup>
+import {computed} from "vue";
 import {useDisplay} from "vuetify";
 
-defineProps<{ answeredCount: number; visibleCount: number; isDark: boolean; tipsOpen: boolean }>();
-defineEmits<{ toggleTheme: []; openNavigation: []; toggleTips: [] }>();
+const props = defineProps<{
+  answeredCount: number;
+  visibleCount: number;
+  isDark: boolean;
+  tipsOpen: boolean;
+  verificationVerified: boolean;
+  submitted: boolean;
+}>();
+const emit = defineEmits<{ toggleTheme: []; openNavigation: []; toggleTips: []; selectReview: [] }>();
 const {xs} = useDisplay();
+const canOpenReview = computed(() => !props.verificationVerified && !props.submitted);
+const accessStatus = computed(() => props.verificationVerified
+  ? {
+      color: "success",
+      icon: "mdi-shield-check-outline",
+      label: "Access confirmed",
+      message: "Access confirmed. You can submit your response while the survey is open.",
+    }
+  : {
+      color: "grey-darken-1",
+      icon: "mdi-shield-outline",
+      label: "Access not confirmed",
+      message: "Access not yet confirmed. You can answer the survey, but you’ll need to confirm access using the link sent to your email before submitting. Your email address is not recorded with your survey response. See Review & submit for more information.",
+    });
 </script>
 
 <template>
@@ -30,6 +52,17 @@ const {xs} = useDisplay();
     </div>
     <v-spacer/>
     <div class="header-actions d-flex align-center ga-1">
+      <v-tooltip content-class="access-status-tooltip" location="bottom">
+        <template #activator="{ props: tooltipProps }">
+          <v-icon v-bind="tooltipProps" :aria-label="accessStatus.label" :color="accessStatus.color"
+                  :icon="accessStatus.icon" :role="canOpenReview ? 'button' : 'img'" class="access-status-icon"
+                  :tabindex="canOpenReview ? 0 : undefined" size="20"
+                  @click="canOpenReview && emit('selectReview')"
+                  @keydown.enter="canOpenReview && emit('selectReview')"
+                  @keydown.space.prevent="canOpenReview && emit('selectReview')"/>
+        </template>
+        <span>{{ accessStatus.message }}</span>
+      </v-tooltip>
       <v-btn :aria-pressed="tipsOpen" :class="['tips-toggle', { 'tips-toggle--active': tipsOpen }]"
              aria-label="Toggle Tips and Guidance"
              prepend-icon="mdi-lightbulb-on-outline" variant="text" @click="$emit('toggleTips')">
@@ -73,6 +106,12 @@ const {xs} = useDisplay();
 .tips-toggle--active {
   color: rgb(var(--v-theme-primary)) !important;
   background: rgba(var(--v-theme-primary), .10);
+}
+
+:global(.access-status-tooltip) {
+  max-width: 360px !important;
+  white-space: normal;
+  line-height: 1.4;
 }
 
 @media (max-width: 599px) {

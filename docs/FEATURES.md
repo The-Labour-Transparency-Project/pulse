@@ -91,7 +91,7 @@ the current respondent renderer registry and the types present in v1.
 - [x] Serialize answers to `survey-response.schema.json`
 - [x] Add submit, retry, success, and failure states
 - [x] Require a persisted signed-token email verification before response submission
-- [x] Consume long-lived signed access tokens from `t` links and remove them from browser history
+- [x] Consume time-limited signed access tokens from `t` links and remove them from browser history
 - [x] Allow verified respondents to clear verification with a duplicate-submission warning
 - [x] Allow respondents to clear all answers without clearing verification
 - [x] Allow verified respondents to clear verification from Review & submit and Outro
@@ -108,7 +108,8 @@ the current respondent renderer registry and the types present in v1.
 - [ ] Add idempotency and safe retry handling
 - [x] Add privacy-preserving response access for research operations
 - [x] Derive deterministic survey-scoped respondent identities from normalised email via HMAC
-- [x] Issue permanent signed respondent credentials and recover access through SES email
+- [x] Issue seven-day signed respondent credentials and recover access through SES email
+- [x] Refresh an unexpired respondent credential with the credential and matching email
 - [x] Keep respondent credentials compact by carrying only the wave and a 64-bit respondent checksum
 - [x] Support local console email delivery with token logging and AWS SES delivery by environment setting
 - [x] Use the local log email strategy for both direct and LocalStack API development

@@ -1,6 +1,8 @@
 export interface VerificationRecord {
     email: string;
     code: string;
+    issuedAt?: number;
+    expiresAt?: number;
 }
 
 export interface VerificationStrategy {
@@ -43,6 +45,19 @@ export function isValidVerificationEmail(email: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
+export function tokenTimes(token: string): { issuedAt: number; expiresAt: number } | null {
+    try {
+        const payload = token.split(".")[0];
+        const encoded = payload.replace(/-/g, "+").replace(/_/g, "/");
+        const bytes = Uint8Array.from(atob(encoded + "=".repeat((4 - encoded.length % 4) % 4)), character => character.charCodeAt(0));
+        const values = JSON.parse(new TextDecoder().decode(bytes)) as unknown;
+        if (!Array.isArray(values) || values.length !== 4 || typeof values[2] !== "number" || typeof values[3] !== "number") return null;
+        return {issuedAt: values[2], expiresAt: values[3]};
+    } catch {
+        return null;
+    }
+}
+
 export function parseVerificationRecord(value: unknown, strategy: VerificationStrategy = new SignedTokenVerificationStrategy()): VerificationRecord | null {
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     const candidate = value as Partial<VerificationRecord>;
@@ -52,5 +67,10 @@ export function parseVerificationRecord(value: unknown, strategy: VerificationSt
     // new credential.
     const email = typeof candidate.email === "string" ? candidate.email.trim() : "";
     if (email && !isValidVerificationEmail(email)) return null;
-    return {email, code: candidate.code.trim()};
+    return {
+        email,
+        code: candidate.code.trim(),
+        ...(typeof candidate.issuedAt === "number" ? {issuedAt: candidate.issuedAt} : {}),
+        ...(typeof candidate.expiresAt === "number" ? {expiresAt: candidate.expiresAt} : {}),
+    };
 }

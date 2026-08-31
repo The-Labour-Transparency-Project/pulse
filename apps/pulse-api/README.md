@@ -6,7 +6,7 @@ workflows, data access, benchmark products, and publishing APIs.
 The first vertical slice is a stateless respondent access and response API:
 
 ```text
-POST /token -> wave-scoped credential with compact survey-scoped deterministic HMAC identity -> signed credential -> SES link
+POST /token -> seven-day wave-scoped credential with compact survey-scoped deterministic HMAC identity -> signed credential -> SES link or direct refresh response
 PUT /response -> token claims -> immutable S3 JSON response version
 GET /response/latest -> token claims -> latest S3 object
 ```
@@ -30,7 +30,8 @@ configuration/secret references, not committed files:
 
 `S3BucketName`, `RespondentBaseUrl`, `SesSender`, `SesConfigurationSetName`,
 `EmailProvider`, `AllowedWaveIds`, `MaximumResponseBytes`,
-`RespondentIdentityKey`, and `TokenSigningKey`. `SesConfigurationSetName` is
+`TokenLifetimeDays`, `RespondentIdentityKey`, and `TokenSigningKey`.
+`SesConfigurationSetName` is
 optional for local development and is set to `labour-transparency` in
 production Terraform.
 
@@ -60,16 +61,22 @@ S3. It automatically omits the encryption request header for configured
 S3-compatible endpoints such as local MinIO, which does not have a KMS by
 default. `UseS3ServerSideEncryption` can explicitly override this behaviour.
 
+Tokens use a compact positional payload `[waveId, respondentHash, iat, exp]`,
+where `iat` and `exp` are Unix timestamps. An unexpired token can be refreshed
+by posting it with the matching email address to `/token`; refresh responses
+return the replacement token and its timestamps directly. The token lifetime is
+configured with `TokenLifetimeDays` and defaults to seven days.
+
 The default wave is `pulse-2026`, mapped to survey
 `ltp.supply-chain-confidence` version `1.0.2`. Its opening and closing dates
 are configurable with `WaveOpensAt` and `WaveClosesAt`. The wave also stores a
 `DefaultWaveValidSurveyVersions` SemVer rule string, defaulting to `*`; that rule is not evaluated
 yet.
 
-Tokens carry only `w` (wave ID) and `r` (a 16-character hexadecimal checksum of
-the keyed respondent identity). The client resolves the wave's survey ID and
-version from its published survey configuration; the API resolves them from its
-wave definition when validating and storing responses.
+The client resolves the wave's survey ID and version from its published survey
+configuration; the API resolves them from its wave definition when validating
+and storing responses. Response reads and writes are rejected after the wave
+closing time, independently of token expiry.
 
 The application keeps AWS concerns behind the S3 and SES adapters so that work can
 be added without changing the core identity or response rules. The SES
@@ -84,3 +91,10 @@ through `WebApplicationFactory<Program>`. Test-only dependencies, such as the
 email sender and response repository, are replaced through DI in
 `ApiApplicationFixture`; new tests should follow the same pattern and should
 not call AWS services directly.
+
+Run the API test solution from this directory so the local `global.json` selects
+the Microsoft Testing Platform runner:
+
+```sh
+dotnet test Api.sln --no-restore
+```

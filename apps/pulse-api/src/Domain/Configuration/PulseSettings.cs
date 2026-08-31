@@ -30,6 +30,7 @@ public sealed class PulseSettings
     public required byte[] RespondentIdentityKey { get; init; }
     public required byte[] TokenSigningKey { get; init; }
     public int MaximumResponseBytes { get; init; } = 1_048_576;
+    public int TokenLifetimeDays { get; init; } = 7;
     public string[] AllowedWaveIds { get; init; } = DefaultAllowedWaveIds;
     public string[] AllowedCorsOrigins { get; init; } = DefaultCorsOrigins;
     public IReadOnlyList<WaveDefinition> Waves { get; init; } = [DefaultWaveDefinition];
@@ -74,6 +75,9 @@ public sealed class PulseSettings
             MaximumResponseBytes = int.TryParse(configuration["MaximumResponseBytes"], out var limit) && limit > 0
                 ? limit
                 : 1_048_576,
+            TokenLifetimeDays = int.TryParse(configuration["TokenLifetimeDays"], out var tokenLifetimeDays) && tokenLifetimeDays > 0
+                ? tokenLifetimeDays
+                : 7,
             AllowedWaveIds = ReadAllowedWaveIds(configuration),
             AllowedCorsOrigins = ReadCorsOrigins(configuration),
             Waves = [ReadDefaultWave(configuration)],

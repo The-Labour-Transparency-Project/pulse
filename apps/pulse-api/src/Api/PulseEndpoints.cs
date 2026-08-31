@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Security.Cryptography;
+using System.Text;
 using Domain;
 using Domain.Configuration;
 using Domain.Identity;
@@ -73,19 +75,51 @@ public static class PulseEndpoints
         PulseSettings settings,
         IRespondentIdentityService identity,
         ITokenService tokens,
+        ITokenLifetimePolicy tokenLifetimePolicy,
+        TimeProvider timeProvider,
         IEmailService email,
         ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
-        if (!settings.IsAllowedWave(request.WaveId, request.SurveyId, request.SurveyVersion) ||
-            !EmailAddress.IsValid(request.Email))
+        if (!EmailAddress.IsValid(request.Email))
+        {
+            return Results.BadRequest(new { error = "The email address is invalid." });
+        }
+
+        var normalizedEmail = IRespondentIdentityService.NormalizeEmail(request.Email);
+
+        if (!string.IsNullOrWhiteSpace(request.Token))
+        {
+            if (!tokens.TryValidate(request.Token, out var existingClaims) || existingClaims is null ||
+                !settings.TryGetAllowedWave(existingClaims.WaveId, out var existingWave))
+            {
+                return Results.Unauthorized();
+            }
+
+            var refreshedRespondentId = identity.GetRespondentId(existingWave!.SurveyId, normalizedEmail);
+            if (!CryptographicOperations.FixedTimeEquals(
+                    Encoding.UTF8.GetBytes(refreshedRespondentId), Encoding.UTF8.GetBytes(existingClaims.RespondentId)))
+            {
+                return Results.Unauthorized();
+            }
+
+            var refreshed = CreateClaims(existingClaims.WaveId, refreshedRespondentId, tokenLifetimePolicy, timeProvider);
+            return Results.Ok(new { token = tokens.Create(refreshed), iat = refreshed.IssuedAt, exp = refreshed.ExpiresAt });
+        }
+
+        if (string.IsNullOrWhiteSpace(request.WaveId) || string.IsNullOrWhiteSpace(request.SurveyId) ||
+            !settings.IsAllowedWave(request.WaveId, request.SurveyId, request.SurveyVersion ?? ""))
         {
             return Results.BadRequest(new { error = "The survey or email address is invalid." });
         }
 
-        var normalizedEmail = IRespondentIdentityService.NormalizeEmail(request.Email);
+        if (!settings.IsWaveOpen(request.WaveId, DateTimeOffset.UtcNow))
+        {
+            return Results.StatusCode(StatusCodes.Status403Forbidden);
+        }
+
         var respondentId = identity.GetRespondentId(request.SurveyId, normalizedEmail);
-        var credential = tokens.Create(new TokenClaims(request.WaveId, respondentId));
+        var credential = tokens.Create(CreateClaims(request.WaveId, respondentId, tokenLifetimePolicy, timeProvider));
         var accessUrl = $"{settings.RespondentBaseUrl.TrimEnd('/')}?t={Uri.EscapeDataString(credential)}";
         await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, accessUrl, cancellationToken);
         loggerFactory.CreateLogger("Pulse.Token").LogInformation(
@@ -94,6 +128,16 @@ public static class PulseEndpoints
             request.SurveyId,
             respondentId);
         return Results.Ok(new { accepted = true });
+    }
+
+    private static TokenClaims CreateClaims(
+        string waveId,
+        string respondentId,
+        ITokenLifetimePolicy lifetimePolicy,
+        TimeProvider timeProvider)
+    {
+        var issuedAt = timeProvider.GetUtcNow().ToUnixTimeSeconds();
+        return new TokenClaims(waveId, respondentId, issuedAt, lifetimePolicy.GetExpiry(issuedAt));
     }
 
     private static async Task<IResult> SaveResponse(
@@ -114,6 +158,11 @@ public static class PulseEndpoints
         if (!settings.TryGetAllowedWave(claims.WaveId, out var waveDefinition))
         {
             return Results.Unauthorized();
+        }
+
+        if (!settings.IsWaveOpen(claims.WaveId, DateTimeOffset.UtcNow))
+        {
+            return Results.StatusCode(StatusCodes.Status403Forbidden);
         }
 
         if (request.ContentLength > settings.MaximumResponseBytes)
@@ -223,6 +272,11 @@ public static class PulseEndpoints
         if (!settings.TryGetAllowedWave(claims.WaveId, out var waveDefinition))
         {
             return Results.Unauthorized();
+        }
+
+        if (!settings.IsWaveOpen(claims.WaveId, DateTimeOffset.UtcNow))
+        {
+            return Results.StatusCode(StatusCodes.Status403Forbidden);
         }
 
         var response = await repository.GetLatestAsync(waveDefinition!.SurveyId, claims.WaveId, claims.RespondentId, cancellationToken);

@@ -5,8 +5,13 @@ using Domain.Identity;
 
 namespace Infrastructure;
 
-public sealed class TokenService(byte[] signingKey) : ITokenService
+public sealed class TokenService(
+    byte[] signingKey,
+    ITokenLifetimePolicy lifetimePolicy,
+    TimeProvider timeProvider) : ITokenService
 {
+    private readonly TimeProvider _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
+    private readonly ITokenLifetimePolicy _lifetimePolicy = lifetimePolicy ?? throw new ArgumentNullException(nameof(lifetimePolicy));
     private readonly byte[] _signingKey = signingKey is { Length: >= 32 }
         ? signingKey.ToArray()
         : throw new ArgumentException("The token signing key must be at least 256 bits.", nameof(signingKey));
@@ -15,7 +20,14 @@ public sealed class TokenService(byte[] signingKey) : ITokenService
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(claims.WaveId);
         ArgumentException.ThrowIfNullOrWhiteSpace(claims.RespondentId);
-        var payload = JsonSerializer.SerializeToUtf8Bytes(new { w = claims.WaveId, r = claims.RespondentId });
+        var issuedAt = claims.IssuedAt == 0 ? _timeProvider.GetUtcNow().ToUnixTimeSeconds() : claims.IssuedAt;
+        var expiresAt = claims.ExpiresAt == 0 ? _lifetimePolicy.GetExpiry(issuedAt) : claims.ExpiresAt;
+        if (expiresAt <= issuedAt)
+        {
+            throw new ArgumentException("The token expiry must be after its issue time.", nameof(claims));
+        }
+
+        var payload = JsonSerializer.SerializeToUtf8Bytes(new object[] { claims.WaveId, claims.RespondentId, issuedAt, expiresAt });
         var encodedPayload = Base64Url(payload);
         return
             $"{encodedPayload}.{Base64Url(HMACSHA256.HashData(_signingKey, Encoding.ASCII.GetBytes(encodedPayload)))}";
@@ -45,15 +57,22 @@ public sealed class TokenService(byte[] signingKey) : ITokenService
         try
         {
             using var document = JsonDocument.Parse(payload);
-            var root = document.RootElement;
-            var wave = root.GetProperty("w").GetString();
-            var respondent = root.GetProperty("r").GetString();
-            if (string.IsNullOrWhiteSpace(wave) || string.IsNullOrWhiteSpace(respondent))
+            var values = document.RootElement;
+            if (values.ValueKind != JsonValueKind.Array || values.GetArrayLength() != 4)
             {
                 return false;
             }
 
-            claims = new TokenClaims(wave, respondent);
+            var wave = values[0].GetString();
+            var respondent = values[1].GetString();
+            if (string.IsNullOrWhiteSpace(wave) || string.IsNullOrWhiteSpace(respondent) ||
+                !values[2].TryGetInt64(out var issuedAt) || !values[3].TryGetInt64(out var expiresAt) ||
+                expiresAt <= issuedAt || _timeProvider.GetUtcNow().ToUnixTimeSeconds() >= expiresAt)
+            {
+                return false;
+            }
+
+            claims = new TokenClaims(wave, respondent, issuedAt, expiresAt);
             return true;
         }
         catch (JsonException)

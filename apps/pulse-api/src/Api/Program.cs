@@ -60,6 +60,7 @@ app.UseCors("PulseCors");
 app.Use(async (context, next) =>
 {
     context.Response.Headers.CacheControl = "no-store";
+    context.Response.Headers["Referrer-Policy"] = "no-referrer";
     await next();
 });
 app.MapPulseEndpoints();

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
 using FluentAssertions;
 
 namespace AcceptanceTests;
@@ -83,6 +84,48 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
         var signedResponse = await application.Client.SendAsync(signedRequest);
 
         signedResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task Token_request_refreshes_an_unexpired_token_when_email_matches()
+    {
+        var sentEmailCount = application.Email.SentEmails.Count;
+        await application.Client.PostAsJsonAsync("/token", new
+        {
+            waveId = "pulse-2026",
+            surveyId = "ltp.supply-chain-confidence",
+            surveyVersion = "1.0.2",
+            email = "refresh@example.com",
+        });
+        var accessLink = new Uri(application.Email.SentEmails.Skip(sentEmailCount).Single().AccessUrl);
+        var token = Uri.UnescapeDataString(accessLink.Query[3..]);
+
+        var response = await application.Client.PostAsJsonAsync("/token", new { token, email = "refresh@example.com" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var refreshed = await response.Content.ReadFromJsonAsync<JsonElement>();
+        refreshed.GetProperty("token").GetString().Should().NotBeNullOrWhiteSpace();
+        refreshed.GetProperty("iat").GetInt64().Should().BeGreaterThan(0);
+        refreshed.GetProperty("exp").GetInt64().Should().BeGreaterThan(refreshed.GetProperty("iat").GetInt64());
+    }
+
+    [Fact]
+    public async Task Token_request_rejects_refresh_with_a_different_email()
+    {
+        var sentEmailCount = application.Email.SentEmails.Count;
+        await application.Client.PostAsJsonAsync("/token", new
+        {
+            waveId = "pulse-2026",
+            surveyId = "ltp.supply-chain-confidence",
+            surveyVersion = "1.0.2",
+            email = "refresh-bound@example.com",
+        });
+        var accessLink = new Uri(application.Email.SentEmails.Skip(sentEmailCount).Single().AccessUrl);
+        var token = Uri.UnescapeDataString(accessLink.Query[3..]);
+
+        var response = await application.Client.PostAsJsonAsync("/token", new { token, email = "other@example.com" });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [Theory]

@@ -13,7 +13,9 @@ defineEmits<{ clear: [] }>();
 <template>
   <div class="verification-status" role="status">
     <div class="verification-content d-flex align-center ga-2">
-      <v-chip color="success" size="small" variant="flat">Verified</v-chip>
+      <v-chip color="success" prepend-icon="mdi-shield-check-outline" size="small" variant="outlined">
+        Access confirmed
+      </v-chip>
       <div class="verification-message">{{ message }}</div>
       <ClearVerificationAction :verified="true" @clear="$emit('clear')"/>
     </div>

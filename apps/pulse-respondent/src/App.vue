@@ -67,9 +67,11 @@ const workspaceColumns = computed(() => {
 
 <template>
   <v-app>
-    <SurveyHeader :answered-count="answeredCount" :is-dark="isDark" :tips-open="tipsOpen"
+    <SurveyHeader :answered-count="answeredCount" :is-dark="isDark" :submitted="Boolean(submission)" :tips-open="tipsOpen"
+                  :verification-verified="verificationVerified"
                   :visible-count="visibleItems.length"
                   @open-navigation="leftOpen = !leftOpen"
+                  @select-review="selectReview"
                   @toggle-tips="tipsOpen = !tipsOpen"
                   @toggle-theme="toggleTheme"/>
     <v-main class="workspace-bg workspace-shell">

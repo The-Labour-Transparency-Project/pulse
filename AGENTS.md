@@ -28,8 +28,9 @@ insights matter because they build reputation and positioning.
   and usable in the relevant workflow.
 - Preserve survey IDs, versions, option semantics, privacy rules, and source
   traceability unless the task explicitly changes the instrument.
-- Treat the respondent credential as a long-lived signed bearer token that
-  gives the respondent access to their survey material; consume `t` links into
+- Treat the respondent credential as a time-limited signed respondent access
+  token. It gives the respondent access to their survey material and can be
+  refreshed while unexpired with the matching email; consume `t` links into
   version-scoped storage and remove the token from browser history immediately.
 - Treat respondent data as sensitive. Do not add direct identifiers or expose
   free-text responses in published outputs.

@@ -17,11 +17,13 @@ access link and `PUT /response` to save a response with an `Authorization:
 Bearer <token>` header. `GET /response/latest` is reserved for response
 resumption from the API.
 
-The token in the access link is a long-lived, signed bearer credential. It
-gives the respondent access to their survey material and authorises saving
-responses for that survey. It is not an expiring session and does not contain
-their email address. On entry, the app reads the `t` query parameter, stores
-the credential in the survey/version-scoped verification storage, and rewrites
+The token in the access link is a seven-day, signed bearer credential. It gives
+the respondent access to their survey material and authorises saving responses
+for that survey. Its compact payload contains the wave, respondent hash, issue
+time, and expiry time; it does not contain their email address. An unexpired
+credential is silently refreshed when the client has the matching email
+address. On entry, the app reads the `t` query parameter, stores the credential
+and its timestamps in survey/version-scoped verification storage, and rewrites
 browser history to remove `t` from the visible URL. The credential must never
 be logged or included in a response document.
 

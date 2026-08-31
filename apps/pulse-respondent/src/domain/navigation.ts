@@ -43,8 +43,8 @@ export function introductionFor(survey: SurveyDefinition): SurveyIntroduction {
         estimatedMinutes: 10,
         privacy: "Your survey responses are not linked to your email address. Results will only be reported in aggregate. Published outputs do not identify individual respondents or reproduce free-text responses.",
         reporting: "Research findings will be combined across respondents. Small groups are protected by minimum-group reporting rules.",
-        autosave: "Your responses are saved automatically as you go, so you can return and continue later on this device. You can return to any question and review your answer at any time.",
-        verification: "To submit, you will need a code sent to your email address. This helps ensure that real people are answering the form. No email address or personal information is stored as part of this verification process. Read Tips & Guidance to learn more. You can complete verification at any time before submitting the survey.",
+        autosave: "Your responses are saved automatically as you go, so you can return and continue later on this device while the survey is open. If your access link expires, request a new one using the same email address.",
+        verification: "Before submitting, we ask for your email address so we can send you a secure access link. Your email address is used for access verification and is not included with your survey response. You can complete verification at any time before submitting the survey.",
     };
 }
 
@@ -53,9 +53,9 @@ export function outroFor(survey: SurveyDefinition): SurveyOutro {
     return {
         title: "Thank you for taking part",
         description: "You have reached the end of the " + title + " survey.",
-        completionMessage: "Your responses remain saved on this device. You can return to the survey or open Review & submit whenever you are ready.",
+        completionMessage: "Your responses remain saved on this device. You can return to the survey or open Review & submit while the survey is open. If your access link expires, request a new one using the same email address.",
         submissionMessage: "Thank you for contributing to the Labour Transparency Project. Once enough responses have been received to protect anonymity, you will be able to see how your responses compare with the aggregated results. Where comparable information is available, you will also be able to see how industry views have changed over time. The results will contribute to the Labour Transparency Project's annual reporting on labour confidence, visibility and transparency across New Zealand agriculture and horticulture.",
-        nextStep: "Review is optional: unanswered questions are highlighted for awareness, but you can submit a partial response at any time.",
+        nextStep: "Review is optional: unanswered questions are highlighted for awareness, but you can submit a partial response at any time. After changes any answers submit will be available again.",
     };
 }
 
@@ -120,7 +120,7 @@ export const guidanceItems: GuidanceItem[] = [
         id: "submission-verification",
         kind: "info",
         scope: "survey",
-        title: "Your token protects your anonymity",
-        body: "We email you a secure token that contains no personally identifiable information. Because it is digitally signed by us, it proves that you are authorised to submit a response, helping prevent spam and automated submissions without identifying you. We do not store a copy, and only you have access to it. The token simply proves that we agreed you could take part, not who you are or how you responded."
+        title: "Why we ask for an email address",
+        body: "We send an access link to your email address so we can confirm access before you submit. The link does not contain your email address, and your email address is not included with your survey response. Responses are stored and reported separately from your email address and are used in aggregate research outputs."
     },
 ];

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { useDisplay } from "vuetify";
+import {useDisplay} from "vuetify";
 
 defineProps<{ answeredCount: number; visibleCount: number; isDark: boolean; tipsOpen: boolean }>();
 defineEmits<{ toggleTheme: []; openNavigation: []; toggleTips: [] }>();
-const { xs } = useDisplay();
+const {xs} = useDisplay();
 </script>
 
 <template>
-  <v-app-bar border="b" class="navigation-surface px-3 px-md-5" flat :height="xs ? 120 : 80">
+  <v-app-bar :height="xs ? 120 : 80" border="b" class="navigation-surface px-3 px-md-5" flat>
     <v-avatar class="mr-3" color="primary" size="38" variant="tonal">
-      <v-img alt="Labour Transparency Pulse" cover src="/favicon.svg" />
+      <v-img alt="Labour Transparency Pulse" cover src="/favicon.svg"/>
     </v-avatar>
     <div class="header-copy mr-8">
       <div class="app-name">Labour Transparency Pulse</div>
@@ -22,21 +22,22 @@ const { xs } = useDisplay();
       <div class="d-flex align-center ga-2">
         <v-progress-linear :model-value="visibleCount ? answeredCount / visibleCount * 100 : 0"
                            aria-label="Overall progress"
-                           class="progress-bar flex-grow-1" color="primary" height="8" rounded />
+                           class="progress-bar flex-grow-1" color="primary" height="8" rounded/>
         <span class="ui-metadata text-medium-emphasis progress-percentage">
         {{ visibleCount ? Math.round(answeredCount / visibleCount * 100) : 0 }}%
         </span>
       </div>
     </div>
-    <v-spacer />
+    <v-spacer/>
     <div class="header-actions d-flex align-center ga-1">
-      <v-btn :aria-pressed="tipsOpen" aria-label="Toggle Tips and Guidance" :class="['tips-toggle', { 'tips-toggle--active': tipsOpen }]"
+      <v-btn :aria-pressed="tipsOpen" :class="['tips-toggle', { 'tips-toggle--active': tipsOpen }]"
+             aria-label="Toggle Tips and Guidance"
              prepend-icon="mdi-lightbulb-on-outline" variant="text" @click="$emit('toggleTips')">
         <span class="d-none d-lg-inline">Tips &amp; Guidance</span>
       </v-btn>
-      <v-btn aria-label="Toggle colour theme" icon="mdi-theme-light-dark" variant="text" @click="$emit('toggleTheme')" />
+      <v-btn aria-label="Toggle colour theme" icon="mdi-theme-light-dark" variant="text" @click="$emit('toggleTheme')"/>
       <v-btn aria-label="Open navigation" class="d-lg-none" icon="mdi-menu" variant="text"
-             @click="$emit('openNavigation')" />
+             @click="$emit('openNavigation')"/>
     </div>
   </v-app-bar>
 </template>

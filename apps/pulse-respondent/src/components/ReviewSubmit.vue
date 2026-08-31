@@ -12,6 +12,8 @@ const props = defineProps<{
   requested: boolean;
   verified: boolean;
   verificationError: string;
+  submitting: boolean;
+  submissionError: string;
 }>();
 defineEmits<{
   submit: [];
@@ -45,30 +47,25 @@ defineEmits<{
         Some questions are unanswered. You may return to them, or submit now with a partial response.
       </v-alert>
       <div v-if="props.verified" class="review-verification-panel mb-8">
-        <VerificationStatus @clear="$emit('clearVerification')" />
+        <VerificationStatus @clear="$emit('clearVerification')"/>
       </div>
-      <VerificationForm v-else class="mb-8" :code="props.code" :email="props.email"
-                        :requested="props.requested" :verification-error="props.verificationError"
+      <VerificationForm v-else :code="props.code" :email="props.email" :requested="props.requested"
+                        :verification-error="props.verificationError" class="mb-8"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')" />
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"/>
+      <v-alert v-if="props.submissionError" class="mb-4" color="error" icon="mdi-cloud-alert-outline" variant="tonal">
+        {{ props.submissionError }} You can try submitting again.
+      </v-alert>
       <div class="d-flex flex-wrap ga-3">
         <div class="d-flex align-center ga-2">
-
-          <v-badge
-              bordered
-              color="tertiary"
-              content="Coming Soon"
-              location="top end"
-              min-height="25"
-              offset-x="20">
-            <v-btn color="primary" disabled min-width="250" @click="$emit('submit')">
-              Submit response
-            </v-btn>
-          </v-badge>
+          <v-btn :loading="props.submitting" :disabled="props.submitting" color="primary" min-width="250"
+                 @click="$emit('submit')">
+            {{ props.submitting ? "Saving response…" : "Submit response" }}
+          </v-btn>
         </div>
-        <v-spacer />
+        <v-spacer/>
         <ClearAnswersAction :has-answers="props.answeredCount > 0" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')" />
+                            @clear="$emit('clearAnswers')"/>
         <v-btn v-if="showReturnButton" variant="text" @click="$emit('returnToSurvey')">Return to survey</v-btn>
       </div>
     </div>

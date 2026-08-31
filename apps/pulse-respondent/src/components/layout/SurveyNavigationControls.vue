@@ -1,10 +1,10 @@
-<script setup lang="ts">
-import { computed } from "vue";
-import { useDisplay } from "vuetify";
+<script lang="ts" setup>
+import {computed} from "vue";
+import {useDisplay} from "vuetify";
 
 defineProps<{ canGoPrevious: boolean }>();
 defineEmits<{ previous: []; previousUnanswered: []; nextUnanswered: []; next: [] }>();
-const { xs } = useDisplay();
+const {xs} = useDisplay();
 const compactMobile = computed(() => xs.value);
 </script>
 
@@ -23,13 +23,14 @@ const compactMobile = computed(() => xs.value);
     </div>
     <v-menu v-else location="top" scroll-strategy="close">
       <template #activator="{ props: menuProps }">
-        <v-btn v-bind="menuProps" aria-label="Unanswered navigation" prepend-icon="mdi-format-list-bulleted" variant="outlined">
+        <v-btn aria-label="Unanswered navigation" prepend-icon="mdi-format-list-bulleted" v-bind="menuProps"
+               variant="outlined">
           Unanswered
         </v-btn>
       </template>
       <v-list density="compact" min-width="220">
-        <v-list-item prepend-icon="mdi-chevron-up" title="Previous unanswered" @click="$emit('previousUnanswered')" />
-        <v-list-item prepend-icon="mdi-chevron-down" title="Next unanswered" @click="$emit('nextUnanswered')" />
+        <v-list-item prepend-icon="mdi-chevron-up" title="Previous unanswered" @click="$emit('previousUnanswered')"/>
+        <v-list-item prepend-icon="mdi-chevron-down" title="Next unanswered" @click="$emit('nextUnanswered')"/>
       </v-list>
     </v-menu>
     <v-btn append-icon="mdi-arrow-right" color="primary" @click="$emit('next')">Next</v-btn>

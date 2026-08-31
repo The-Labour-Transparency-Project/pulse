@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import {ref} from "vue";
 
 const props = defineProps<{ verified: boolean }>();
 defineEmits<{ clear: [] }>();
@@ -21,7 +21,7 @@ const dialogOpen = ref(false);
         the same person.
       </v-card-text>
       <v-card-actions>
-        <v-spacer />
+        <v-spacer/>
         <v-btn variant="text" @click="dialogOpen = false">Keep verification</v-btn>
         <v-btn color="primary" variant="flat" @click="$emit('clear'); dialogOpen = false">
           Clear verification

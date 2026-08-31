@@ -1,0 +1,18 @@
+.idea
+
+# Terraform
+**/.terraform/
+**/terraform.logs
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+.terraform
+**/terraform.tfstate*.backup
+tfplan
+# ignore lock files and are created on the build agent
+.terraform.lock.hcl
+
+*.log
+terraform.tfvars
+.env
+¡

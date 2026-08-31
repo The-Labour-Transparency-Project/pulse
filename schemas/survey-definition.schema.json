@@ -128,7 +128,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "wave": {
+        "waveId": {
           "type": "string"
         },
         "priorVersion": {

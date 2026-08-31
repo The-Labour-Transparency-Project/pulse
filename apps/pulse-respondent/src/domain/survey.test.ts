@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 import definitionJson from "../../../../surveys/labour-transparency-pulse/v1/definition.json";
 import {
     answerProgress,
@@ -37,7 +37,7 @@ describe("derived primary choices", () => {
     });
 
     it("hides a primary question for one selected source option and never auto-selects", () => {
-        const answers: Answers = { "context.activity": ["activity.0"] };
+        const answers: Answers = {"context.activity": ["activity.0"]};
         expect(
             evaluateExpression(
                 item("context.primary-activity").visibleWhen,
@@ -54,7 +54,7 @@ describe("derived primary choices", () => {
     });
 
     it("shows only eligible selected activities and appends no-primary for multiple selections", () => {
-        const answers: Answers = { "context.activity": ["activity.0", "activity.15", "activity.16"] };
+        const answers: Answers = {"context.activity": ["activity.0", "activity.15", "activity.16"]};
         expect(
             evaluateExpression(
                 item("context.primary-activity").visibleWhen,
@@ -93,14 +93,14 @@ describe("derived primary choices", () => {
         expect(
             evaluateExpression(
                 primary.visibleWhen,
-                { "context.region": [nz[0], outside] },
+                {"context.region": [nz[0], outside]},
                 survey,
             ),
         ).toBe(false);
         expect(
             evaluateExpression(
                 primary.visibleWhen,
-                { "context.region": [...nz, outside] },
+                {"context.region": [...nz, outside]},
                 survey,
             ),
         ).toBe(true);
@@ -137,7 +137,7 @@ describe("multi-select semantics and validation", () => {
     it("exposes min and max validation state", () => {
         const constrained = {
             ...item("awareness-risk.hidden-risk"),
-            validation: { minSelections: 2, maxSelections: 3 },
+            validation: {minSelections: 2, maxSelections: 3},
         };
         expect(multiSelectValidationError(constrained, ["a"])).toContain(
             "at least",
@@ -205,7 +205,7 @@ describe("answer status", () => {
 
     it("keeps partial matrix progress distinct from unanswered", () => {
         const matrix = item("awareness-risk.risk");
-        const value = { [matrix.rows![0].id]: "risk.0" };
+        const value = {[matrix.rows![0].id]: "risk.0"};
 
         expect(answerStatus(matrix, value, false)).toBe("partial");
     });
@@ -234,7 +234,7 @@ describe("question navigator filtering", () => {
 
     it("keeps partially completed matrix items in the unanswered view", () => {
         const matrix = item("awareness-risk.risk");
-        const value = { [matrix.rows![0].id]: "risk.0" };
+        const value = {[matrix.rows![0].id]: "risk.0"};
 
         expect(
             matchesQuestionNavigatorFilter(matrix, value, "Unanswered only"),
@@ -245,7 +245,7 @@ describe("question navigator filtering", () => {
 describe("localized item guidance", () => {
     it("resolves an instruction in the active locale", () => {
         expect(
-            localized({ "en-NZ": "Select one.", mi: "Tīpakohia kotahi." }, "mi"),
+            localized({"en-NZ": "Select one.", mi: "Tīpakohia kotahi."}, "mi"),
         ).toBe("Tīpakohia kotahi.");
     });
 
@@ -254,7 +254,7 @@ describe("localized item guidance", () => {
     });
 
     it("falls back to the first available locale", () => {
-        expect(localized({ "en-NZ": "Select up to three." }, "mi")).toBe(
+        expect(localized({"en-NZ": "Select up to three."}, "mi")).toBe(
             "Select up to three.",
         );
     });
@@ -262,7 +262,7 @@ describe("localized item guidance", () => {
     it("keeps instructions and descriptions independent", () => {
         const itemWithGuidance = {
             ...item("context.seasonal-worker-count"),
-            instruction: { "en-NZ": "Select one." },
+            instruction: {"en-NZ": "Select one."},
         };
         expect(localized(itemWithGuidance.instruction, "en-NZ")).toBe(
             "Select one.",

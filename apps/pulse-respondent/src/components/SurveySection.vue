@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+import {computed} from "vue";
 import QuestionRenderer from "./QuestionRenderer.vue";
 import {
-  evaluateExpression,
-  isAnswered,
-  isSelectedOptionsDependent,
-  localized,
   type Answers,
   type DetailAnswers,
+  evaluateExpression,
+  isSelectedOptionsDependent,
+  localized,
   type SurveyDefinition,
   type SurveyItem,
   type SurveyOption,
@@ -37,12 +36,13 @@ function isItemAvailable(
 }
 
 const visibleQuestionIds = computed(() => props.section.itemIds.filter((id) =>
-  props.visibleItems.some((item) => item.id === id),
+    props.visibleItems.some((item) => item.id === id),
 ));
 </script>
 
 <template>
-  <v-card-item :data-section-index="survey.sections.findIndex((candidate) => candidate.id === section.id)" class="section-anchor px-4 px-md-6 pt-5 pb-2">
+  <v-card-item :data-section-index="survey.sections.findIndex((candidate) => candidate.id === section.id)"
+               class="section-anchor px-4 px-md-6 pt-5 pb-2">
     <div class="d-flex align-center ga-2 mb-2">
       <v-chip class="ui-badge" color="primary" rounded="4" size="small" variant="tonal">Section
         {{ survey.sections.findIndex((candidate) => candidate.id === section.id) + 1 }} of {{ survey.sections.length }}

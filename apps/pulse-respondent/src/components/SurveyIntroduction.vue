@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SurveyIntroduction } from "../domain/navigation";
+import type {SurveyIntroduction} from "../domain/navigation";
 import ClearAnswersAction from "./ClearAnswersAction.vue";
 
 const props = defineProps<{ introduction: SurveyIntroduction; hasProgress: boolean; verified: boolean }>();
@@ -37,7 +37,7 @@ defineEmits<{ start: []; clearAnswers: [] }>();
       </v-alert>
 
       <p class="survey-section-description mb-6">
-        <v-icon class="mr-1" icon="mdi-information-outline" size="18" />
+        <v-icon class="mr-1" icon="mdi-information-outline" size="18"/>
         {{ introduction.autosave }}
       </p>
       <div class="d-flex align-center justify-space-between flex-wrap ga-3">
@@ -54,7 +54,7 @@ defineEmits<{ start: []; clearAnswers: [] }>();
         </v-badge>
 
         <ClearAnswersAction :has-answers="props.hasProgress" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')" />
+                            @clear="$emit('clearAnswers')"/>
       </div>
     </div>
   </section>

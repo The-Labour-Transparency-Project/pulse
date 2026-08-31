@@ -1,10 +1,10 @@
 .idea
 .DS_Store
-**/node_modules/
-**/dist/
-
-# Terraform local state and plans
-**/.terraform/
-*.tfstate
-*.tfstate.*
-*.tfplan
+node_modules
+dist
+*.logs
+/apps/pulse-api/src/Api/appsettings.Development.json
+/apps/pulse-respondent/.env
+/apps/pulse-respondent/.env.localdev
+/apps/pulse-respondent/.env.localstack
+/apps/pulse-respondent/.env.production

@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import type { PanelSide } from "../../composables/useResizablePanels";
+<script lang="ts" setup>
+import type {PanelSide} from "../../composables/useResizablePanels";
 
 const props = defineProps<{ side: PanelSide; resizing: boolean }>();
 const emit = defineEmits<{ resize: [event: PointerEvent]; nudge: [delta: number] }>();
@@ -14,33 +14,33 @@ function onKeydown(event: KeyboardEvent) {
 
 <template>
   <div
-    :aria-label="`Resize ${side} panel`"
-    :class="['panel-resize-handle', { 'is-resizing': resizing }]"
-    role="separator"
-    tabindex="0"
-    @keydown="onKeydown"
-    @pointerdown="$emit('resize', $event)"
+      :aria-label="`Resize ${side} panel`"
+      :class="['panel-resize-handle', { 'is-resizing': resizing }]"
+      role="separator"
+      tabindex="0"
+      @keydown="onKeydown"
+      @pointerdown="$emit('resize', $event)"
   >
-    <span />
+    <span/>
   </div>
 </template>
 
 <style scoped>
 .panel-resize-handle {
-    align-items: center;
-    cursor: col-resize;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    touch-action: none;
-    user-select: none;
-    z-index: 2;
+  align-items: center;
+  cursor: col-resize;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  touch-action: none;
+  user-select: none;
+  z-index: 2;
 }
 
 .panel-resize-handle::before {
-    content: "";
-    inset: 0 -2px;
-    position: absolute;
+  content: "";
+  inset: 0 -2px;
+  position: absolute;
 }
 
 .panel-resize-handle span {

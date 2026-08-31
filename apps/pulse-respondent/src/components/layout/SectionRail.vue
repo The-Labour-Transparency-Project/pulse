@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { type Answers, localized, type SurveyDefinition } from "../../domain/survey";
-import type { ViewMode } from "../../composables/useSurveyExperience";
-import type { SurveyDestination } from "../../domain/navigation";
+import {type Answers, localized, type SurveyDefinition} from "../../domain/survey";
+import type {ViewMode} from "../../composables/useSurveyExperience";
+import type {SurveyDestination} from "../../domain/navigation";
 
 defineProps<{
   survey: SurveyDefinition;
@@ -41,7 +41,7 @@ defineEmits<{
       <span>Survey sections</span>
       <span class="ui-metadata text-medium-emphasis">{{ survey.sections.length }} sections</span>
     </div>
-    <v-divider class="mb-2" />
+    <v-divider class="mb-2"/>
     <v-list class="section-list bg-transparent pa-0">
       <v-list-item :active="destination.type === 'introduction'"
                    class="section-item survey-destination-item destination-introduction-item" rounded="lg"
@@ -64,7 +64,7 @@ defineEmits<{
           }} / {{ sectionVisibleCount(section.id) }}</span>
           <v-progress-circular
               :model-value="sectionVisibleCount(section.id) ? sectionAnswered(section.id) / sectionVisibleCount(section.id) * 100 : 0"
-              color="primary" size="20" width="3" />
+              color="primary" size="20" width="3"/>
         </template>
       </v-list-item>
       <v-list-item v-if="!submitted" :active="destination.type === 'review'"

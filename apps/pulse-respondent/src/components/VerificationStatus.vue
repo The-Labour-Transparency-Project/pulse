@@ -15,7 +15,7 @@ defineEmits<{ clear: [] }>();
     <div class="verification-content d-flex align-center ga-2">
       <v-chip color="success" size="small" variant="flat">Verified</v-chip>
       <div class="verification-message">{{ message }}</div>
-      <ClearVerificationAction :verified="true" @clear="$emit('clear')" />
+      <ClearVerificationAction :verified="true" @clear="$emit('clear')"/>
     </div>
   </div>
 </template>

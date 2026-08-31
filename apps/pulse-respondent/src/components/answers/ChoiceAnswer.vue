@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { detailAnswerKey, type DetailAnswers, type SurveyItem, type SurveyOption } from '../../domain/survey'
+import {computed} from 'vue'
+import {detailAnswerKey, type DetailAnswers, type SurveyItem, type SurveyOption} from '../../domain/survey'
 
 type AnswerValue = string | string[] | undefined
 
@@ -61,7 +61,7 @@ const toggleSelection = (optionId: string, selected: boolean | null) => {
   <v-radio-group v-else v-model="answerModel" color="primary" density="compact" hide-details>
     <template v-for="option in options" :key="option.id">
       <v-radio :label="option.label['en-NZ'] ?? Object.values(option.label)[0]" :value="option.id" color="primary"
-               density="compact" />
+               density="compact"/>
       <v-textarea
           v-if="option.detailInput && selectedIds.includes(option.id) && option.detailInput.type === 'longText'"
           :model-value="detailAnswers[detailAnswerKey(item.id, option.id)]"

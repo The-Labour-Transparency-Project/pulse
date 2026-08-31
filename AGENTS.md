@@ -9,6 +9,7 @@ traceable to explicit versions and approved research workflows.
 ## Product north star
 
 Always remember that this code is about building the intelligence layer.
+
 - The survey is the input.
 - The data is the asset.
 - The insights are the product.
@@ -27,6 +28,9 @@ insights matter because they build reputation and positioning.
   and usable in the relevant workflow.
 - Preserve survey IDs, versions, option semantics, privacy rules, and source
   traceability unless the task explicitly changes the instrument.
+- Treat the respondent credential as a long-lived signed bearer token that
+  gives the respondent access to their survey material; consume `t` links into
+  version-scoped storage and remove the token from browser history immediately.
 - Treat respondent data as sensitive. Do not add direct identifiers or expose
   free-text responses in published outputs.
 - Prefer a small end-to-end vertical slice over scaffolding broad abstractions.

@@ -1,0 +1,11 @@
+aws_region          = "ap-southeast-2"
+bucket_name         = "ltp-pulse-results"
+lambda_artifact_path = "../../../apps/pulse-api/artifacts/pulse-api.zip"
+respondent_base_url = "https://survey.labourtransparency.com"
+ses_sender          = "no-reply@labourtransparency.com"
+cors_allow_origins  = ["https://survey.labourtransparency.com"]
+# Supply these two sensitive values through TeamCity as TF_VAR_* environment
+# variables, rather than committing them to this file:
+# 32-byte, base64-encoded keys
+# respondent_identity_key =
+# token_signing_key       =

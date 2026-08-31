@@ -34,7 +34,8 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [x] Keep question navigation controls fixed below independently scrolling question content
 - [ ] Keep the dismissible tip banner as a full-width bottom overlay
 - [x] Represent the Introduction as a navigable survey destination
-- [x] Explain the survey scope, repeat-wave purpose, optional questions, and valid “Don’t know” responses in the Introduction
+- [x] Explain the survey scope, repeat-wave purpose, optional questions, and valid “Don’t know” responses in the
+  Introduction
 - [x] Start new respondent sessions on the Introduction and preserve the working position
 - [x] Provide a navigable Outro destination after the final question
 - [x] Provide optional Review & submit navigation with partial submission support
@@ -88,8 +89,9 @@ the current respondent renderer registry and the types present in v1.
 - [ ] Enforce required answers and item-level validation
 - [ ] Add consent capture and review-before-submit
 - [x] Serialize answers to `survey-response.schema.json`
-- [ ] Add submit, retry, success, and failure states
+- [x] Add submit, retry, success, and failure states
 - [x] Require a persisted signed-token email verification before response submission
+- [x] Consume long-lived signed access tokens from `t` links and remove them from browser history
 - [x] Allow verified respondents to clear verification with a duplicate-submission warning
 - [x] Allow respondents to clear all answers without clearing verification
 - [x] Allow verified respondents to clear verification from Review & submit and Outro
@@ -97,12 +99,26 @@ the current respondent renderer registry and the types present in v1.
 
 ## API and data stewardship
 
-- [ ] Create the ASP.NET Core `pulse-api` project
+- [x] Create the ASP.NET Core `pulse-api` project
+- [x] Add xUnit integration-test startup with constructor injection and opt-in S3 lifecycle setup
+- [x] Test the Minimal API through `WebApplicationFactory<Program>` with test services composed through DI
 - [ ] Serve a published survey definition by ID and version
-- [ ] Accept and validate response submissions
-- [ ] Persist submissions with provenance and completion status
+- [x] Accept and validate response submissions
+- [x] Persist submissions with provenance and completion status
 - [ ] Add idempotency and safe retry handling
-- [ ] Add privacy-preserving response access for research operations
+- [x] Add privacy-preserving response access for research operations
+- [x] Derive deterministic survey-scoped respondent identities from normalised email via HMAC
+- [x] Issue permanent signed respondent credentials and recover access through SES email
+- [x] Keep respondent credentials compact by carrying only the wave and a 64-bit respondent checksum
+- [x] Support local console email delivery with token logging and AWS SES delivery by environment setting
+- [x] Use the local log email strategy for both direct and LocalStack API development
+- [x] Provision the local SES sender identity for LocalStack
+- [x] Store immutable response versions in an S3-derived respondent namespace
+- [x] Scope respondent credentials, drafts, responses, and S3 keys by wave ID
+- [x] Provide a configurable CORS policy for the respondent app
+- [x] Configure respondent API URLs through `VITE_PULSE_API_BASE_URL`
+- [x] Provide non-mutating S3 diagnostics with classified server-side failure logs
+- [x] Retry response save once after S3 provisioning when storage is unavailable
 
 ## Research operations
 
@@ -115,7 +131,8 @@ the current respondent renderer registry and the types present in v1.
 ## Published intelligence
 
 - [ ] Define approved aggregate metrics for the 2026 wave
-- [ ] Give respondents access to anonymity-protected comparisons with aggregate results when enough responses have been received
+- [ ] Give respondents access to anonymity-protected comparisons with aggregate results when enough responses have been
+  received
 - [ ] Build a reproducible analysis/reporting pipeline
 - [ ] Scaffold the public insights application
 - [ ] Publish methodology, scope, limitations, and dataset provenance
@@ -123,7 +140,15 @@ the current respondent renderer registry and the types present in v1.
 
 ## Delivery hygiene
 
+- [x] Provide local and LocalStack respondent dev build targets
+- [x] Provide one repeatable managed Lambda packaging process for local and production Terraform
 - [ ] Add workspace-level checks and CI
-- [ ] Add local API/database development environment
-- [ ] Document deployment configuration and secret handling
+- [x] Add local API development environment using LocalStack and persistent MinIO response storage
+- [x] Use a predictable LocalStack Lambda Function URL subdomain
+- [x] Provision the production Lambda, Function URL, private S3, SES permissions, logging, and TeamCity-injected secret
+  environment with Terraform
+- [x] Provision shared SES domain sending identity, DKIM, custom MAIL FROM, configuration set, and scoped runtime IAM
+  permissions with external-DNS and SES-production-access guidance
+- [x] Document deployment configuration and secret handling
+- [x] Add a privileged Provisioner Factory with controlled provisioner users and group policy
 - [ ] Add accessibility and privacy review checklists

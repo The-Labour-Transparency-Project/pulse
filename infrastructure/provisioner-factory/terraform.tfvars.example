@@ -1,0 +1,78 @@
+aws_region = "ap-southeast-2"
+
+# These are deliberately project-scoped IAM users. Do not create their access
+# keys in Terraform; create them once through an approved credential workflow
+# and store them only in TeamCity's secure parameters.
+provisioner_users = {
+  production = {
+    user_name = "pulse-production-provisioner"
+  }
+}
+
+environment_provisioners = {
+  production = {
+    terraform_state_bucket_name = "terraform-state-picmi-production"
+  }
+}
+
+provisioner_managed_policy_arns = [
+  "arn:aws:iam::aws:policy/AmazonS3FullAccess",
+  "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess",
+  "arn:aws:iam::aws:policy/AmazonSESFullAccess",
+  "arn:aws:iam::aws:policy/AWSLambda_FullAccess"
+]
+
+# This policy is attached to the Provisioners group. Keep the account ID,
+# bucket names, function name, and log group aligned with the target environment.
+provisioner_policy_json = <<-JSON
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:ListBucket"],
+      "Resource": "arn:aws:s3:::terraform-state-ltp-production"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": "arn:aws:s3:::terraform-state-ltp-production/network/terraform.tfstate"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole",
+        "iam:DeleteRole",
+        "iam:GetRole",
+        "iam:UpdateAssumeRolePolicy",
+        "iam:TagRole",
+        "iam:UntagRole",
+        "iam:PutRolePolicy",
+        "iam:DeleteRolePolicy",
+        "iam:GetRolePolicy"
+      ],
+      "Resource": "arn:aws:iam::796303379981:role/pulse-api-production-execution"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["iam:ListAttachedRolePolicies", "iam:ListRolePolicies"],
+      "Resource": "*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["iam:PassRole"],
+      "Resource": "arn:aws:iam::796303379981:role/pulse-api-production-execution",
+      "Condition": {"StringEquals": {"iam:PassedToService": "lambda.amazonaws.com"}}
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["sts:GetCallerIdentity"],
+      "Resource": "*"
+    }
+  ]
+}
+JSON
+
+tags = {
+  Owner = "platform"
+}

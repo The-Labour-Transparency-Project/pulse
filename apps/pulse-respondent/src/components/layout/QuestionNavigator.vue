@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch, type ComponentPublicInstance } from "vue";
+import {type ComponentPublicInstance, computed, nextTick, ref, watch} from "vue";
 import {
   answerProgress,
+  type Answers,
   answerStatus,
   isItemAnswered,
-  matchesQuestionNavigatorFilter,
   isSelectedOptionsDependent,
   localized,
-  type Answers,
+  matchesQuestionNavigatorFilter,
   type QuestionNavigatorFilter,
   type SurveyDefinition,
   type SurveyItem
@@ -42,10 +42,10 @@ function setQuestionElement(id: string, element: Element | ComponentPublicInstan
 async function bringCurrentQuestionIntoView(id?: string) {
   await nextTick();
   if (!id) return;
-  questionElements.value.get(id)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  questionElements.value.get(id)?.scrollIntoView({block: "nearest", behavior: "smooth"});
 }
 
-watch(() => props.currentQuestionId, bringCurrentQuestionIntoView, { immediate: true });
+watch(() => props.currentQuestionId, bringCurrentQuestionIntoView, {immediate: true});
 
 const currentSectionIndex = computed(() => props.survey.sections.findIndex((section) =>
     section.itemIds.includes(props.currentQuestionId ?? ""),
@@ -53,7 +53,7 @@ const currentSectionIndex = computed(() => props.survey.sections.findIndex((sect
 
 function progressFor(id: string) {
   const item = props.itemsById.get(id);
-  return item ? answerProgress(item, props.answers[id]) : { completed: 0, total: 1, complete: false };
+  return item ? answerProgress(item, props.answers[id]) : {completed: 0, total: 1, complete: false};
 }
 
 function statusFor(id: string) {
@@ -157,7 +157,7 @@ function isNavigatorItem(id: string) {
         </template>
       </v-list>
 
-      <v-divider class="legend-divider mt-3 mb-3" />
+      <v-divider class="legend-divider mt-3 mb-3"/>
       <div class="navigator-legend d-flex ga-4 ui-metadata text-medium-emphasis">
         <span><v-icon color="success" size="16">mdi-check-circle-outline</v-icon> Answered</span>
         <span><v-icon color="primary" size="16">mdi-circle-outline</v-icon> Unanswered</span>

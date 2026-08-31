@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, watch, type ComponentPublicInstance } from "vue";
-import { useDisplay } from "vuetify";
+import {type ComponentPublicInstance, nextTick, onMounted, ref, watch} from "vue";
+import {useDisplay} from "vuetify";
 import SurveySection from "../SurveySection.vue";
 import SurveyIntroduction from "../SurveyIntroduction.vue";
 import SurveyOutro from "../SurveyOutro.vue";
@@ -11,12 +11,15 @@ import {
   type DetailAnswers,
   type SurveyDefinition,
   type SurveyItem,
-  type SurveySection as SurveySectionDefinition,
-  type SurveyOption
+  type SurveyOption,
+  type SurveySection as SurveySectionDefinition
 } from "../../domain/survey";
-import type { ViewMode } from "../../composables/useSurveyExperience";
-import type { SectionNavigationRequest } from "../../composables/useSurveyExperience";
-import type { SurveyDestination, SurveyIntroduction as SurveyIntroductionContent, SurveyOutro as SurveyOutroContent } from "../../domain/navigation";
+import type {SectionNavigationRequest, ViewMode} from "../../composables/useSurveyExperience";
+import type {
+  SurveyDestination,
+  SurveyIntroduction as SurveyIntroductionContent,
+  SurveyOutro as SurveyOutroContent
+} from "../../domain/navigation";
 
 const props = defineProps<{
   viewMode: ViewMode;
@@ -29,6 +32,8 @@ const props = defineProps<{
   answeredCount: number;
   visibleCount: number;
   submitted: boolean;
+  submitting: boolean;
+  submissionError: string;
   showIntroductionInContinuous: boolean;
   itemsById: Map<string, SurveyItem>;
   answers: Answers;
@@ -67,7 +72,7 @@ const emit = defineEmits<{
 const card = ref<ComponentPublicInstance | null>(null);
 const programmaticScroll = ref(false);
 const interactionQuestionId = ref<string | null>(null);
-const { xs } = useDisplay();
+const {xs} = useDisplay();
 
 function cardElement() {
   return card.value?.$el instanceof HTMLElement ? card.value.$el : null;
@@ -78,14 +83,14 @@ function updateQuestionInView() {
   if (props.viewMode === "question" || !element) return;
   const cardTop = element.getBoundingClientRect().top;
   const questions = Array.from(element.querySelectorAll<HTMLElement>("[data-question-id]"))
-    .filter((element) => element.offsetParent !== null);
+      .filter((element) => element.offsetParent !== null);
   if (!questions.length) return;
 
   const current = questions.reduce<HTMLElement | undefined>((selected, question) => {
     const questionTop = question.getBoundingClientRect().top;
     return questionTop <= cardTop + 96 && (!selected || questionTop > selected.getBoundingClientRect().top)
-      ? question
-      : selected;
+        ? question
+        : selected;
   }, undefined) ?? questions[0];
   const id = current.dataset.questionId;
   if (id) emit("questionInView", id);
@@ -119,7 +124,7 @@ async function bringCurrentQuestionIntoView(id?: string) {
   const target = cardElement()?.querySelector<HTMLElement>(`[data-question-id="${id}"]`);
   if (!target) return;
   programmaticScroll.value = true;
-  target.scrollIntoView({ block: "start", behavior: "auto" });
+  target.scrollIntoView({block: "start", behavior: "auto"});
   requestAnimationFrame(() => {
     programmaticScroll.value = false;
   });
@@ -131,7 +136,7 @@ async function bringSelectedSectionIntoView(request: SectionNavigationRequest | 
   const target = cardElement()?.querySelector<HTMLElement>(`[data-section-index="${request.index}"]`);
   if (!target) return;
   programmaticScroll.value = true;
-  target.scrollIntoView({ block: "start", behavior: "auto" });
+  target.scrollIntoView({block: "start", behavior: "auto"});
   requestAnimationFrame(() => {
     programmaticScroll.value = false;
   });
@@ -143,7 +148,7 @@ async function bringDestinationIntoView(destination: SurveyDestination) {
   const target = cardElement()?.querySelector<HTMLElement>(`[data-survey-destination="${destination.type}"]`);
   if (!target) return;
   programmaticScroll.value = true;
-  target.scrollIntoView({ block: "start", behavior: "auto" });
+  target.scrollIntoView({block: "start", behavior: "auto"});
   requestAnimationFrame(() => {
     programmaticScroll.value = false;
   });
@@ -153,15 +158,15 @@ onMounted(updateQuestionInView);
 watch(() => [props.currentQuestionId, props.viewMode], ([id, mode], previous) => {
   const [previousId, previousMode] = previous ?? [];
   const changedFromInteraction = interactionQuestionId.value === id
-    && id !== previousId
-    && mode === previousMode;
+      && id !== previousId
+      && mode === previousMode;
   if (changedFromInteraction) {
     interactionQuestionId.value = null;
     return;
   }
   interactionQuestionId.value = null;
   bringCurrentQuestionIntoView(id);
-}, { immediate: true });
+}, {immediate: true});
 watch(() => props.sectionNavigationRequest?.token, () => {
   bringSelectedSectionIntoView(props.sectionNavigationRequest);
 });
@@ -176,80 +181,87 @@ watch(() => props.destination.type, (type) => {
   <section class="question-canvas pa-3 pa-md-4">
     <div class="question-card-shell" @click="updateQuestionFromInteraction" @focusin="updateQuestionFromInteraction">
       <v-card ref="card" class="question-card" elevation="1" rounded="lg" @scroll.passive="handleScroll">
-      <template v-if="viewMode === 'continuous'">
-        <div v-if="showIntroductionInContinuous" class="continuous-destination"
-             data-survey-destination="introduction">
-          <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction" :verified="verificationVerified"
-                              @start="$emit('start')" @clear-answers="$emit('clearAnswers')" />
-        </div>
-        <template v-for="surveySection in survey.sections" :key="surveySection.id">
-          <SurveySection
-              :answer-options="answerOptions"
-              :answers="answers"
-              :default-locale="defaultLocale"
-              :detail-answers="detailAnswers"
-              :item-number="itemNumber"
-              :items-by-id="itemsById"
-              :row-answer-options="rowAnswerOptions"
-              :section="surveySection"
-              :survey="survey"
-              :visible-items="visibleItems"
-          />
+        <template v-if="viewMode === 'continuous'">
+          <div v-if="showIntroductionInContinuous" class="continuous-destination"
+               data-survey-destination="introduction">
+            <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction"
+                                :verified="verificationVerified"
+                                @start="$emit('start')" @clear-answers="$emit('clearAnswers')"/>
+          </div>
+          <template v-for="surveySection in survey.sections" :key="surveySection.id">
+            <SurveySection
+                :answer-options="answerOptions"
+                :answers="answers"
+                :default-locale="defaultLocale"
+                :detail-answers="detailAnswers"
+                :item-number="itemNumber"
+                :items-by-id="itemsById"
+                :row-answer-options="rowAnswerOptions"
+                :section="surveySection"
+                :survey="survey"
+                :visible-items="visibleItems"
+            />
+          </template>
+          <div v-if="!submitted" class="continuous-destination" data-survey-destination="review">
+            <ReviewSubmit :answered-count="answeredCount" :code="verificationCode" :email="verificationEmail"
+                          :requested="verificationRequested" :show-return-button="false"
+                          :verification-error="verificationError"
+                          :submitting="submitting" :submission-error="submissionError"
+                          :verified="verificationVerified" :visible-count="visibleCount"
+                          @submit="$emit('submit')" @update:email="$emit('update:email', $event)"
+                          @update:code="$emit('update:code', $event)" @request-code="$emit('requestCode')"
+                          @confirm-code="$emit('confirmCode')"
+                          @clear-verification="$emit('clearVerification')"
+                          @clear-answers="$emit('clearAnswers')" @return-to-survey="$emit('returnToSurvey')"/>
+          </div>
+          <div v-if="submitted" class="continuous-destination" data-survey-destination="outro">
+            <SurveyOutro :answered-count="answeredCount" :outro="outro" :show-return-button="false"
+                         :submitted="submitted"
+                         :verified="verificationVerified" :visible-count="visibleCount"
+                         @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
+                         @clear-verification="$emit('clearVerification')"/>
+          </div>
         </template>
-        <div v-if="!submitted" class="continuous-destination" data-survey-destination="review">
-          <ReviewSubmit :answered-count="answeredCount" :show-return-button="false" :visible-count="visibleCount"
-                        :email="verificationEmail" :code="verificationCode" :requested="verificationRequested"
-                        :verified="verificationVerified" :verification-error="verificationError"
-                        @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
-                        @clear-verification="$emit('clearVerification')"
-                        @clear-answers="$emit('clearAnswers')"
-                        @return-to-survey="$emit('returnToSurvey')" @submit="$emit('submit')" />
-        </div>
-        <div v-if="submitted" class="continuous-destination" data-survey-destination="outro">
-          <SurveyOutro :answered-count="answeredCount" :outro="outro" :show-return-button="false" :submitted="submitted"
-                        :verified="verificationVerified" :visible-count="visibleCount"
-                       @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
-                       @clear-verification="$emit('clearVerification')" />
-        </div>
-      </template>
-      <SurveyIntroduction v-else-if="destination.type === 'introduction'" :has-progress="hasProgress"
-                          :introduction="introduction" :verified="verificationVerified"
-                          @start="$emit('start')" @clear-answers="$emit('clearAnswers')" />
-      <ReviewSubmit v-else-if="destination.type === 'review' && !submitted" :answered-count="answeredCount"
-                    :show-return-button="true" :visible-count="visibleCount"
-                    :email="verificationEmail" :code="verificationCode" :requested="verificationRequested"
-                    :verified="verificationVerified" :verification-error="verificationError"
-                    @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                    @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
-                    @clear-verification="$emit('clearVerification')"
-                    @clear-answers="$emit('clearAnswers')"
-                    @return-to-survey="$emit('returnToSurvey')"
-                    @submit="$emit('submit')" />
-      <SurveyOutro v-else-if="destination.type === 'outro' && submitted" :answered-count="answeredCount"
-                   :outro="outro" :show-return-button="true" :submitted="submitted"
-                   :verified="verificationVerified" :visible-count="visibleCount"
-                   @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
-                   @clear-verification="$emit('clearVerification')" />
-      <SurveySection
-          v-else
-          :answer-options="answerOptions"
-          :answers="answers"
-          :default-locale="defaultLocale"
-          :detail-answers="detailAnswers"
-          :item-number="itemNumber"
-          :items-by-id="itemsById"
-          :question-index="viewMode === 'question' ? questionIndex : undefined"
-          :row-answer-options="rowAnswerOptions"
-          :section="section"
-          :survey="survey"
-          :visible-items="visibleItems"
-      />
+        <SurveyIntroduction v-else-if="destination.type === 'introduction'" :has-progress="hasProgress"
+                            :introduction="introduction" :verified="verificationVerified"
+                            @start="$emit('start')" @clear-answers="$emit('clearAnswers')"/>
+        <ReviewSubmit v-else-if="destination.type === 'review' && !submitted" :answered-count="answeredCount"
+                      :code="verificationCode" :email="verificationEmail"
+                      :requested="verificationRequested" :show-return-button="true"
+                      :verification-error="verificationError"
+                      :submitting="submitting" :submission-error="submissionError"
+                      :verified="verificationVerified" :visible-count="visibleCount"
+                      @submit="$emit('submit')" @update:email="$emit('update:email', $event)"
+                      @update:code="$emit('update:code', $event)" @request-code="$emit('requestCode')"
+                      @confirm-code="$emit('confirmCode')"
+                      @clear-verification="$emit('clearVerification')"
+                      @clear-answers="$emit('clearAnswers')"
+                      @return-to-survey="$emit('returnToSurvey')"/>
+        <SurveyOutro v-else-if="destination.type === 'outro' && submitted" :answered-count="answeredCount"
+                     :outro="outro" :show-return-button="true" :submitted="submitted"
+                     :verified="verificationVerified" :visible-count="visibleCount"
+                     @return-to-survey="$emit('returnToSurvey')" @clear-answers="$emit('clearAnswers')"
+                     @clear-verification="$emit('clearVerification')"/>
+        <SurveySection
+            v-else
+            :answer-options="answerOptions"
+            :answers="answers"
+            :default-locale="defaultLocale"
+            :detail-answers="detailAnswers"
+            :item-number="itemNumber"
+            :items-by-id="itemsById"
+            :question-index="viewMode === 'question' ? questionIndex : undefined"
+            :row-answer-options="rowAnswerOptions"
+            :section="section"
+            :survey="survey"
+            :visible-items="visibleItems"
+        />
       </v-card>
     </div>
-    <SurveyNavigationControls v-if="destination.type === 'question'" :can-go-previous="canGoPrevious" @next="$emit('next')" @previous="$emit('previous')"
+    <SurveyNavigationControls v-if="destination.type === 'question'" :can-go-previous="canGoPrevious"
+                              @next="$emit('next')" @previous="$emit('previous')"
                               @next-unanswered="$emit('nextUnanswered')"
-                              @previous-unanswered="$emit('previousUnanswered')" />
+                              @previous-unanswered="$emit('previousUnanswered')"/>
   </section>
 </template>
 

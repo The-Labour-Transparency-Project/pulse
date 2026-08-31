@@ -1,11 +1,11 @@
-<script setup lang="ts">
-import { computed } from "vue";
+<script lang="ts" setup>
+import {computed} from "vue";
 import {
-  multiSelectValidationError,
-  updateMultiSelectAnswer,
   type MultiSelectMatrixAnswer,
+  multiSelectValidationError,
   type SurveyItem,
   type SurveyOption,
+  updateMultiSelectAnswer,
 } from "../../domain/survey";
 
 const props = defineProps<{
@@ -25,12 +25,12 @@ function selectedIds(rowId: string) {
 
 function toggle(rowId: string, optionId: string, selected: boolean) {
   const next = updateMultiSelectAnswer(
-    selectedIds(rowId),
-    optionId,
-    selected,
-    props.rowOptions[rowId] ?? [],
+      selectedIds(rowId),
+      optionId,
+      selected,
+      props.rowOptions[rowId] ?? [],
   );
-  emit("update:answer", { ...answerModel.value, [rowId]: next });
+  emit("update:answer", {...answerModel.value, [rowId]: next});
 }
 
 function label(value: Record<string, string>) {
@@ -39,28 +39,28 @@ function label(value: Record<string, string>) {
 </script>
 
 <template>
-  <div class="matrix-answer" role="table" :aria-label="label(item.title)">
+  <div :aria-label="label(item.title)" class="matrix-answer" role="table">
     <div
-      v-for="(row, index) in item.rows ?? []"
-      :key="row.id"
-      class="matrix-answer__row"
-      :class="{ 'matrix-answer__row--last': index === (item.rows?.length ?? 0) - 1 }"
-      role="row"
+        v-for="(row, index) in item.rows ?? []"
+        :key="row.id"
+        :class="{ 'matrix-answer__row--last': index === (item.rows?.length ?? 0) - 1 }"
+        class="matrix-answer__row"
+        role="row"
     >
       <div class="matrix-answer__label" role="rowheader">
         {{ label(row.label) }}
       </div>
       <div class="matrix-answer__choices" role="cell">
-        <div class="matrix-answer__option-group" role="group" :aria-label="label(row.label)">
+        <div :aria-label="label(row.label)" class="matrix-answer__option-group" role="group">
           <v-checkbox
-            v-for="option in rowOptions[row.id] ?? []"
-            :key="option.id"
-            :model-value="selectedIds(row.id).includes(option.id)"
-            :label="label(option.label)"
-            color="primary"
-            density="compact"
-            hide-details
-            @update:model-value="toggle(row.id, option.id, Boolean($event))"
+              v-for="option in rowOptions[row.id] ?? []"
+              :key="option.id"
+              :label="label(option.label)"
+              :model-value="selectedIds(row.id).includes(option.id)"
+              color="primary"
+              density="compact"
+              hide-details
+              @update:model-value="toggle(row.id, option.id, Boolean($event))"
           />
         </div>
       </div>

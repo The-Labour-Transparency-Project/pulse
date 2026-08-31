@@ -1,16 +1,15 @@
-import { computed, reactive, ref, watch } from "vue";
-import { useDisplay, useTheme } from "vuetify";
-import definitionJson from "../../../../surveys/labour-transparency-pulse/v1/definition.json";
-import { useClipboard, useEventListener, useLocalStorage } from "@vueuse/core";
-import { serializeSurveyResponse } from "../domain/response";
+import {computed, reactive, ref, watch} from "vue";
+import {useDisplay, useTheme} from "vuetify";
+import {useClipboard, useEventListener, useLocalStorage} from "@vueuse/core";
+import {serializeSurveyResponse} from "../domain/response";
 import {
-    draftStorageKey,
-    draftStorageSerializer,
     createJsonStorageSerializer,
     destinationStorageKey,
+    draftStorageKey,
+    draftStorageSerializer,
     isViewMode,
-    parseSurveyDraft,
     parseSurveyDestination,
+    parseSurveyDraft,
     parseSurveyPosition,
     positionStorageKey,
     type SurveyDraft,
@@ -24,10 +23,11 @@ import {
     resolveItemOptions,
     type SurveyItem,
     surveyItemNumber,
-    validateSurveyDefinition,
 } from "../domain/survey";
-import { introductionFor, outroFor, type SurveyDestination } from "../domain/navigation";
-import { useVerification } from "./useVerification";
+import {defaultWave, surveyForWave} from "../domain/wave";
+import {introductionFor, outroFor, type SurveyDestination} from "../domain/navigation";
+import {useVerification} from "./useVerification";
+import {saveResponse} from "../api/client";
 
 export type ViewMode = "continuous" | "sections" | "question";
 export type SectionNavigationRequest = { index: number; token: number };
@@ -36,9 +36,11 @@ const viewModeStorageKey = "pulse-respondent-view-mode";
 
 export function useSurveyExperience() {
     const theme = useTheme();
-    const { xs } = useDisplay();
-    const survey = validateSurveyDefinition(definitionJson);
-    const verification = useVerification(survey.id, survey.version);
+    const {xs} = useDisplay();
+    const wave = defaultWave;
+    const survey = surveyForWave(wave);
+    const waveId = wave.waveId;
+    const verification = useVerification(waveId, survey.id, survey.version);
     const verificationEmail = verification.email;
     const verificationCode = verification.code;
     const verificationRequested = verification.requested;
@@ -46,23 +48,23 @@ export function useSurveyExperience() {
     const verificationVerified = verification.verified;
     const answers = reactive<Answers>({});
     const detailAnswers = reactive<DetailAnswers>({});
-    const storedDraft = useLocalStorage<SurveyDraft | null>(draftStorageKey(survey), null, {
+    const storedDraft = useLocalStorage<SurveyDraft | null>(draftStorageKey(survey, waveId), null, {
         serializer: draftStorageSerializer,
     });
     const hydratedDraft = parseSurveyDraft(storedDraft.value, survey);
     const storedViewMode = useLocalStorage<ViewMode | null>(viewModeStorageKey, null);
     const storedPosition = useLocalStorage<{ sectionIndex: number; questionIndex: number } | null>(
-        positionStorageKey(survey),
+        positionStorageKey(survey, waveId),
         null,
-        { serializer: createJsonStorageSerializer<{ sectionIndex: number; questionIndex: number }>() },
+        {serializer: createJsonStorageSerializer<{ sectionIndex: number; questionIndex: number }>()},
     );
-    const storedDestination = useLocalStorage<SurveyDestination | null>(destinationStorageKey(survey), null, {
+    const storedDestination = useLocalStorage<SurveyDestination | null>(destinationStorageKey(survey, waveId), null, {
         serializer: createJsonStorageSerializer<SurveyDestination>(),
     });
     const storedSubmission = useLocalStorage<ReturnType<typeof serializeSurveyResponse> | null>(
-        `pulse-respondent-submission:${survey.id}:${survey.version}`,
+        `pulse-respondent-submission:${waveId}:${survey.id}:${survey.version}`,
         null,
-        { serializer: createJsonStorageSerializer<ReturnType<typeof serializeSurveyResponse>>() },
+        {serializer: createJsonStorageSerializer<ReturnType<typeof serializeSurveyResponse>>()},
     );
     const preferredViewMode = isViewMode(storedViewMode.value)
         ? storedViewMode.value
@@ -71,7 +73,7 @@ export function useSurveyExperience() {
     // it first so an older standalone position key cannot move the respondent
     // away from the location captured in the latest draft.
     const preferredPosition = hydratedDraft
-        ? { sectionIndex: hydratedDraft.sectionIndex, questionIndex: hydratedDraft.questionIndex }
+        ? {sectionIndex: hydratedDraft.sectionIndex, questionIndex: hydratedDraft.questionIndex}
         : parseSurveyPosition(storedPosition.value, survey);
     if (hydratedDraft) {
         Object.assign(answers, hydratedDraft.answers);
@@ -80,7 +82,7 @@ export function useSurveyExperience() {
     const itemsById = new Map(survey.items.map((item) => [item.id, item]));
     const sectionIndex = ref(preferredPosition?.sectionIndex ?? 0);
     const questionIndex = ref(preferredPosition?.questionIndex ?? 0);
-    const destination = ref<SurveyDestination>({ type: "introduction" });
+    const destination = ref<SurveyDestination>({type: "introduction"});
     const showIntroductionInContinuous = ref(true);
     const visitedQuestionIds = reactive(new Set<string>(hydratedDraft?.visitedQuestionIds ?? []));
     const viewMode = ref<ViewMode>(preferredViewMode ?? "question");
@@ -90,6 +92,8 @@ export function useSurveyExperience() {
     const rightOpen = ref(false);
     const tipsOpen = ref(false);
     const submission = ref<ReturnType<typeof serializeSurveyResponse> | null>(storedSubmission.value);
+    const submitting = ref(false);
+    const submissionError = ref("");
     const restoredDestination = parseSurveyDestination(storedDestination.value, survey);
     if (restoredDestination) {
         destination.value = restoredDestination;
@@ -97,7 +101,7 @@ export function useSurveyExperience() {
     }
     const sectionNavigationRequest = ref<SectionNavigationRequest | null>(null);
     let sectionNavigationToken = 0;
-    const { copy, copied, isSupported } = useClipboard();
+    const {copy, copied, isSupported} = useClipboard();
 
     watch(xs, (isXs) => {
         if (isXs) {
@@ -108,7 +112,7 @@ export function useSurveyExperience() {
             viewMode.value = viewModeBeforeXs.value;
             xsModeForced.value = false;
         }
-    }, { immediate: true });
+    }, {immediate: true});
 
     watch(viewMode, (mode) => {
         if (xs.value && mode !== "continuous") {
@@ -143,22 +147,22 @@ export function useSurveyExperience() {
         } else if (questionIndex.value >= items.length) {
             questionIndex.value = items.length - 1;
         }
-    }, { immediate: true });
+    }, {immediate: true});
 
     watch([sectionIndex, questionIndex], ([section, question]) => {
-        storedPosition.value = { sectionIndex: section, questionIndex: question };
-    }, { immediate: true });
+        storedPosition.value = {sectionIndex: section, questionIndex: question};
+    }, {immediate: true});
 
     watch(destination, (value) => {
         storedDestination.value = value;
-    }, { deep: true, immediate: true });
+    }, {deep: true, immediate: true});
 
     watch(
         () => currentQuestion.value?.id,
         (id) => {
             if (id) visitedQuestionIds.add(id);
         },
-        { immediate: true },
+        {immediate: true},
     );
 
     const sectionAnswered = (sectionId: string) => {
@@ -181,14 +185,14 @@ export function useSurveyExperience() {
     function selectSection(index: number) {
         sectionIndex.value = index;
         questionIndex.value = 0;
-        destination.value = { type: "question", sectionId: survey.sections[index]?.id ?? "" };
+        destination.value = {type: "question", sectionId: survey.sections[index]?.id ?? ""};
         showIntroductionInContinuous.value = false;
-        sectionNavigationRequest.value = { index, token: ++sectionNavigationToken };
+        sectionNavigationRequest.value = {index, token: ++sectionNavigationToken};
         leftOpen.value = false;
     }
 
     function selectIntroduction() {
-        destination.value = { type: "introduction" };
+        destination.value = {type: "introduction"};
         showIntroductionInContinuous.value = true;
         leftOpen.value = false;
     }
@@ -198,13 +202,13 @@ export function useSurveyExperience() {
             selectReview();
             return;
         }
-        destination.value = { type: "outro" };
+        destination.value = {type: "outro"};
         showIntroductionInContinuous.value = false;
         leftOpen.value = false;
     }
 
     function selectReview() {
-        destination.value = { type: "review" };
+        destination.value = {type: "review"};
         showIntroductionInContinuous.value = false;
         leftOpen.value = false;
     }
@@ -275,18 +279,35 @@ export function useSurveyExperience() {
         return false;
     }
 
-    function submitResponse() {
+    async function submitResponse() {
         if (!verification.verified.value) return null;
-        submission.value = serializeSurveyResponse(survey, answers, detailAnswers, {
+        const responseDocument = serializeSurveyResponse(survey, answers, detailAnswers, {
+            waveId,
             completionStatus: answeredCount.value === visibleItems.value.length ? "complete" : "partial",
         });
-        storedSubmission.value = submission.value;
-        selectOutro();
-        return submission.value;
+        submissionError.value = "";
+        submitting.value = true;
+        try {
+            await saveResponse(verification.code.value, responseDocument);
+            submission.value = responseDocument;
+            storedSubmission.value = responseDocument;
+            selectOutro();
+            return responseDocument;
+        } catch (exception) {
+            submissionError.value = exception instanceof Error ? exception.message : "We could not save your response.";
+            return null;
+        } finally {
+            submitting.value = false;
+        }
     }
 
-    function setVerificationEmail(value: string) { verification.email.value = value; }
-    function setVerificationCode(value: string) { verification.code.value = value; }
+    function setVerificationEmail(value: string) {
+        verification.email.value = value;
+    }
+
+    function setVerificationCode(value: string) {
+        verification.code.value = value;
+    }
 
     function clearAnswers() {
         Object.keys(answers).forEach((id) => delete answers[id]);
@@ -323,24 +344,25 @@ export function useSurveyExperience() {
     async function copySerializedResponse() {
         if (!isSupported.value) return false;
         try {
-            await copy(JSON.stringify(serializeSurveyResponse(survey, answers, detailAnswers, { completionStatus: "partial" }), null, 2));
+            await copy(JSON.stringify(serializeSurveyResponse(survey, answers, detailAnswers, {completionStatus: "partial"}), null, 2));
             return true;
         } catch {
             return false;
         }
     }
 
-    watch(answers, () => reconcileDependentAnswers(survey, answers), { deep: true, immediate: true });
+    watch(answers, () => reconcileDependentAnswers(survey, answers), {deep: true, immediate: true});
 
     watch([answers, detailAnswers], () => {
         if (!submission.value) return;
         submission.value = null;
         storedSubmission.value = null;
         if (destination.value.type === "outro") selectReview();
-    }, { deep: true });
+    }, {deep: true});
 
     watch([answers, detailAnswers, sectionIndex, questionIndex, viewMode, () => [...visitedQuestionIds]], () => {
         storedDraft.value = {
+            waveId,
             surveyId: survey.id,
             surveyVersion: survey.version,
             answers: JSON.parse(JSON.stringify(answers)) as Answers,
@@ -350,19 +372,60 @@ export function useSurveyExperience() {
             viewMode: viewMode.value,
             visitedQuestionIds: [...visitedQuestionIds],
         };
-    }, { deep: true });
+    }, {deep: true});
 
     return {
-        survey, answers, detailAnswers, itemsById, sectionIndex, questionIndex, viewMode, destination, introduction, outro,
+        survey,
+        answers,
+        detailAnswers,
+        itemsById,
+        sectionIndex,
+        questionIndex,
+        viewMode,
+        destination,
+        introduction,
+        outro,
         visitedQuestionIds,
-        leftOpen, rightOpen, copied, isDark, visibleItems, answeredCount, currentSection,
-        tipsOpen, submission, showIntroductionInContinuous,
-        currentQuestion, sectionAnswered, sectionVisibleCount, itemNumber, answerOptions, sectionNavigationRequest,
-        rowAnswerOptions, selectSection, selectIntroduction, selectReview, selectOutro, startSurvey, selectQuestion, setCurrentQuestionById, moveQuestion, moveNext, submitResponse, toggleTheme,
+        leftOpen,
+        rightOpen,
+        copied,
+        isDark,
+        visibleItems,
+        answeredCount,
+        currentSection,
+        tipsOpen,
+        submission,
+        submitting,
+        submissionError,
+        showIntroductionInContinuous,
+        currentQuestion,
+        sectionAnswered,
+        sectionVisibleCount,
+        itemNumber,
+        answerOptions,
+        sectionNavigationRequest,
+        rowAnswerOptions,
+        selectSection,
+        selectIntroduction,
+        selectReview,
+        selectOutro,
+        startSurvey,
+        selectQuestion,
+        setCurrentQuestionById,
+        moveQuestion,
+        moveNext,
+        submitResponse,
+        toggleTheme,
         verification,
-        verificationEmail, verificationCode, verificationRequested, verificationError, verificationVerified,
-        setVerificationEmail, setVerificationCode,
+        verificationEmail,
+        verificationCode,
+        verificationRequested,
+        verificationError,
+        verificationVerified,
+        setVerificationEmail,
+        setVerificationCode,
         clearAnswers,
-        findNextUnanswered: () => moveQuestion(1, true), copySerializedResponse,
+        findNextUnanswered: () => moveQuestion(1, true),
+        copySerializedResponse,
     };
 }

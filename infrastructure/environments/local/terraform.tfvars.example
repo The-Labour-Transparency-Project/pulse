@@ -1,0 +1,2 @@
+# LocalStack must be running on localhost:4566 before apply.
+# Build the Lambda artifact first; see infrastructure/terraform/README.md.

@@ -1,6 +1,58 @@
+name: pulse
+
 services:
+  localstack:
+    # Community image with .NET 10 Lambda runtime support (pro requires token)
+    image: localstack/localstack:4.14.0
+    ports:
+      - '127.0.0.1:${PULSE_LOCALSTACK_PORT:-14566}:4566'  # LocalStack Gateway
+      - '127.0.0.1:${PULSE_LOCALSTACK_EXTERNAL_PORT_START:-14510}-${PULSE_LOCALSTACK_EXTERNAL_PORT_END:-14559}:4510-4559'  # Lambda external services
+    environment:
+      SERVICES: s3,lambda,iam,logs,ses
+      LOCALSTACK_HOST: 'localhost.localstack.cloud:${PULSE_LOCALSTACK_PORT:-14566}'
+      DEBUG: ${DEBUG-1}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-testtest}
+      AWS_REGION: ${S3_REGION:-ap-southeast-2}
+      AWS_DEFAULT_REGION: ${S3_REGION:-ap-southeast-2}
+      # LocalStack applies its own CORS check before routing Function URLs.
+      # Keep this aligned with the Vite respondent origin.
+      EXTRA_CORS_ALLOWED_ORIGINS: '${PULSE_RESPONDENT_ORIGIN:-http://localhost:5173}'
+      # LocalStack Lambda runs through Docker's bridge network.
+      # LAMBDA_KEEPALIVE_MS=0 disables the keepalive for test runs.
+      LAMBDA_KEEPALIVE_MS: 600
+      LAMBDA_RUNTIME_ENVIRONMENT_TIMEOUT: 60
+    volumes:
+      - localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # MinIO is the persistent local response store. LocalStack remains the
+  # Lambda/IAM/SES emulator.
+  s3:
+    image: 'minio/minio:latest'
+    ports:
+      - '${PULSE_MINIO_PORT:-19000}:9000'
+      - '${PULSE_MINIO_CONSOLE_PORT:-19090}:9090'
+    environment:
+      MINIO_ROOT_USER: '${AWS_ACCESS_KEY_ID:-test}'
+      MINIO_ROOT_PASSWORD: '${AWS_SECRET_ACCESS_KEY:-testtest}'
+      MINIO_API_CORS_ALLOW_ORIGIN: 'http://pulse-api-local.lambda-url.${S3_REGION:-ap-southeast-2}.localhost.localstack.cloud:${PULSE_LOCALSTACK_PORT:-14566}'
+    restart: always
+    volumes:
+      - 'minio:/data/minio'
+    command: minio server /data/minio --console-address ":9090"
+    networks:
+      - default
+
   pulse-api:
-    image: mcr.microsoft.com/dotnet/aspnet:8.0
-    profiles: [placeholder]
+    image: mcr.microsoft.com/dotnet/aspnet:10.0
+    profiles: [ placeholder ]
     working_dir: /app
-    command: ["/bin/sh", "-c", "echo 'Build the Pulse API image before enabling this service' && sleep infinity"]
+    command: [ "/bin/sh", "-c", "echo 'Build the Pulse API image before enabling this service' && sleep infinity" ]
+
+volumes:
+  localstack-data:
+  minio:
+    driver: local
+networks:
+  default:

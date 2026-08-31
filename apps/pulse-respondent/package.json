@@ -4,8 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --mode localdev",
+    "dev:local": "vite --mode localdev",
+    "dev:localstack": "vite --mode localstack",
+    "dev:production": "vite --mode production",
+    "build": "vite build --mode production",
+    "build:production": "vite build --mode production",
+    "build:local": "vite build --mode localdev",
+    "build:localstack": "vite build --mode localstack",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run"
   },

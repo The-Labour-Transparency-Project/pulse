@@ -1,6 +1,6 @@
-import { computed, ref } from "vue";
-import { useEventListener, useLocalStorage } from "@vueuse/core";
-import { useDisplay } from "vuetify";
+import {computed, ref} from "vue";
+import {useEventListener, useLocalStorage} from "@vueuse/core";
+import {useDisplay} from "vuetify";
 
 export type PanelSide = "left" | "right" | "tips";
 export type PanelBreakpoint = "xs" | "sm" | "md" | "lg" | "xl";
@@ -15,21 +15,21 @@ const MAX_RIGHT_WIDTH = 980;
 export function panelDefaultsForBreakpoint(breakpoint: PanelBreakpoint | string) {
     switch (breakpoint) {
         case "xs":
-            return { left: 420, right: 280, tips: 420 };
+            return {left: 420, right: 280, tips: 420};
         case "md":
-            return { left: 280, right: 300, tips: 500 };
+            return {left: 280, right: 300, tips: 500};
         case "sm":
-            return { left: 420, right: 280, tips: 500 };
+            return {left: 420, right: 280, tips: 500};
         case "lg":
-            return { left: 412, right: 340, tips: 500 };
+            return {left: 412, right: 340, tips: 500};
         case "xl":
         case "xxl":
-            return { left: 660, right: 380, tips: 500 };
+            return {left: 660, right: 380, tips: 500};
         default:
             // Vuetify can briefly expose an unrecognised value while its
             // display service is initialising. Keep the panel layout usable
             // until a supported breakpoint is available.
-            return { left: 248, right: 280, tips: 280 };
+            return {left: 248, right: 280, tips: 280};
     }
 }
 
@@ -51,18 +51,18 @@ function normalizePanelBreakpoint(breakpoint: string): PanelBreakpoint {
 }
 
 const PANEL_LIMITS: Record<PanelBreakpoint, PanelLimits> = {
-    xs: { left: { min: 420, max: 420 }, right: { min: 280, max: 280 }, tips: { min: 420, max: 420 } },
-    sm: { left: { min: 420, max: 420 }, right: { min: 280, max: 280 }, tips: { min: 500, max: 500 } },
-    md: { left: { min: 280, max: 280 }, right: { min: 300, max: 300 }, tips: { min: 500, max: 500 } },
+    xs: {left: {min: 420, max: 420}, right: {min: 280, max: 280}, tips: {min: 420, max: 420}},
+    sm: {left: {min: 420, max: 420}, right: {min: 280, max: 280}, tips: {min: 500, max: 500}},
+    md: {left: {min: 280, max: 280}, right: {min: 300, max: 300}, tips: {min: 500, max: 500}},
     lg: {
-        left: { min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH },
-        right: { min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH },
-        tips: { min: 280, max: 720 }
+        left: {min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH},
+        right: {min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH},
+        tips: {min: 280, max: 720}
     },
     xl: {
-        left: { min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH },
-        right: { min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH },
-        tips: { min: 280, max: 760 }
+        left: {min: MIN_LEFT_WIDTH, max: MAX_LEFT_WIDTH},
+        right: {min: MIN_RIGHT_WIDTH, max: MAX_RIGHT_WIDTH},
+        tips: {min: 280, max: 760}
     },
 };
 
@@ -71,7 +71,7 @@ export function panelLimitsForBreakpoint(breakpoint: PanelBreakpoint | string): 
 }
 
 export function useResizablePanels() {
-    const { name: displayBreakpoint, lgAndUp } = useDisplay();
+    const {name: displayBreakpoint, lgAndUp} = useDisplay();
     const breakpoint = computed(() => normalizePanelBreakpoint(displayBreakpoint.value));
     const leftWidths = useLocalStorage<Record<PanelBreakpoint, number>>("pulse-respondent-left-panel-widths", {
         xs: 420, sm: 420, md: 280, lg: 412, xl: 660,
@@ -173,5 +173,5 @@ export function useResizablePanels() {
         }
     }
 
-    return { leftWidth, rightWidth, tipsWidth, resizing, gridTemplateColumns, startResize, nudge };
+    return {leftWidth, rightWidth, tipsWidth, resizing, gridTemplateColumns, startResize, nudge};
 }

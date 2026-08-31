@@ -1,9 +1,16 @@
 <script lang="ts" setup>
-import type { SurveyOutro } from "../domain/navigation";
+import type {SurveyOutro} from "../domain/navigation";
 import ClearAnswersAction from "./ClearAnswersAction.vue";
 import ClearVerificationAction from "./ClearVerificationAction.vue";
 
-const props = defineProps<{ outro: SurveyOutro; answeredCount: number; visibleCount: number; submitted: boolean; showReturnButton: boolean; verified: boolean }>();
+const props = defineProps<{
+  outro: SurveyOutro;
+  answeredCount: number;
+  visibleCount: number;
+  submitted: boolean;
+  showReturnButton: boolean;
+  verified: boolean
+}>();
 defineEmits<{ returnToSurvey: []; clearAnswers: []; clearVerification: [] }>();
 </script>
 
@@ -17,8 +24,9 @@ defineEmits<{ returnToSurvey: []; clearAnswers: []; clearVerification: [] }>();
       <h1 class="survey-section-title mb-4">{{ outro.title }}</h1>
       <p class="outro-description mb-6">{{ outro.description }}</p>
 
-      <v-alert class="mb-4" :color="submitted ? 'success' : 'info'"
-               :icon="submitted ? 'mdi-check-circle-outline' : 'mdi-content-save-outline'" variant="tonal">
+      <v-alert :color="submitted ? 'success' : 'info'"
+               :icon="submitted ? 'mdi-check-circle-outline' : 'mdi-content-save-outline'"
+               class="mb-4" variant="tonal">
         <div class="font-weight-medium mb-1">{{ submitted ? "Thank you" : "Your progress is saved" }}</div>
         <template v-if="submitted">
           <p class="mb-3">Your response has been submitted and saved with the survey version shown above.</p>
@@ -35,13 +43,13 @@ defineEmits<{ returnToSurvey: []; clearAnswers: []; clearVerification: [] }>();
         <v-chip color="primary" prepend-icon="mdi-chart-donut" variant="tonal">
           {{ answeredCount }} of {{ visibleCount }} questions answered
         </v-chip>
-        <v-spacer />
+        <v-spacer/>
         <ClearAnswersAction :has-answers="props.answeredCount > 0" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')" />
-        <ClearVerificationAction :verified="props.verified" @clear="$emit('clearVerification')" />
+                            @clear="$emit('clearAnswers')"/>
+        <ClearVerificationAction :verified="props.verified" @clear="$emit('clearVerification')"/>
         <v-btn v-if="showReturnButton" color="primary" variant="text" @click="$emit('returnToSurvey')">
           Return to survey
-          <v-icon end icon="mdi-arrow-left" />
+          <v-icon end icon="mdi-arrow-left"/>
         </v-btn>
       </div>
     </div>

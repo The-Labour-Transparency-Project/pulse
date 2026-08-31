@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useDisplay } from "vuetify";
+import {useDisplay} from "vuetify";
 import {
   answerProgress,
   type Answers,
@@ -9,10 +9,10 @@ import {
   type SurveyDefinition,
   type SurveyItem
 } from "../../domain/survey";
-import type { SurveyDestination } from "../../domain/navigation";
+import type {SurveyDestination} from "../../domain/navigation";
 import TipsGuidanceRail from "./TipsGuidanceRail.vue";
 
-const { lgAndUp } = useDisplay();
+const {lgAndUp} = useDisplay();
 const props = defineProps<{
   survey: SurveyDefinition;
   answers: Answers;
@@ -67,10 +67,10 @@ function isNavigatorItem(id: string) {
 
 <template>
   <template v-if="!lgAndUp">
-    <v-navigation-drawer :model-value="leftOpen" class="d-lg-none" temporary :width="leftWidth"
+    <v-navigation-drawer :model-value="leftOpen" :width="leftWidth" class="d-lg-none" temporary
                          @update:model-value="$emit('update:leftOpen', $event)">
-      <v-list-item class="py-5" title="Survey navigation" />
-      <v-divider />
+      <v-list-item class="py-5" title="Survey navigation"/>
+      <v-divider/>
       <v-list nav>
         <v-list-item :active="destination.type === 'introduction'" @click="$emit('selectIntroduction')">
           <v-list-item-title>Introduction</v-list-item-title>
@@ -91,19 +91,19 @@ function isNavigatorItem(id: string) {
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-navigation-drawer :model-value="tipsOpen" class="d-lg-none" location="right" temporary :width="tipsWidth"
+    <v-navigation-drawer :model-value="tipsOpen" :width="tipsWidth" class="d-lg-none" location="right" temporary
                          @update:model-value="$emit('update:tipsOpen', $event)">
       <TipsGuidanceRail :verification-code="verificationCode" :verification-email="verificationEmail"
                         :verification-error="verificationError" :verification-requested="verificationRequested"
                         :verification-verified="verificationVerified"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
                         @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
-                        @clear-verification="$emit('clearVerification')" />
+                        @clear-verification="$emit('clearVerification')"/>
     </v-navigation-drawer>
     <v-navigation-drawer :model-value="rightOpen" class="d-lg-none" location="right" temporary
                          @update:model-value="$emit('update:rightOpen', $event)">
-      <v-list-item class="py-5" title="Question navigator" />
-      <v-divider />
+      <v-list-item class="py-5" title="Question navigator"/>
+      <v-divider/>
       <v-list density="compact" nav>
         <template v-for="(section, sIndex) in survey.sections" :key="section.id">
           <v-list-subheader>{{ sIndex + 1 }} · {{ localized(section.title, survey.defaultLocale) }}</v-list-subheader>
@@ -114,11 +114,11 @@ function isNavigatorItem(id: string) {
             <template #prepend>
               <v-progress-circular v-if="(itemsById.get(id) && statusFor(id) === 'partial')"
                                    :model-value="answerProgress(itemsById.get(id)!, answers[id]).completed / answerProgress(itemsById.get(id)!, answers[id]).total * 100"
-                                   color="primary" size="16" width="2" />
+                                   color="primary" size="16" width="2"/>
               <v-icon v-else
                       :color="statusFor(id) === 'answered' ? 'success' : statusFor(id) === 'unanswered' ? 'primary' : 'grey-lighten-1'"
                       :icon="statusFor(id) === 'answered' ? 'mdi-check-circle-outline' : isUnavailable(id) ? 'mdi-lock-outline' : 'mdi-circle-outline'"
-                      size="16" />
+                      size="16"/>
             </template>
             <span>{{ sIndex + 1 }}.{{ qIndex + 1 }} {{
                 localized(itemsById.get(id)?.title ?? {}, survey.defaultLocale)

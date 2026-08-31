@@ -1,7 +1,7 @@
-import { describe, expect, it } from "vitest";
+import {describe, expect, it} from "vitest";
 import definitionJson from "../../../../surveys/labour-transparency-pulse/v1/definition.json";
-import { serializeSurveyResponse } from "./response";
-import { validateSurveyDefinition } from "./survey";
+import {serializeSurveyResponse} from "./response";
+import {validateSurveyDefinition} from "./survey";
 
 describe("matrix multi-select responses", () => {
     it("serializes one answer per row", () => {
@@ -34,6 +34,8 @@ describe("matrix multi-select responses", () => {
                 })()
             },
         );
+
+        expect(response.waveId).toBe("pulse-2026");
 
         expect(response.answers).toEqual(expect.arrayContaining([
             expect.objectContaining({

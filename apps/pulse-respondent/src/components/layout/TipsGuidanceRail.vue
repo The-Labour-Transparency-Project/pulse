@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { guidanceItems, type GuidanceKind } from "../../domain/navigation";
+import {guidanceItems, type GuidanceKind} from "../../domain/navigation";
 import VerificationForm from "../VerificationForm.vue";
 import VerificationStatus from "../VerificationStatus.vue";
 
@@ -33,14 +33,14 @@ const visibleItems = guidanceItems.filter((item) => item.id !== "required");
     <section class="rail-section tips-card">
       <div class="tips-heading d-flex align-center justify-space-between px-3 py-2">
         <div class="d-flex align-center ga-2">
-          <v-icon color="primary" icon="mdi-lightbulb-on-outline" size="16" />
+          <v-icon color="primary" icon="mdi-lightbulb-on-outline" size="16"/>
           <span>Tips and guidance</span>
         </div>
       </div>
-      <v-divider />
+      <v-divider/>
       <div class="tips-list px-3 py-2">
         <div v-for="item in visibleItems" :key="item.id" class="guidance-item d-flex ga-2 py-2">
-          <v-icon :icon="iconFor[item.kind]" class="guidance-icon flex-shrink-0 mt-1" color="primary" size="14" />
+          <v-icon :icon="iconFor[item.kind]" class="guidance-icon flex-shrink-0 mt-1" color="primary" size="14"/>
           <div class="guidance-copy">
             <div class="guidance-title">{{ item.title }}</div>
             <div class="guidance-body">{{ item.body }}</div>
@@ -49,15 +49,15 @@ const visibleItems = guidanceItems.filter((item) => item.id !== "required");
       </div>
     </section>
 
-    <section class="rail-section verification-section mt-3 pa-3"
-             :class="{ 'verification-section--verified': props.verificationVerified }">
+    <section :class="{ 'verification-section--verified': props.verificationVerified }"
+             class="rail-section verification-section mt-3 pa-3">
       <div class="section-heading mb-2">Before you submit</div>
-      <VerificationStatus v-if="props.verificationVerified" @clear="$emit('clearVerification')" />
+      <VerificationStatus v-if="props.verificationVerified" @clear="$emit('clearVerification')"/>
       <VerificationForm v-else :code="props.verificationCode" :email="props.verificationEmail"
                         :requested="props.verificationRequested" :show-title="false"
                         :verification-error="props.verificationError"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')" />
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"/>
     </section>
   </aside>
 </template>

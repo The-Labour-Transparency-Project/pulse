@@ -6,6 +6,7 @@
   "required": [
     "responseSchemaVersion",
     "submissionId",
+    "waveId",
     "surveyId",
     "surveyVersion",
     "submittedAt",
@@ -30,7 +31,7 @@
     "surveyVersion": {
       "type": "string"
     },
-    "wave": {
+    "waveId": {
       "type": "string"
     },
     "submittedAt": {

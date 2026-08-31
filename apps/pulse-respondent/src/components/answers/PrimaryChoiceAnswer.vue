@@ -1,11 +1,6 @@
-<script setup lang="ts">
-import { computed } from "vue";
-import {
-  detailAnswerKey,
-  type DetailAnswers,
-  type SurveyItem,
-  type SurveyOption,
-} from "../../domain/survey";
+<script lang="ts" setup>
+import {computed} from "vue";
+import {detailAnswerKey, type DetailAnswers, type SurveyItem, type SurveyOption,} from "../../domain/survey";
 
 const props = defineProps<{
   item: SurveyItem;
@@ -22,58 +17,58 @@ const answerModel = computed({
 
 <template>
   <fieldset
-    class="border-0 pa-0 ma-0 w-100"
-    :aria-describedby="item.answerRequired ? `${item.id}-help` : undefined"
+      :aria-describedby="item.answerRequired ? `${item.id}-help` : undefined"
+      class="border-0 pa-0 ma-0 w-100"
   >
     <legend class="sr-only">{{ Object.values(item.title)[0] }}</legend>
     <v-radio-group
-      v-model="answerModel"
-      :aria-label="Object.values(item.title)[0]"
-      color="primary"
-      density="compact"
-      hide-details
+        v-model="answerModel"
+        :aria-label="Object.values(item.title)[0]"
+        color="primary"
+        density="compact"
+        hide-details
     >
       <template v-for="option in options" :key="option.id">
         <v-radio
-          :value="option.id"
-          :label="Object.values(option.label)[0]"
-          color="primary"
-          density="compact"
+            :label="Object.values(option.label)[0]"
+            :value="option.id"
+            color="primary"
+            density="compact"
         />
         <v-textarea
-          v-if="
+            v-if="
             option.detailInput &&
             answer === option.id &&
             option.detailInput.type === 'longText'
           "
-          :id="`${item.id}-${option.id}-detail`"
-          :model-value="detailAnswers[detailAnswerKey(item.id, option.id)]"
-          label="Please tell us more"
-          auto-grow
-          rows="3"
-          variant="outlined"
-          class="ml-8 mb-3"
-          @update:model-value="
+            :id="`${item.id}-${option.id}-detail`"
+            :model-value="detailAnswers[detailAnswerKey(item.id, option.id)]"
+            auto-grow
+            class="ml-8 mb-3"
+            label="Please tell us more"
+            rows="3"
+            variant="outlined"
+            @update:model-value="
             detailAnswers[detailAnswerKey(item.id, option.id)] = $event
           "
         />
         <v-text-field
-          v-else-if="option.detailInput && answer === option.id"
-          :id="`${item.id}-${option.id}-detail`"
-          :model-value="detailAnswers[detailAnswerKey(item.id, option.id)]"
-          label="Please tell us more"
-          variant="outlined"
-          class="ml-8 mb-3"
-          @update:model-value="
+            v-else-if="option.detailInput && answer === option.id"
+            :id="`${item.id}-${option.id}-detail`"
+            :model-value="detailAnswers[detailAnswerKey(item.id, option.id)]"
+            class="ml-8 mb-3"
+            label="Please tell us more"
+            variant="outlined"
+            @update:model-value="
             detailAnswers[detailAnswerKey(item.id, option.id)] = $event
           "
         />
       </template>
     </v-radio-group>
     <p
-      v-if="item.answerRequired"
-      :id="`${item.id}-help`"
-      class="survey-instruction mb-0"
+        v-if="item.answerRequired"
+        :id="`${item.id}-help`"
+        class="survey-instruction mb-0"
     >
       This question is required.
     </p>

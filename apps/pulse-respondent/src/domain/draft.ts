@@ -1,9 +1,11 @@
-import type { Answers, DetailAnswers, AnswerValue, SurveyDefinition } from "./survey";
-import type { SurveyDestination } from "./navigation";
+import type {Answers, AnswerValue, DetailAnswers, SurveyDefinition} from "./survey";
+import type {SurveyDestination} from "./navigation";
+import {defaultWave} from "./wave";
 
 /** JSON storage for object drafts. Invalid legacy values are discarded safely. */
 export interface JsonStorageSerializer<T> {
     read(value: string): T | null;
+
     write(value: T | null): string;
 }
 
@@ -23,6 +25,7 @@ export function createJsonStorageSerializer<T>(): JsonStorageSerializer<T> {
 }
 
 export interface SurveyDraft {
+    waveId: string;
     surveyId: string;
     surveyVersion: string;
     answers: Answers;
@@ -66,23 +69,23 @@ function readDetailAnswers(value: unknown): DetailAnswers {
     return Object.fromEntries(Object.entries(value).filter(([, answer]) => typeof answer === "string"));
 }
 
-export function draftStorageKey(survey: SurveyDefinition): string {
-    return `pulse-respondent-draft:${survey.id}:${survey.version}`;
+export function draftStorageKey(survey: SurveyDefinition, waveId = defaultWave.waveId): string {
+    return `pulse-respondent-draft:${waveId}:${survey.id}:${survey.version}`;
 }
 
-export function positionStorageKey(survey: SurveyDefinition): string {
-    return `pulse-respondent-position:${survey.id}:${survey.version}`;
+export function positionStorageKey(survey: SurveyDefinition, waveId = defaultWave.waveId): string {
+    return `pulse-respondent-position:${waveId}:${survey.id}:${survey.version}`;
 }
 
-export function destinationStorageKey(survey: SurveyDefinition): string {
-    return `pulse-respondent-destination:${survey.id}:${survey.version}`;
+export function destinationStorageKey(survey: SurveyDefinition, waveId = defaultWave.waveId): string {
+    return `pulse-respondent-destination:${waveId}:${survey.id}:${survey.version}`;
 }
 
 export function parseSurveyDestination(value: unknown, survey: SurveyDefinition): SurveyDestination | null {
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     const candidate = value as Partial<SurveyDestination>;
     if (candidate.type === "introduction" || candidate.type === "review" || candidate.type === "outro") {
-        return { type: candidate.type };
+        return {type: candidate.type};
     }
     if (candidate.type !== "question" || typeof candidate.sectionId !== "string") return null;
     const section = survey.sections.find((item) => item.id === candidate.sectionId);
@@ -90,7 +93,7 @@ export function parseSurveyDestination(value: unknown, survey: SurveyDefinition)
     return {
         type: "question",
         sectionId: section.id,
-        ...(typeof candidate.questionId === "string" ? { questionId: candidate.questionId } : {}),
+        ...(typeof candidate.questionId === "string" ? {questionId: candidate.questionId} : {}),
     };
 }
 
@@ -112,7 +115,7 @@ export function parseSurveyPosition(value: unknown, survey: SurveyDefinition): S
 export function parseSurveyDraft(value: unknown, survey: SurveyDefinition): SurveyDraft | null {
     if (!value || typeof value !== "object" || Array.isArray(value)) return null;
     const candidate = value as Partial<SurveyDraft>;
-    if (candidate.surveyId !== survey.id || candidate.surveyVersion !== survey.version) return null;
+    if (candidate.waveId !== defaultWave.waveId || candidate.surveyId !== survey.id || candidate.surveyVersion !== survey.version) return null;
     if (!Number.isInteger(candidate.sectionIndex) || !Number.isInteger(candidate.questionIndex)) return null;
     if (!Array.isArray(candidate.visitedQuestionIds) || !candidate.visitedQuestionIds.every((id) => typeof id === "string")) return null;
     if (!isViewMode(candidate.viewMode)) return null;
@@ -121,6 +124,7 @@ export function parseSurveyDraft(value: unknown, survey: SurveyDefinition): Surv
     if (sectionIndex < 0 || sectionIndex >= survey.sections.length) return null;
     if (questionIndex < 0 || questionIndex >= survey.sections[sectionIndex].itemIds.length) return null;
     return {
+        waveId: defaultWave.waveId,
         surveyId: survey.id,
         surveyVersion: survey.version,
         answers: readAnswers(candidate.answers, survey),

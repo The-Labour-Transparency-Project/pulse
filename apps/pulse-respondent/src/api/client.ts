@@ -26,7 +26,8 @@ async function responseError(response: Response): Promise<ApiError> {
         if (typeof body.error === "string") {
             message = body.error;
         }
-    } catch {
+    } catch (error) {
+        console.error("Failed response.", error);
         // Keep the status-based message when the API has no JSON error body.
     }
     return new ApiError(response.status, message);

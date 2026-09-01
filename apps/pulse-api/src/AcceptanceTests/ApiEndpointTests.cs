@@ -32,6 +32,29 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
     }
 
     [Fact]
+    public async Task Direct_hosting_emits_exactly_one_cors_origin_header()
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/ping");
+        request.Headers.Add("Origin", "http://localhost:5173");
+
+        var response = await application.Client.SendAsync(request);
+
+        response.Headers.GetValues("Access-Control-Allow-Origin")
+            .Should().ContainSingle().Which.Should().Be("http://localhost:5173");
+    }
+
+    [Fact]
+    public async Task Lambda_hosting_does_not_emit_application_cors_headers()
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/ping");
+        request.Headers.Add("Origin", "https://survey.labourtransparency.com");
+
+        var response = await application.LambdaClient.SendAsync(request);
+
+        response.Headers.Contains("Access-Control-Allow-Origin").Should().BeFalse();
+    }
+
+    [Fact]
     public async Task Token_request_sends_an_access_link_containing_a_valid_token()
     {
         var sentEmailCount = application.Email.SentEmails.Count;
@@ -48,6 +71,7 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
         var email = application.Email.SentEmails.Skip(sentEmailCount).Should().ContainSingle().Which;
         email.Email.Should().Be("researcher@example.com");
         email.SurveyId.Should().Be("ltp.supply-chain-confidence");
+        email.SurveyTitle.Should().Be("Confidence in Labour Supply Chains 2026");
 
         var accessLink = new Uri(email.AccessUrl);
         accessLink.Query.Should().StartWith("?t=");

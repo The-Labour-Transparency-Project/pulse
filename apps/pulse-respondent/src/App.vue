@@ -92,6 +92,7 @@ const workspaceColumns = computed(() => {
                                @select-question="selectQuestion" @select-section="selectSection"
                                @update:email="setVerificationEmail" @update:code="setVerificationCode"
                                @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                               @use-another-email="verification.useAnotherEmail()"
                                @clear-verification="verification.clearVerification()"/>
       <div :class="['workspace-grid', { 'is-resizing': resizing }]"
            :style="{ gridTemplateColumns: workspaceColumns }">
@@ -127,6 +128,7 @@ const workspaceColumns = computed(() => {
                         @question-in-view="setCurrentQuestionById" @update:email="setVerificationEmail"
                         @update:code="setVerificationCode" @request-code="verification.requestCode()"
                         @confirm-code="verification.confirmCode()"
+                        @use-another-email="verification.useAnotherEmail()"
                         @clear-verification="verification.clearVerification()"
                         @clear-answers="clearAnswers" @return-to-survey="startSurvey"/>
         <PanelResizeHandle :resizing="resizing === 'right'" side="right"
@@ -143,6 +145,7 @@ const workspaceColumns = computed(() => {
                           :verification-requested="verificationRequested" :verification-verified="verificationVerified"
                           @update:email="setVerificationEmail" @update:code="setVerificationCode"
                           @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                          @use-another-email="verification.useAnotherEmail()"
                           @clear-verification="verification.clearVerification()"/>
       </div>
     </v-main>

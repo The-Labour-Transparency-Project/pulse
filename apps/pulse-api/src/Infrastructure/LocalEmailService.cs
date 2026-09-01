@@ -7,13 +7,15 @@ public sealed class LocalEmailService(ILogger<LocalEmailService> logger) : IEmai
     public Task SendAccessLinkAsync(
         string email,
         string surveyId,
+        string surveyTitle,
         string accessUrl,
         CancellationToken cancellationToken)
     {
         logger.LogInformation(
-            "Local email for {Email}, survey {SurveyId}: access URL {AccessUrl}",
+            "Local email for {Email}, survey {SurveyId} ({SurveyTitle}): access URL {AccessUrl}",
             email,
             surveyId,
+            surveyTitle,
             accessUrl);
 
         return Task.CompletedTask;

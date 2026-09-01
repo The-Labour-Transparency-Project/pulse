@@ -12,6 +12,7 @@ namespace AcceptanceTests;
 public sealed class ApiApplicationFixture : IDisposable
 {
     private readonly WebApplicationFactory<Program> application;
+    private readonly WebApplicationFactory<Program> lambdaApplication;
     public FakeEmailService Email { get; } = new();
 
     public ApiApplicationFixture()
@@ -38,14 +39,33 @@ public sealed class ApiApplicationFixture : IDisposable
         });
 
         Client = application.CreateClient();
+
+        lambdaApplication = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Acceptance");
+            builder.UseSetting("AWS_LAMBDA_FUNCTION_NAME", "acceptance-api");
+            builder.UseSetting("S3BucketName", "acceptance-tests");
+            builder.UseSetting("RespondentBaseUrl", "http://localhost");
+            builder.UseSetting("SesSender", "acceptance-tests@example.test");
+            builder.UseSetting("RespondentIdentityKey", Convert.ToBase64String(new byte[32]));
+            builder.UseSetting("TokenSigningKey", Convert.ToBase64String(new byte[32]));
+            builder.UseSetting("AllowedWaveIds", "pulse-2026");
+            builder.UseSetting("MaximumResponseBytes", "1048576");
+            builder.UseSetting("Cors:AllowedOrigins:0", "http://localhost:5173");
+        });
+
+        LambdaClient = lambdaApplication.CreateClient();
     }
 
     public HttpClient Client { get; }
+    public HttpClient LambdaClient { get; }
 
     public void Dispose()
     {
         Client.Dispose();
+        LambdaClient.Dispose();
         application.Dispose();
+        lambdaApplication.Dispose();
     }
 
     private sealed class InMemoryResponseRepository : IResponseRepository
@@ -67,7 +87,7 @@ public sealed class ApiApplicationFixture : IDisposable
 
 }
 
-public sealed record SentEmail(string Email, string SurveyId, string AccessUrl);
+public sealed record SentEmail(string Email, string SurveyId, string SurveyTitle, string AccessUrl);
 
 public sealed class FakeEmailService : IEmailService
 {
@@ -76,10 +96,11 @@ public sealed class FakeEmailService : IEmailService
     public Task SendAccessLinkAsync(
         string email,
         string surveyId,
+        string surveyTitle,
         string accessUrl,
         CancellationToken cancellationToken)
     {
-        SentEmails.Enqueue(new SentEmail(email, surveyId, accessUrl));
+        SentEmails.Enqueue(new SentEmail(email, surveyId, surveyTitle, accessUrl));
         return Task.CompletedTask;
     }
 }

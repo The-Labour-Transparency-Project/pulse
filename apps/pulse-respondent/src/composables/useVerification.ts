@@ -6,6 +6,11 @@ import {
     isValidVerificationEmail,
     parseVerificationRecord,
     tokenTimes,
+    normalizedVerificationEmail,
+    verificationRequestBlockedUntil,
+    verificationRequestCooldownMessage,
+    verificationRequestCooldownMs,
+    verificationRequestCooldownStorageKey,
     SignedTokenVerificationStrategy,
     type VerificationRecord,
     verificationStorageKey,
@@ -35,6 +40,7 @@ export function useVerification(
         null,
         { serializer },
     );
+    const requestCooldowns = useLocalStorage<Record<string, number>>(verificationRequestCooldownStorageKey, {});
     const email = ref(stored.value?.email ?? "");
     const code = ref(stored.value?.code ?? "");
     const requested = ref(Boolean(stored.value?.email));
@@ -106,9 +112,16 @@ export function useVerification(
             error.value = "Enter a valid email address.";
             return false;
         }
+        const normalizedEmail = normalizedVerificationEmail(email.value);
+        const blockedUntil = verificationRequestBlockedUntil(normalizedEmail, requestCooldowns.value);
+        if (blockedUntil) {
+            error.value = verificationRequestCooldownMessage(blockedUntil);
+            return false;
+        }
         requesting.value = true;
         try {
             await requestToken(waveId, surveyId, surveyVersion, email.value.trim());
+            requestCooldowns.value[normalizedEmail] = Date.now() + verificationRequestCooldownMs;
             requested.value = true;
             code.value = "";
             stored.value = null;
@@ -119,6 +132,14 @@ export function useVerification(
         } finally {
             requesting.value = false;
         }
+    }
+
+    function useAnotherEmail() {
+        stored.value = null;
+        email.value = "";
+        code.value = "";
+        requested.value = false;
+        error.value = "";
     }
 
     function confirmCode() {
@@ -148,5 +169,8 @@ export function useVerification(
     scheduleRefresh(stored.value?.expiresAt ?? tokenTimes(code.value)?.expiresAt);
     onUnmounted(() => { if (refreshTimer) clearTimeout(refreshTimer); });
 
-    return { email, code, requested, requesting, error, verified, requestCode, confirmCode, clearVerification };
+    return {
+        email, code, requested, requesting, error, verified, requestCode, confirmCode, clearVerification,
+        useAnotherEmail,
+    };
 }

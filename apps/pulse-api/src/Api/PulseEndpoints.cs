@@ -78,6 +78,7 @@ public static class PulseEndpoints
         ITokenLifetimePolicy tokenLifetimePolicy,
         TimeProvider timeProvider,
         IEmailService email,
+        ISurveyCatalog surveys,
         ILoggerFactory loggerFactory,
         CancellationToken cancellationToken)
     {
@@ -121,7 +122,8 @@ public static class PulseEndpoints
         var respondentId = identity.GetRespondentId(request.SurveyId, normalizedEmail);
         var credential = tokens.Create(CreateClaims(request.WaveId, respondentId, tokenLifetimePolicy, timeProvider));
         var accessUrl = $"{settings.RespondentBaseUrl.TrimEnd('/')}?t={Uri.EscapeDataString(credential)}";
-        await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, accessUrl, cancellationToken);
+        var surveyTitle = surveys.GetTitle(request.SurveyId, request.SurveyVersion ?? "") ?? "Labour Transparency Pulse";
+        await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, surveyTitle, accessUrl, cancellationToken);
         loggerFactory.CreateLogger("Pulse.Token").LogInformation(
             "Access token requested for wave {WaveId}, survey {SurveyId}, respondent {RespondentId}",
             request.WaveId,

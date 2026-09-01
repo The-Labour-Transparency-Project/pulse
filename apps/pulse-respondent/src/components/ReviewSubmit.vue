@@ -23,7 +23,8 @@ defineEmits<{
   "update:email": [value: string];
   "update:code": [value: string];
   requestCode: [];
-  confirmCode: []
+  confirmCode: [];
+  useAnotherEmail: [];
 }>();
 </script>
 
@@ -52,7 +53,8 @@ defineEmits<{
       <VerificationForm v-else :code="props.code" :email="props.email" :requested="props.requested"
                         :verification-error="props.verificationError" class="mb-8"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"/>
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                        @use-another-email="$emit('useAnotherEmail')"/>
       <v-alert v-if="props.submissionError" class="mb-4" color="error" icon="mdi-cloud-alert-outline" variant="tonal">
         {{ props.submissionError }} You can try submitting again.
       </v-alert>

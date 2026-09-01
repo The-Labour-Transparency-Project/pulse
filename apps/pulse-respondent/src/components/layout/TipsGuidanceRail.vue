@@ -16,6 +16,7 @@ defineEmits<{
   "update:code": [value: string];
   requestCode: [];
   confirmCode: [];
+  useAnotherEmail: [];
   clearVerification: [];
 }>();
 
@@ -57,7 +58,8 @@ const visibleItems = guidanceItems.filter((item) => item.id !== "required");
                         :requested="props.verificationRequested" :show-title="false"
                         :verification-error="props.verificationError"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
-                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"/>
+                        @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                        @use-another-email="$emit('useAnotherEmail')"/>
     </section>
   </aside>
 </template>

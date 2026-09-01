@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
         public IServiceCollection AddPulseServices(PulseSettings settings)
         {
             services.AddSingleton(settings);
+            services.AddSingleton<ISurveyCatalog, EmbeddedSurveyCatalog>();
             services.AddSingleton<TimeProvider>(TimeProvider.System);
             services.AddSingleton<ITokenLifetimePolicy>(_ =>
                 new TokenLifetimePolicy(TimeSpan.FromDays(settings.TokenLifetimeDays)));

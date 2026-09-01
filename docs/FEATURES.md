@@ -91,6 +91,8 @@ the current respondent renderer registry and the types present in v1.
 - [x] Serialize answers to `survey-response.schema.json`
 - [x] Add submit, retry, success, and failure states
 - [x] Require a persisted signed-token email verification before response submission
+- [x] Clear the pending email and token and focus the email field when using another email
+- [x] Bounce repeat access-link requests for the same email in the browser cooldown window
 - [x] Consume time-limited signed access tokens from `t` links and remove them from browser history
 - [x] Allow verified respondents to clear verification with a duplicate-submission warning
 - [x] Allow respondents to clear all answers without clearing verification

@@ -5,6 +5,27 @@ export interface VerificationRecord {
     expiresAt?: number;
 }
 
+export const verificationRequestCooldownMs = 60_000;
+export const verificationRequestCooldownStorageKey = "pulse-respondent-token-request-cooldowns";
+
+export function normalizedVerificationEmail(email: string): string {
+    return email.trim().toLowerCase();
+}
+
+export function verificationRequestBlockedUntil(
+    email: string,
+    cooldowns: Record<string, number>,
+    now = Date.now(),
+): number | null {
+    const blockedUntil = cooldowns[normalizedVerificationEmail(email)];
+    return typeof blockedUntil === "number" && blockedUntil > now ? blockedUntil : null;
+}
+
+export function verificationRequestCooldownMessage(blockedUntil: number, now = Date.now()): string {
+    const seconds = Math.max(1, Math.ceil((blockedUntil - now) / 1000));
+    return `Please wait ${seconds} second${seconds === 1 ? "" : "s"} before requesting another access link for this email address.`;
+}
+
 export interface VerificationStrategy {
     readonly id: string;
     tokenErrorMessage: string;

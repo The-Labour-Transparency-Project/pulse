@@ -1,10 +1,13 @@
 import {describe, expect, it} from "vitest";
 import {
     isValidVerificationEmail,
+    normalizedVerificationEmail,
     parseVerificationRecord,
     SignedTokenVerificationStrategy,
     consumeVerificationTokenUrl,
     verificationStorageKey,
+    verificationRequestBlockedUntil,
+    verificationRequestCooldownMessage,
     type VerificationStrategy,
 } from "./verification";
 
@@ -30,6 +33,15 @@ describe("verification", () => {
         expect(strategy.isValidToken("123456")).toBe(true);
         expect(strategy.isValidToken(" ")).toBe(false);
         expect(strategy.isValidToken("token with spaces")).toBe(false);
+    });
+
+    it("normalizes email cooldown keys and blocks only active cooldowns", () => {
+        const now = 100_000;
+        const cooldowns = {[normalizedVerificationEmail(" Respondent@Example.com ")]: now + 30_000};
+        expect(verificationRequestBlockedUntil("respondent@example.com", cooldowns, now)).toBe(130_000);
+        expect(verificationRequestBlockedUntil("other@example.com", cooldowns, now)).toBeNull();
+        expect(verificationRequestBlockedUntil("respondent@example.com", cooldowns, 130_000)).toBeNull();
+        expect(verificationRequestCooldownMessage(101_000, now)).toContain("1 second");
     });
 
     it("hydrates records with or without an email address", () => {

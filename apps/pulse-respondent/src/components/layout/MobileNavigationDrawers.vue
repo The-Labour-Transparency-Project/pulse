@@ -47,6 +47,7 @@ defineEmits<{
   'update:code': [value: string];
   requestCode: [];
   confirmCode: [];
+  useAnotherEmail: [];
   clearVerification: [];
 }>();
 
@@ -98,6 +99,7 @@ function isNavigatorItem(id: string) {
                         :verification-verified="verificationVerified"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
                         @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"
+                        @use-another-email="$emit('useAnotherEmail')"
                         @clear-verification="$emit('clearVerification')"/>
     </v-navigation-drawer>
     <v-navigation-drawer :model-value="rightOpen" class="d-lg-none" location="right" temporary

@@ -66,6 +66,7 @@ const emit = defineEmits<{
   "update:code": [value: string];
   requestCode: [];
   confirmCode: [];
+  useAnotherEmail: [];
   clearVerification: [];
   clearAnswers: [];
 }>();
@@ -210,7 +211,7 @@ watch(() => props.destination.type, (type) => {
                           :verified="verificationVerified" :visible-count="visibleCount"
                           @submit="$emit('submit')" @update:email="$emit('update:email', $event)"
                           @update:code="$emit('update:code', $event)" @request-code="$emit('requestCode')"
-                          @confirm-code="$emit('confirmCode')"
+                      @confirm-code="$emit('confirmCode')" @use-another-email="$emit('useAnotherEmail')"
                           @clear-verification="$emit('clearVerification')"
                           @clear-answers="$emit('clearAnswers')" @return-to-survey="$emit('returnToSurvey')"/>
           </div>
@@ -233,7 +234,7 @@ watch(() => props.destination.type, (type) => {
                       :verified="verificationVerified" :visible-count="visibleCount"
                       @submit="$emit('submit')" @update:email="$emit('update:email', $event)"
                       @update:code="$emit('update:code', $event)" @request-code="$emit('requestCode')"
-                      @confirm-code="$emit('confirmCode')"
+                          @confirm-code="$emit('confirmCode')" @use-another-email="$emit('useAnotherEmail')"
                       @clear-verification="$emit('clearVerification')"
                       @clear-answers="$emit('clearAnswers')"
                       @return-to-survey="$emit('returnToSurvey')"/>

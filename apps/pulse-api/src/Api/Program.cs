@@ -27,8 +27,17 @@ builder.Services.AddDefaultAWSOptions(awsOptions);
 
 var settings = PulseSettings.FromEnvironment(builder.Configuration);
 builder.Services.AddPulseServices(settings);
-builder.Services.AddCors(options => options.AddPolicy("PulseCors", policy =>
-    policy.WithOrigins(settings.AllowedCorsOrigins).AllowAnyHeader().AllowAnyMethod()));
+// Lambda Function URLs (including the LocalStack Function URL) add the CORS
+// headers and handle preflight requests themselves. Adding the ASP.NET policy
+// as well would emit duplicate Access-Control-Allow-Origin headers, which
+// browsers reject. Direct `dotnet run` has no Function URL in front of it, so
+// keep the ASP.NET policy for that local hosting mode.
+var runningInLambda = !string.IsNullOrWhiteSpace(builder.Configuration["AWS_LAMBDA_FUNCTION_NAME"]);
+if (!runningInLambda)
+{
+    builder.Services.AddCors(options => options.AddPolicy("PulseCors", policy =>
+        policy.WithOrigins(settings.AllowedCorsOrigins).AllowAnyHeader().AllowAnyMethod()));
+}
 if (!string.IsNullOrWhiteSpace(localAwsServiceUrl))
 {
     // LocalStack and MinIO use path-style addressing in local development.
@@ -56,7 +65,10 @@ builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 var app = builder.Build();
 app.UseHttpsRedirection();
-app.UseCors("PulseCors");
+if (!runningInLambda)
+{
+    app.UseCors("PulseCors");
+}
 app.Use(async (context, next) =>
 {
     context.Response.Headers.CacheControl = "no-store";

@@ -40,7 +40,8 @@ export async function requestToken(waveId: string, surveyId: string, surveyVersi
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ waveId, surveyId, surveyVersion, email }),
         });
-    } catch {
+    } catch (error) {
+        console.error("Failed to request a respondent access token.", error);
         throw new ApiError(0, "We could not reach the respondent service. Check your connection and try again.");
     }
     if (!response.ok) {
@@ -56,7 +57,8 @@ export async function refreshToken(token: string, email: string): Promise<{token
             headers: {"content-type": "application/json"},
             body: JSON.stringify({token, email}),
         });
-    } catch {
+    } catch (error) {
+        console.error("Failed to refresh a respondent access token.", error);
         throw new ApiError(0, "We could not reach the respondent service. Check your connection and try again.");
     }
     if (!response.ok) throw await responseError(response);
@@ -74,7 +76,8 @@ export async function saveResponse(token: string, responseDocument: SurveyRespon
             headers: { "authorization": `Bearer ${token}`, "content-type": "application/json" },
             body: JSON.stringify(responseDocument),
         });
-    } catch {
+    } catch (error) {
+        console.error("Failed to save the respondent response.", error);
         throw new ApiError(0, "We could not reach the respondent service. Check your connection and try again.");
     }
     if (!response.ok) {

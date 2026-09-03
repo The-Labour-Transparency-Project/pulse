@@ -7,6 +7,7 @@ defineProps<{
   email: string;
   code: string;
   requested: boolean;
+  requesting: boolean;
   verificationError: string;
   showTitle?: boolean;
 }>();
@@ -33,10 +34,11 @@ async function useAnotherEmail() {
     <div v-if="showTitle !== false" class="text-h6 mb-2">Verify before submitting</div>
     <p class="text-body-2 mb-4">Enter your email address and we’ll send you a secure access link. You’ll need this link
       before submitting your response. Access links expire after 7 days; you can request a new link if needed.</p>
-    <v-text-field ref="emailInput" :disabled="requested" :model-value="email" autocomplete="email" label="Email address"
+    <v-text-field ref="emailInput" :disabled="requested || requesting" :model-value="email" autocomplete="email" label="Email address"
                   prepend-inner-icon="mdi-email-outline" type="email"
                   @update:model-value="$emit('update:email', String($event))"/>
-    <v-btn v-if="!requested" color="secondary" variant="tonal" @click="$emit('requestCode')">Send verification
+    <v-btn v-if="!requested" :disabled="requesting" :loading="requesting" color="secondary" variant="tonal"
+           @click="$emit('requestCode')">Send verification
       code
     </v-btn>
     <template v-else>

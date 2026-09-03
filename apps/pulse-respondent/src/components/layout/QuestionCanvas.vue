@@ -50,6 +50,7 @@ const props = defineProps<{
   verificationEmail: string;
   verificationCode: string;
   verificationRequested: boolean;
+  verificationRequesting: boolean;
   verificationVerified: boolean;
   verificationError: string;
 }>();
@@ -205,7 +206,7 @@ watch(() => props.destination.type, (type) => {
           </template>
           <div v-if="!submitted" class="continuous-destination" data-survey-destination="review">
             <ReviewSubmit :answered-count="answeredCount" :code="verificationCode" :email="verificationEmail"
-                          :requested="verificationRequested" :show-return-button="false"
+                          :requested="verificationRequested" :requesting="verificationRequesting" :show-return-button="false"
                           :verification-error="verificationError"
                           :submitting="submitting" :submission-error="submissionError"
                           :verified="verificationVerified" :visible-count="visibleCount"
@@ -228,7 +229,7 @@ watch(() => props.destination.type, (type) => {
                             @start="$emit('start')" @clear-answers="$emit('clearAnswers')"/>
         <ReviewSubmit v-else-if="destination.type === 'review' && !submitted" :answered-count="answeredCount"
                       :code="verificationCode" :email="verificationEmail"
-                      :requested="verificationRequested" :show-return-button="true"
+                      :requested="verificationRequested" :requesting="verificationRequesting" :show-return-button="true"
                       :verification-error="verificationError"
                       :submitting="submitting" :submission-error="submissionError"
                       :verified="verificationVerified" :visible-count="visibleCount"

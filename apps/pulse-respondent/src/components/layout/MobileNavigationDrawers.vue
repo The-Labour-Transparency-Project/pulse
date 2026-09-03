@@ -29,6 +29,7 @@ const props = defineProps<{
   verificationEmail: string;
   verificationCode: string;
   verificationRequested: boolean;
+  verificationRequesting: boolean;
   verificationVerified: boolean;
   verificationError: string;
   visitedQuestionIds: ReadonlySet<string>;
@@ -96,6 +97,7 @@ function isNavigatorItem(id: string) {
                          @update:model-value="$emit('update:tipsOpen', $event)">
       <TipsGuidanceRail :verification-code="verificationCode" :verification-email="verificationEmail"
                         :verification-error="verificationError" :verification-requested="verificationRequested"
+                        :verification-requesting="verificationRequesting"
                         :verification-verified="verificationVerified"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
                         @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"

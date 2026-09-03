@@ -7,6 +7,7 @@ const props = defineProps<{
   verificationEmail: string;
   verificationCode: string;
   verificationRequested: boolean;
+  verificationRequesting: boolean;
   verificationVerified: boolean;
   verificationError: string;
 }>();
@@ -55,7 +56,8 @@ const visibleItems = guidanceItems.filter((item) => item.id !== "required");
       <div class="section-heading mb-2">Before you submit</div>
       <VerificationStatus v-if="props.verificationVerified" @clear="$emit('clearVerification')"/>
       <VerificationForm v-else :code="props.verificationCode" :email="props.verificationEmail"
-                        :requested="props.verificationRequested" :show-title="false"
+                        :requested="props.verificationRequested" :requesting="props.verificationRequesting"
+                        :show-title="false"
                         :verification-error="props.verificationError"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
                         @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"

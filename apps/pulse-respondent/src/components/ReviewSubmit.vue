@@ -10,6 +10,7 @@ const props = defineProps<{
   email: string;
   code: string;
   requested: boolean;
+  requesting: boolean;
   verified: boolean;
   verificationError: string;
   submitting: boolean;
@@ -51,6 +52,7 @@ defineEmits<{
         <VerificationStatus @clear="$emit('clearVerification')"/>
       </div>
       <VerificationForm v-else :code="props.code" :email="props.email" :requested="props.requested"
+                        :requesting="props.requesting"
                         :verification-error="props.verificationError" class="mb-8"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"
                         @request-code="$emit('requestCode')" @confirm-code="$emit('confirmCode')"

@@ -107,6 +107,7 @@ export function useVerification(
     consumeTokenFromUrl();
 
     async function requestCode() {
+        if (requesting.value) return false;
         error.value = "";
         if (!isValidVerificationEmail(email.value)) {
             error.value = "Enter a valid email address.";

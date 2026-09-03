@@ -56,7 +56,7 @@ const {
   moveNext,
   submitResponse,
   verification,
-  verificationEmail, verificationCode, verificationRequested, verificationError, verificationVerified,
+  verificationEmail, verificationCode, verificationRequested, verificationRequesting, verificationError, verificationVerified,
   setVerificationEmail, setVerificationCode,
   clearAnswers,
 } = experience;
@@ -85,6 +85,7 @@ const workspaceColumns = computed(() => {
                                :verification-code="verificationCode"
                                :verification-email="verificationEmail" :verification-error="verificationError"
                                :verification-requested="verificationRequested"
+                               :verification-requesting="verificationRequesting"
                                :verification-verified="verificationVerified" :visible-items="visibleItems"
                                :visited-question-ids="visitedQuestionIds"
                                @select-introduction="selectIntroduction" @select-review="selectReview"
@@ -119,7 +120,8 @@ const workspaceColumns = computed(() => {
                         :survey="survey"
                         :verification-code="verificationCode" :verification-email="verificationEmail"
                         :verification-error="verificationError"
-                        :verification-requested="verificationRequested" :verification-verified="verificationVerified"
+                        :verification-requested="verificationRequested" :verification-requesting="verificationRequesting"
+                        :verification-verified="verificationVerified"
                         :view-mode="viewMode" :visible-count="visibleItems.length"
                         :visible-items="visibleItems" @next="moveNext"
                         @previous="moveQuestion(-1)" @start="startSurvey"
@@ -142,7 +144,8 @@ const workspaceColumns = computed(() => {
                            @nudge="nudge('tips', $event)" @resize="startResize('tips', $event)"/>
         <TipsGuidanceRail v-if="tipsOpen" :verification-code="verificationCode"
                           :verification-email="verificationEmail" :verification-error="verificationError"
-                          :verification-requested="verificationRequested" :verification-verified="verificationVerified"
+                          :verification-requested="verificationRequested" :verification-requesting="verificationRequesting"
+                          :verification-verified="verificationVerified"
                           @update:email="setVerificationEmail" @update:code="setVerificationCode"
                           @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
                           @use-another-email="verification.useAnotherEmail()"

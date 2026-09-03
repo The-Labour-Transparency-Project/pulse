@@ -30,7 +30,7 @@ module "pulse_backend" {
   lambda_runtime                = "dotnet10"
   lambda_handler                = "Api"
   respondent_base_url           = var.respondent_base_url
-  email_provider                = "Local"
+  email_provider                = "Aws"
   ses_sender                    = var.ses_sender
   ses_identity_arn              = module.ses_email.identity_arn
   ses_configuration_set_name    = var.ses_configuration_set_name

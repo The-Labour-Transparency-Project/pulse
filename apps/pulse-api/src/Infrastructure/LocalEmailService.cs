@@ -9,14 +9,16 @@ public sealed class LocalEmailService(ILogger<LocalEmailService> logger) : IEmai
         string surveyId,
         string surveyTitle,
         string accessUrl,
+        string accessToken,
         CancellationToken cancellationToken)
     {
         logger.LogInformation(
-            "Local email for {Email}, survey {SurveyId} ({SurveyTitle}): access URL {AccessUrl}",
+            "Local email for {Email}, survey {SurveyId} ({SurveyTitle}): access URL {AccessUrl}, access token {AccessToken}",
             email,
             surveyId,
             surveyTitle,
-            accessUrl);
+            accessUrl,
+            accessToken);
 
         return Task.CompletedTask;
     }

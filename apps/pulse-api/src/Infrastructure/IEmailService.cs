@@ -7,5 +7,6 @@ public interface IEmailService
         string surveyId,
         string surveyTitle,
         string accessUrl,
+        string accessToken,
         CancellationToken cancellationToken);
 }

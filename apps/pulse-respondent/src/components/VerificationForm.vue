@@ -32,8 +32,8 @@ async function useAnotherEmail() {
 <template>
   <v-card class="verification-card pa-4" variant="outlined">
     <div v-if="showTitle !== false" class="text-h6 mb-2">Verify before submitting</div>
-    <p class="text-body-2 mb-4">Enter your email address and we’ll send you a secure access link. You’ll need this link
-      before submitting your response. Access links expire after 7 days; you can request a new link if needed.</p>
+    <p class="text-body-2 mb-4">Enter your email address and we’ll send you a secure access link. You’ll need to confirm
+      access before submitting your response. Access links expire after 7 days; you can request a new link if needed.</p>
     <v-text-field ref="emailInput" :disabled="requested || requesting" :model-value="email" autocomplete="email" label="Email address"
                   prepend-inner-icon="mdi-email-outline" type="email"
                   @update:model-value="$emit('update:email', String($event))"/>
@@ -42,8 +42,9 @@ async function useAnotherEmail() {
       code
     </v-btn>
     <template v-else>
-      <v-text-field :model-value="code" autocomplete="one-time-code" class="mt-3"
-                    label="Access token" prepend-inner-icon="mdi-shield-key-outline"
+      <v-text-field :model-value="code" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" class="mt-3"
+                    hint="Copy the access token from the email, paste it here, then select Confirm code." label="Access token"
+                    persistent-hint prepend-inner-icon="mdi-shield-key-outline" spellcheck="false"
                     @update:model-value="$emit('update:code', String($event))"/>
       <div class="d-flex flex-wrap ga-3 align-center">
         <v-btn color="secondary" @click="$emit('confirmCode')">Confirm code</v-btn>

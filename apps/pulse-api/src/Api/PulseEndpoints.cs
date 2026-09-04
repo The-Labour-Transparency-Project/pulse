@@ -123,7 +123,7 @@ public static class PulseEndpoints
         var credential = tokens.Create(CreateClaims(request.WaveId, respondentId, tokenLifetimePolicy, timeProvider));
         var accessUrl = $"{settings.RespondentBaseUrl.TrimEnd('/')}?t={Uri.EscapeDataString(credential)}";
         var surveyTitle = surveys.GetTitle(request.SurveyId, request.SurveyVersion ?? "") ?? "Labour Transparency Pulse";
-        await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, surveyTitle, accessUrl, cancellationToken);
+        await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, surveyTitle, accessUrl, credential, cancellationToken);
         loggerFactory.CreateLogger("Pulse.Token").LogInformation(
             "Access token requested for wave {WaveId}, survey {SurveyId}, respondent {RespondentId}",
             request.WaveId,

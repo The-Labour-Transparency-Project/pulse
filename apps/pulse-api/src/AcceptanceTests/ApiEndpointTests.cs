@@ -78,6 +78,7 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
 
         var token = Uri.UnescapeDataString(accessLink.Query[3..]);
         token.Split('.').Should().HaveCount(2);
+        email.AccessToken.Should().Be(token);
 
         using var authenticatedRequest = new HttpRequestMessage(HttpMethod.Get, "/response/latest");
         authenticatedRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);

@@ -87,7 +87,7 @@ public sealed class ApiApplicationFixture : IDisposable
 
 }
 
-public sealed record SentEmail(string Email, string SurveyId, string SurveyTitle, string AccessUrl);
+public sealed record SentEmail(string Email, string SurveyId, string SurveyTitle, string AccessUrl, string AccessToken);
 
 public sealed class FakeEmailService : IEmailService
 {
@@ -98,9 +98,10 @@ public sealed class FakeEmailService : IEmailService
         string surveyId,
         string surveyTitle,
         string accessUrl,
+        string accessToken,
         CancellationToken cancellationToken)
     {
-        SentEmails.Enqueue(new SentEmail(email, surveyId, surveyTitle, accessUrl));
+        SentEmails.Enqueue(new SentEmail(email, surveyId, surveyTitle, accessUrl, accessToken));
         return Task.CompletedTask;
     }
 }

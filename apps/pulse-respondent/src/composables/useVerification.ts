@@ -46,6 +46,7 @@ export function useVerification(
     const requested = ref(Boolean(stored.value?.email));
     const error = ref("");
     const requesting = ref(false);
+    const requestMessage = ref("");
     const verified = computed(() => Boolean(stored.value));
     let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -101,6 +102,7 @@ export function useVerification(
         scheduleRefresh(times?.expiresAt);
         requested.value = false;
         error.value = "";
+        requestMessage.value = "";
         return true;
     }
 
@@ -121,9 +123,10 @@ export function useVerification(
         }
         requesting.value = true;
         try {
-            await requestToken(waveId, surveyId, surveyVersion, email.value.trim());
+            const result = await requestToken(waveId, surveyId, surveyVersion, email.value.trim());
             requestCooldowns.value[normalizedEmail] = Date.now() + verificationRequestCooldownMs;
             requested.value = true;
+            requestMessage.value = result.message ?? "The access email has been sent. Open it on this same device and browser so you can continue with your saved answers.";
             code.value = "";
             stored.value = null;
             return true;
@@ -140,6 +143,7 @@ export function useVerification(
         email.value = "";
         code.value = "";
         requested.value = false;
+        requestMessage.value = "";
         error.value = "";
     }
 
@@ -164,6 +168,7 @@ export function useVerification(
         stored.value = null;
         code.value = "";
         requested.value = false;
+        requestMessage.value = "";
         error.value = "";
     }
 
@@ -171,7 +176,7 @@ export function useVerification(
     onUnmounted(() => { if (refreshTimer) clearTimeout(refreshTimer); });
 
     return {
-        email, code, requested, requesting, error, verified, requestCode, confirmCode, clearVerification,
+        email, code, requested, requesting, requestMessage, error, verified, requestCode, confirmCode, clearVerification,
         useAnotherEmail,
     };
 }

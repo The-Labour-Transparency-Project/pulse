@@ -8,7 +8,7 @@ describe("respondent API client", () => {
     });
 
     it("requests a token from the configured API origin", async () => {
-        vi.mocked(fetch).mockResolvedValue(new Response(null, {status: 200}));
+        vi.mocked(fetch).mockResolvedValue(Response.json({accepted: true, message: "Use the same device."}));
 
         await requestToken("pulse-2026", "ltp.supply-chain-confidence", "1.0.2", "respondent@example.com");
 

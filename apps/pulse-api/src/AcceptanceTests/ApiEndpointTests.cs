@@ -67,6 +67,8 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
         });
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+        (await response.Content.ReadFromJsonAsync<JsonElement>()).GetProperty("message").GetString()
+            .Should().Contain("same device");
 
         var email = application.Email.SentEmails.Skip(sentEmailCount).Should().ContainSingle().Which;
         email.Email.Should().Be("researcher@example.com");

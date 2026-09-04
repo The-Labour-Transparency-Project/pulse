@@ -33,7 +33,12 @@ async function responseError(response: Response): Promise<ApiError> {
     return new ApiError(response.status, message);
 }
 
-export async function requestToken(waveId: string, surveyId: string, surveyVersion: string, email: string): Promise<void> {
+export interface TokenRequestResult {
+    accepted: boolean;
+    message?: string;
+}
+
+export async function requestToken(waveId: string, surveyId: string, surveyVersion: string, email: string): Promise<TokenRequestResult> {
     let response: Response;
     try {
         response = await fetch(endpoint("/token"), {
@@ -48,6 +53,7 @@ export async function requestToken(waveId: string, surveyId: string, surveyVersi
     if (!response.ok) {
         throw await responseError(response);
     }
+    return await response.json() as TokenRequestResult;
 }
 
 export async function refreshToken(token: string, email: string): Promise<{token: string; iat: number; exp: number}> {

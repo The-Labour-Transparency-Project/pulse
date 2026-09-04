@@ -28,6 +28,7 @@ public sealed class SesEmailService(IAmazonSimpleEmailService ses, string sender
                             $"Hello,\n\n" +
                             $"You requested access to the {surveyTitle} survey.\n\n" +
                             $"Open the secure link below to access your survey:\n\n{accessUrl}\n\n" +
+                            "Important: Open this email and its link on the same device and browser where you are completing the survey. Your saved answers stay in that browser and are not transferred to another device. If you received this email on your phone but are answering on a desktop, open the email on the desktop instead (or copy the complete token below to the desktop).\n\n" +
                             "If you need to enter the token manually:\n\n" +
                             "1. Copy the complete access token below.\n" +
                             "2. Paste it into the Access token field in the survey.\n" +

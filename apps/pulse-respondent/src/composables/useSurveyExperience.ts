@@ -45,6 +45,7 @@ export function useSurveyExperience() {
     const verificationCode = verification.code;
     const verificationRequested = verification.requested;
     const verificationRequesting = verification.requesting;
+    const verificationRequestMessage = verification.requestMessage;
     const verificationError = verification.error;
     const verificationVerified = verification.verified;
     const answers = reactive<Answers>({});
@@ -422,6 +423,7 @@ export function useSurveyExperience() {
         verificationCode,
         verificationRequested,
         verificationRequesting,
+        verificationRequestMessage,
         verificationError,
         verificationVerified,
         setVerificationEmail,

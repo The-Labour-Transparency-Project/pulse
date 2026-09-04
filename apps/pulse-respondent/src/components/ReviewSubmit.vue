@@ -11,6 +11,7 @@ const props = defineProps<{
   code: string;
   requested: boolean;
   requesting: boolean;
+  requestMessage: string;
   verified: boolean;
   verificationError: string;
   submitting: boolean;
@@ -51,7 +52,7 @@ defineEmits<{
       <div v-if="props.verified" class="review-verification-panel mb-8">
         <VerificationStatus @clear="$emit('clearVerification')"/>
       </div>
-      <VerificationForm v-else :code="props.code" :email="props.email" :requested="props.requested"
+      <VerificationForm v-else :code="props.code" :email="props.email" :request-message="props.requestMessage" :requested="props.requested"
                         :requesting="props.requesting"
                         :verification-error="props.verificationError" class="mb-8"
                         @update:email="$emit('update:email', $event)" @update:code="$emit('update:code', $event)"

@@ -8,6 +8,7 @@ defineProps<{
   code: string;
   requested: boolean;
   requesting: boolean;
+  requestMessage?: string;
   verificationError: string;
   showTitle?: boolean;
 }>();
@@ -42,6 +43,10 @@ async function useAnotherEmail() {
       code
     </v-btn>
     <template v-else>
+      <v-alert v-if="requestMessage" class="mb-3" color="info" icon="mdi-cellphone-link" variant="tonal">
+        <div class="font-weight-medium mb-1">Use the same device</div>
+        {{ requestMessage }}
+      </v-alert>
       <v-text-field :model-value="code" autocomplete="one-time-code" autocapitalize="none" autocorrect="off" class="mt-3"
                     hint="Copy the access token from the email, paste it here, then select Confirm code." label="Access token"
                     persistent-hint prepend-inner-icon="mdi-shield-key-outline" spellcheck="false"

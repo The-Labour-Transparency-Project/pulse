@@ -114,6 +114,7 @@ the current respondent renderer registry and the types present in v1.
 - [x] Refresh an unexpired respondent credential with the credential and matching email
 - [x] Keep respondent credentials compact by carrying only the wave and a 64-bit respondent checksum
 - [x] Support local console email delivery with token logging and AWS SES delivery by environment setting
+- [x] Explain that access links and locally saved drafts must be used on the same device and browser
 - [x] Use the local log email strategy for both direct and LocalStack API development
 - [x] Provision the local SES sender identity for LocalStack
 - [x] Store immutable response versions in an S3-derived respondent namespace

@@ -129,7 +129,11 @@ public static class PulseEndpoints
             request.WaveId,
             request.SurveyId,
             respondentId);
-        return Results.Ok(new { accepted = true });
+        return Results.Ok(new
+        {
+            accepted = true,
+            message = "Open this email on the same device and browser where you are completing the survey. Your saved answers stay on that device and are not transferred to another device."
+        });
     }
 
     private static TokenClaims CreateClaims(

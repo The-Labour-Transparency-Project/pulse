@@ -165,6 +165,23 @@ body,
 }
 
 @media (max-width: 599px) {
+    /* Wrapped answer labels need room to breathe on narrow screens. */
+    .survey-answer .v-selection-control,
+    .survey-choice-row .v-selection-control {
+        /*align-items: flex-start;*/
+        flex: 0 0 auto;
+        min-height: 0 !important;
+        padding-block: 0.125rem;
+    }
+
+    .survey-answer .v-selection-control__wrapper {
+        margin-top: -0.125rem;
+    }
+
+    .survey-answer .v-selection-control .v-label {
+        height: auto !important;
+    }
+
     .workspace-shell {
         min-height: calc(100dvh - 120px);
     }

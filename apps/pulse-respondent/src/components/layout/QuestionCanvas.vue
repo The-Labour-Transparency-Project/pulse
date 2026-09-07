@@ -188,7 +188,7 @@ watch(() => props.destination.type, (type) => {
           <div v-if="showIntroductionInContinuous" class="continuous-destination"
                data-survey-destination="introduction">
             <SurveyIntroduction :has-progress="hasProgress" :introduction="introduction"
-                                :verified="verificationVerified"
+                                :show-start-button="false" :verified="verificationVerified"
                                 @start="$emit('start')" @clear-answers="$emit('clearAnswers')"/>
           </div>
           <template v-for="surveySection in survey.sections" :key="surveySection.id">

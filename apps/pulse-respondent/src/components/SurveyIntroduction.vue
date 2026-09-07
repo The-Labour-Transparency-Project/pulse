@@ -2,7 +2,14 @@
 import type {SurveyIntroduction} from "../domain/navigation";
 import ClearAnswersAction from "./ClearAnswersAction.vue";
 
-const props = defineProps<{ introduction: SurveyIntroduction; hasProgress: boolean; verified: boolean }>();
+const props = withDefaults(defineProps<{
+  introduction: SurveyIntroduction;
+  hasProgress: boolean;
+  verified: boolean;
+  showStartButton?: boolean;
+}>(), {
+  showStartButton: true,
+});
 defineEmits<{ start: []; clearAnswers: [] }>();
 </script>
 
@@ -40,7 +47,7 @@ defineEmits<{ start: []; clearAnswers: [] }>();
         <v-icon class="mr-1" icon="mdi-information-outline" size="18"/>
         {{ introduction.autosave }}
       </p>
-      <div class="d-flex align-center flex-wrap ga-3">
+      <div v-if="props.showStartButton" class="d-flex align-center flex-wrap ga-3">
         <v-btn append-icon="mdi-arrow-right" color="primary" min-width="250" @click="$emit('start')">
           {{ hasProgress ? "Continue survey" : "Start survey" }}
         </v-btn>

@@ -52,6 +52,7 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [x] Wrap matrix labels and headings within responsive table cells
 - [x] Provide mobile-friendly navigation controls
 - [x] Force continuous view on xs while restoring the prior view mode above xs
+- [x] Hide the Start survey action in continuous desktop and mobile views
 - [x] Remember the preferred view mode across browser sessions
 - [x] Remember the current section and question across browser sessions
 - [x] Keep mobile navigation controls fixed and usable at the xs breakpoint

@@ -199,6 +199,15 @@ body,
         height: auto !important;
     }
 
+    .survey-radio-group .v-selection-control-group {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .survey-radio-group .v-selection-control {
+        width: 100%;
+    }
+
     .workspace-shell {
         min-height: calc(100dvh - 120px);
     }

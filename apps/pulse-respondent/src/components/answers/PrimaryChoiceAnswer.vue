@@ -24,6 +24,7 @@ const answerModel = computed({
     <v-radio-group
         v-model="answerModel"
         :aria-label="Object.values(item.title)[0]"
+        class="survey-radio-group"
         color="primary"
         density="compact"
         hide-details

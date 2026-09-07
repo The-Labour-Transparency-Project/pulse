@@ -204,5 +204,15 @@ function updateRow(rowId: string, value: string | null) {
   .matrix-answer__choices {
     padding-block: 0 !important;
   }
+
+  .matrix-answer__choices :deep(.v-selection-control-group--inline) {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .matrix-answer__choices :deep(.v-selection-control) {
+    width: 100%;
+  }
 }
 </style>

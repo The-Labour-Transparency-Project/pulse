@@ -41,17 +41,9 @@ defineEmits<{ start: []; clearAnswers: [] }>();
         {{ introduction.autosave }}
       </p>
       <div class="d-flex align-center flex-wrap ga-3">
-        <v-badge
-            bordered
-            color="tertiary"
-            content="Preview only"
-            location="top end"
-            min-height="30"
-            offset-x="30">
-          <v-btn append-icon="mdi-arrow-right" color="primary" min-width="250" @click="$emit('start')">
-            {{ hasProgress ? "Continue survey" : "Start survey" }}
-          </v-btn>
-        </v-badge>
+        <v-btn append-icon="mdi-arrow-right" color="primary" min-width="250" @click="$emit('start')">
+          {{ hasProgress ? "Continue survey" : "Start survey" }}
+        </v-btn>
       </div>
       <ClearAnswersAction :has-answers="props.hasProgress" :verified="props.verified"
                           @clear="$emit('clearAnswers')"/>

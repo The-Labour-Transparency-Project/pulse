@@ -36,6 +36,8 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [x] Represent the Introduction as a navigable survey destination
 - [x] Explain the survey scope, repeat-wave purpose, optional questions, and valid “Don’t know” responses in the
   Introduction
+- [x] Explain who should answer, the organisation and experience focus, multi-sector participation, Tips & Guidance,
+  optional larger-screen guidance, and the observed completion-time estimate in the Introduction
 - [x] Start new respondent sessions on the Introduction and preserve the working position
 - [x] Provide a navigable Outro destination after the final question
 - [x] Provide optional Review & submit navigation with partial submission support

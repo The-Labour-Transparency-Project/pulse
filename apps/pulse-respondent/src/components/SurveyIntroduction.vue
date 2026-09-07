@@ -25,10 +25,20 @@ defineEmits<{ start: []; clearAnswers: [] }>();
 
       <div class="introduction-meta d-flex flex-wrap ga-3 mb-8">
         <v-chip color="primary" prepend-icon="mdi-clock-outline" variant="tonal">
-          About {{ introduction.estimatedMinutes }} minutes
+          {{ introduction.estimatedTime }}
         </v-chip>
         <v-chip prepend-icon="mdi-content-save-outline" variant="outlined">Saved automatically</v-chip>
       </div>
+
+      <v-alert class="mb-4" color="primary" icon="mdi-lightbulb-on-outline" variant="tonal">
+        <div class="font-weight-medium mb-1">Tips and guidance</div>
+        Open Tips &amp; Guidance at any time for more context about the survey, navigation and answering questions.
+      </v-alert>
+      <v-alert class="mb-8" color="info" icon="mdi-monitor-dashboard" variant="tonal">
+        <div class="font-weight-medium mb-1">Choose the screen that works for you</div>
+        You can complete the survey on a phone, tablet or computer. A larger screen may make the matrix questions
+        easier to read, but using a desktop or laptop is optional.
+      </v-alert>
 
       <v-alert class="mb-4" color="info" icon="mdi-shield-lock-outline" variant="tonal">
         <div class="font-weight-medium mb-1">Privacy and confidentiality</div>

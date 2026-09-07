@@ -20,7 +20,7 @@ export interface SurveyIntroduction {
     title: string;
     purpose: string;
     description: string;
-    estimatedMinutes: number;
+    estimatedTime: string;
     privacy: string;
     reporting: string;
     autosave: string;
@@ -39,8 +39,8 @@ export function introductionFor(survey: SurveyDefinition): SurveyIntroduction {
     return {
         title: survey.title[survey.defaultLocale] ?? Object.values(survey.title)[0] ?? "Survey",
         purpose: "The Labour Transparency Project is building a clearer picture of labour practices, confidence and transparency across New Zealand agriculture and horticulture.",
-        description: "This survey asks about your experience and views. You do not need to be an expert in forced labour, people trafficking or labour assurance to take part. “Don’t know” is a useful answer. The survey will be repeated over time so we can understand where confidence is improving and where gaps remain. All questions are optional.",
-        estimatedMinutes: 10,
+        description: "This survey is for people who have experience of, or responsibility for, workforce, labour provider or supply chain practices through their organisation. Your organisation does not need to directly employ workers to take part: industry bodies, regulators, investigators, auditors and other organisations involved in these areas are also welcome. The questions ask about your organisation and your own experience and views. If your organisation works across more than one sector, answer based on its overall experience and select all relevant sectors when asked. You do not need to be an expert in forced labour, people trafficking or labour assurance to take part. “Don’t know” is a useful answer. The survey will be repeated over time so we can understand where confidence is improving and where gaps remain. All questions are optional.",
+        estimatedTime: "About 10 minutes",
         privacy: "Your survey responses are not linked to your email address. Results will only be reported in aggregate. Published outputs do not identify individual respondents or reproduce free-text responses.",
         reporting: "Research findings will be combined across respondents. Small groups are protected by minimum-group reporting rules.",
         autosave: "Your responses are saved automatically as you go, so you can return and continue later on this device while the survey is open. If your access link expires, request a new one using the same email address.",

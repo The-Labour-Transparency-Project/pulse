@@ -36,7 +36,10 @@ const viewModeStorageKey = "pulse-respondent-view-mode";
 
 export function useSurveyExperience() {
     const theme = useTheme();
-    const {xs} = useDisplay();
+    const {height, width, xs} = useDisplay();
+    // A phone in landscape is wider than Vuetify's xs breakpoint, but it
+    // should keep the same continuous respondent workflow as portrait mode.
+    const compactMobile = computed(() => xs.value || (width.value <= 900 && height.value <= 600));
     const wave = defaultWave;
     const survey = surveyForWave(wave);
     const waveId = wave.waveId;
@@ -105,8 +108,8 @@ export function useSurveyExperience() {
     let sectionNavigationToken = 0;
     const {copy, copied, isSupported} = useClipboard();
 
-    watch(xs, (isXs) => {
-        if (isXs) {
+    watch(compactMobile, (isCompactMobile) => {
+        if (isCompactMobile) {
             viewModeBeforeXs.value = viewMode.value;
             viewMode.value = "continuous";
             xsModeForced.value = true;
@@ -117,11 +120,11 @@ export function useSurveyExperience() {
     }, {immediate: true});
 
     watch(viewMode, (mode) => {
-        if (xs.value && mode !== "continuous") {
+        if (compactMobile.value && mode !== "continuous") {
             viewMode.value = "continuous";
             return;
         }
-        if (!xs.value) {
+        if (!compactMobile.value) {
             viewModeBeforeXs.value = mode;
             storedViewMode.value = mode;
         }

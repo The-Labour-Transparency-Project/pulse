@@ -40,7 +40,7 @@ defineEmits<{ start: []; clearAnswers: [] }>();
         <v-icon class="mr-1" icon="mdi-information-outline" size="18"/>
         {{ introduction.autosave }}
       </p>
-      <div class="d-flex align-center justify-space-between flex-wrap ga-3">
+      <div class="d-flex align-center flex-wrap ga-3">
         <v-badge
             bordered
             color="tertiary"
@@ -52,10 +52,9 @@ defineEmits<{ start: []; clearAnswers: [] }>();
             {{ hasProgress ? "Continue survey" : "Start survey" }}
           </v-btn>
         </v-badge>
-
-        <ClearAnswersAction :has-answers="props.hasProgress" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')"/>
       </div>
+      <ClearAnswersAction :has-answers="props.hasProgress" :verified="props.verified"
+                          @clear="$emit('clearAnswers')"/>
     </div>
   </section>
 </template>

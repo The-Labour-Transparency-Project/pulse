@@ -44,14 +44,14 @@ defineEmits<{ returnToSurvey: []; clearAnswers: []; clearVerification: [] }>();
           {{ answeredCount }} of {{ visibleCount }} questions answered
         </v-chip>
         <v-spacer/>
-        <ClearAnswersAction :has-answers="props.answeredCount > 0" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')"/>
         <ClearVerificationAction :verified="props.verified" @clear="$emit('clearVerification')"/>
         <v-btn v-if="showReturnButton" color="primary" variant="text" @click="$emit('returnToSurvey')">
           Return to survey
           <v-icon end icon="mdi-arrow-left"/>
         </v-btn>
       </div>
+      <ClearAnswersAction :has-answers="props.answeredCount > 0" :verified="props.verified"
+                          @clear="$emit('clearAnswers')"/>
     </div>
   </section>
 </template>

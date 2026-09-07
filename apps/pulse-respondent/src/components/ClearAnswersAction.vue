@@ -1,17 +1,23 @@
 <script lang="ts" setup>
 import {ref} from "vue";
 
-const props = defineProps<{ hasAnswers: boolean; verified: boolean; inline?: boolean }>();
+const props = defineProps<{ hasAnswers: boolean; verified: boolean }>();
 defineEmits<{ clear: [] }>();
 const dialogOpen = ref(false);
 </script>
 
 <template>
   <div v-if="props.hasAnswers"
-       :class="['clear-answers-action', 'd-flex', 'justify-end', { 'is-inline': props.inline }]">
-    <v-btn color="error" variant="text" @click="dialogOpen = true">Clear all my answers</v-btn>
+       class="clear-answers-action d-flex align-center justify-space-between flex-wrap ga-3"
+       role="group" aria-label="Start over">
+    <div>
+      <div class="text-body-2 font-weight-medium">Need to start over?</div>
+    </div>
+    <v-btn color="error" prepend-icon="mdi-delete-sweep-outline" variant="outlined" @click="dialogOpen = true">
+      Clear all my answers
+    </v-btn>
   </div>
-  <v-dialog v-model="dialogOpen" max-width="520">
+  <v-dialog v-model="dialogOpen" max-width="520" persistent>
     <v-card>
       <v-card-title>Clear all your answers?</v-card-title>
       <v-card-text>
@@ -32,7 +38,15 @@ const dialogOpen = ref(false);
 </template>
 
 <style scoped>
-.clear-answers-action:not(.is-inline) {
-  margin-top: 16px;
+.clear-answers-action {
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid rgba(var(--v-theme-error), .24);
+  border-radius: 8px;
+  background: rgba(var(--v-theme-error), .035);
+}
+
+.clear-answers-action :deep(.v-btn) {
+  text-transform: none;
 }
 </style>

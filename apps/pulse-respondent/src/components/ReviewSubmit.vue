@@ -61,7 +61,7 @@ defineEmits<{
       <v-alert v-if="props.submissionError" class="mb-4" color="error" icon="mdi-cloud-alert-outline" variant="tonal">
         {{ props.submissionError }} You can try submitting again.
       </v-alert>
-      <div class="d-flex flex-wrap ga-3">
+      <div class="d-flex align-center flex-wrap ga-3">
         <div class="d-flex align-center ga-2">
           <v-btn :loading="props.submitting" :min-width="120" :disabled="props.submitting || !props.verified" color="primary"
                  @click="$emit('submit')">
@@ -69,10 +69,10 @@ defineEmits<{
           </v-btn>
         </div>
         <v-spacer/>
-        <ClearAnswersAction :has-answers="props.answeredCount > 0" :inline="true" :verified="props.verified"
-                            @clear="$emit('clearAnswers')"/>
         <v-btn v-if="showReturnButton" variant="text" @click="$emit('returnToSurvey')">Return to survey</v-btn>
       </div>
+      <ClearAnswersAction :has-answers="props.answeredCount > 0" :verified="props.verified"
+                          @clear="$emit('clearAnswers')"/>
     </div>
   </section>
 </template>

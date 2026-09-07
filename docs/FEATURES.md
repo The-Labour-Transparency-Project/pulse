@@ -95,7 +95,7 @@ the current respondent renderer registry and the types present in v1.
 - [x] Bounce repeat access-link requests for the same email in the browser cooldown window
 - [x] Consume time-limited signed access tokens from `t` links and remove them from browser history
 - [x] Allow verified respondents to clear verification with a duplicate-submission warning
-- [x] Allow respondents to clear all answers without clearing verification
+- [x] Allow respondents to clear all answers with confirmation, separate from progression actions, without clearing verification
 - [x] Allow verified respondents to clear verification from Review & submit and Outro
 - [x] Preserve a recoverable draft locally
 

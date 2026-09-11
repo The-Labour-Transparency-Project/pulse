@@ -27,6 +27,11 @@ and its timestamps in survey/version-scoped verification storage, and rewrites
 browser history to remove `t` from the visible URL. The credential must never
 be logged or included in a response document.
 
+Access links may also carry a UI resume target and view mode in `r`, such as
+`review|continuous` or a stable section/question destination. The respondent
+validates and consumes this navigation state separately from the bearer
+credential, then removes it from browser history.
+
 Each survey item may provide localized `instruction` and `description` text.
 The respondent UI renders both independently below the localized item title,
 using the active locale and falling back to the first available translation.

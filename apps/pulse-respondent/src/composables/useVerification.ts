@@ -47,6 +47,7 @@ export function useVerification(
     const error = ref("");
     const requesting = ref(false);
     const requestMessage = ref("");
+    const resume = ref<string | null>(null);
     const verified = computed(() => Boolean(stored.value));
     let refreshTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -103,12 +104,13 @@ export function useVerification(
         requested.value = false;
         error.value = "";
         requestMessage.value = "";
+        resume.value = consumed.resume ?? null;
         return true;
     }
 
     consumeTokenFromUrl();
 
-    async function requestCode() {
+    async function requestCode(resumeTarget?: string) {
         if (requesting.value) return false;
         error.value = "";
         if (!isValidVerificationEmail(email.value)) {
@@ -123,7 +125,7 @@ export function useVerification(
         }
         requesting.value = true;
         try {
-            const result = await requestToken(waveId, surveyId, surveyVersion, email.value.trim());
+            const result = await requestToken(waveId, surveyId, surveyVersion, email.value.trim(), resumeTarget);
             requestCooldowns.value[normalizedEmail] = Date.now() + verificationRequestCooldownMs;
             requested.value = true;
             requestMessage.value = result.message ?? "The access email has been sent. Open it on this same device and browser so you can continue with your saved answers.";
@@ -144,6 +146,7 @@ export function useVerification(
         code.value = "";
         requested.value = false;
         requestMessage.value = "";
+        resume.value = null;
         error.value = "";
     }
 
@@ -169,6 +172,7 @@ export function useVerification(
         code.value = "";
         requested.value = false;
         requestMessage.value = "";
+        resume.value = null;
         error.value = "";
     }
 
@@ -176,7 +180,7 @@ export function useVerification(
     onUnmounted(() => { if (refreshTimer) clearTimeout(refreshTimer); });
 
     return {
-        email, code, requested, requesting, requestMessage, error, verified, requestCode, confirmCode, clearVerification,
+        email, code, requested, requesting, requestMessage, error, verified, resume, requestCode, confirmCode, clearVerification,
         useAnotherEmail,
     };
 }

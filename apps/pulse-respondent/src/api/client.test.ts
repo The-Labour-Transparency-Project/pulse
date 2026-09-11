@@ -18,6 +18,16 @@ describe("respondent API client", () => {
         }));
     });
 
+    it("includes the resume destination in a token request when provided", async () => {
+        vi.mocked(fetch).mockResolvedValue(Response.json({accepted: true}));
+
+        await requestToken("pulse-2026", "ltp.supply-chain-confidence", "1.0.2", "respondent@example.com", "review");
+
+        expect(fetch).toHaveBeenCalledWith("https://api.example.test/token", expect.objectContaining({
+            body: JSON.stringify({waveId: "pulse-2026", surveyId: "ltp.supply-chain-confidence", surveyVersion: "1.0.2", email: "respondent@example.com", resume: "review"}),
+        }));
+    });
+
     it("saves a response with the signed bearer credential", async () => {
         vi.mocked(fetch).mockResolvedValue(Response.json({responseVersion: "01", receivedAt: "now"}));
         const document = {surveyId: "pulse-2026"} as never;

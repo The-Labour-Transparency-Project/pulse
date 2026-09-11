@@ -22,6 +22,8 @@ describe("verification", () => {
     it("extracts t and removes it while preserving the path, other params, and hash", () => {
         expect(consumeVerificationTokenUrl("https://survey.example.test/?t=signed.token&mode=review#submit"))
             .toEqual({token: "signed.token", cleanUrl: "/?mode=review#submit"});
+        expect(consumeVerificationTokenUrl("https://survey.example.test/?t=signed.token&r=review#submit"))
+            .toEqual({token: "signed.token", resume: "review", cleanUrl: "/#submit"});
         expect(consumeVerificationTokenUrl("https://survey.example.test/"))
             .toBeNull();
     });

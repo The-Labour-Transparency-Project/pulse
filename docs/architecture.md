@@ -84,6 +84,12 @@ rewrites browser history to remove `t` from the visible URL. The credential
 grants access to the respondent's survey material; it must be treated as
 sensitive and never logged or stored in a response document.
 
+The link may also carry a respondent UI resume target and view mode as the `r`
+query parameter. This is navigation state, not an authentication claim: the
+client validates it against the loaded survey and removes it from browser
+history after consumption. It is intentionally excluded from the signed
+credential and is never used to authorise response access.
+
 ## Next infrastructure increment
 
 Terraform should provision only the local/LocalStack and AWS resources required

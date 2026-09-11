@@ -25,7 +25,7 @@ import {
     surveyItemNumber,
 } from "../domain/survey";
 import {defaultWave, surveyForWave} from "../domain/wave";
-import {introductionFor, outroFor, type SurveyDestination} from "../domain/navigation";
+import {introductionFor, outroFor, parseResumeDestination, serializeResumeDestination, type SurveyDestination} from "../domain/navigation";
 import {useVerification} from "./useVerification";
 import {saveResponse} from "../api/client";
 
@@ -71,9 +71,10 @@ export function useSurveyExperience() {
         null,
         {serializer: createJsonStorageSerializer<ReturnType<typeof serializeSurveyResponse>>()},
     );
-    const preferredViewMode = isViewMode(storedViewMode.value)
+    const linkState = parseResumeDestination(verification.resume.value, survey);
+    const preferredViewMode = linkState?.viewMode ?? (isViewMode(storedViewMode.value)
         ? storedViewMode.value
-        : hydratedDraft?.viewMode;
+        : hydratedDraft?.viewMode);
     // The draft contains the answer state and progress from the same write. Use
     // it first so an older standalone position key cannot move the respondent
     // away from the location captured in the latest draft.
@@ -100,9 +101,11 @@ export function useSurveyExperience() {
     const submitting = ref(false);
     const submissionError = ref("");
     const restoredDestination = parseSurveyDestination(storedDestination.value, survey);
-    if (restoredDestination) {
-        destination.value = restoredDestination;
-        showIntroductionInContinuous.value = restoredDestination.type === "introduction";
+    const linkDestination = linkState?.destination;
+    const initialDestination = linkDestination ?? restoredDestination;
+    if (initialDestination) {
+        destination.value = initialDestination;
+        showIntroductionInContinuous.value = initialDestination.type === "introduction";
     }
     const sectionNavigationRequest = ref<SectionNavigationRequest | null>(null);
     let sectionNavigationToken = 0;
@@ -137,6 +140,19 @@ export function useSurveyExperience() {
     const visibleItems = computed(() => survey.sections.flatMap((section) => section.itemIds
         .map((id) => itemsById.get(id))
         .filter((item): item is SurveyItem => !!item && evaluateExpression(item.visibleWhen, answers, survey))));
+    if (linkDestination?.type === "question") {
+        const linkedSectionIndex = survey.sections.findIndex((section) => section.id === linkDestination.sectionId);
+        if (linkedSectionIndex >= 0) {
+            sectionIndex.value = linkedSectionIndex;
+            const linkedItems = survey.sections[linkedSectionIndex].itemIds
+                .map((id) => itemsById.get(id))
+                .filter((item): item is SurveyItem => !!item && visibleItems.value.includes(item));
+            const linkedQuestionIndex = linkDestination.questionId
+                ? linkedItems.findIndex((item) => item.id === linkDestination.questionId)
+                : 0;
+            questionIndex.value = linkedQuestionIndex >= 0 ? linkedQuestionIndex : 0;
+        }
+    }
     const answeredCount = computed(() => visibleItems.value.filter((item) => isItemAnswered(item, answers[item.id])).length);
     const currentSection = computed(() => survey.sections[sectionIndex.value]);
     const currentItems = computed(() => (currentSection.value?.itemIds ?? [])
@@ -314,6 +330,10 @@ export function useSurveyExperience() {
         verification.code.value = value;
     }
 
+    function requestVerificationCode() {
+        return verification.requestCode(serializeResumeDestination(destination.value, viewMode.value));
+    }
+
     function clearAnswers() {
         Object.keys(answers).forEach((id) => delete answers[id]);
         Object.keys(detailAnswers).forEach((id) => delete detailAnswers[id]);
@@ -431,6 +451,7 @@ export function useSurveyExperience() {
         verificationVerified,
         setVerificationEmail,
         setVerificationCode,
+        requestVerificationCode,
         clearAnswers,
         findNextUnanswered: () => moveQuestion(1, true),
         copySerializedResponse,

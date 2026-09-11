@@ -114,6 +114,24 @@ public sealed class ApiEndpointTests(ApiApplicationFixture application) : IClass
     }
 
     [Fact]
+    public async Task Token_request_carries_the_requested_resume_destination_in_the_access_link()
+    {
+        var sentEmailCount = application.Email.SentEmails.Count;
+        var response = await application.Client.PostAsJsonAsync("/token", new
+        {
+            waveId = "pulse-2026",
+            surveyId = "ltp.supply-chain-confidence",
+            surveyVersion = "1.0.2",
+            email = "resume@example.com",
+            resume = "review",
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var accessLink = new Uri(application.Email.SentEmails.Skip(sentEmailCount).Single().AccessUrl);
+        accessLink.Query.Should().Contain("&r=review");
+    }
+
+    [Fact]
     public async Task Token_request_refreshes_an_unexpired_token_when_email_matches()
     {
         var sentEmailCount = application.Email.SentEmails.Count;

@@ -122,6 +122,10 @@ public static class PulseEndpoints
         var respondentId = identity.GetRespondentId(request.SurveyId, normalizedEmail);
         var credential = tokens.Create(CreateClaims(request.WaveId, respondentId, tokenLifetimePolicy, timeProvider));
         var accessUrl = $"{settings.RespondentBaseUrl.TrimEnd('/')}?t={Uri.EscapeDataString(credential)}";
+        if (!string.IsNullOrWhiteSpace(request.Resume) && request.Resume.Length <= 512 && !request.Resume.Any(char.IsWhiteSpace))
+        {
+            accessUrl += $"&r={Uri.EscapeDataString(request.Resume)}";
+        }
         var surveyTitle = surveys.GetTitle(request.SurveyId, request.SurveyVersion ?? "") ?? "Labour Transparency Pulse";
         await email.SendAccessLinkAsync(normalizedEmail, request.SurveyId, surveyTitle, accessUrl, credential, cancellationToken);
         loggerFactory.CreateLogger("Pulse.Token").LogInformation(

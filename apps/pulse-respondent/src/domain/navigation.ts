@@ -6,6 +6,37 @@ export type SurveyDestination =
     | { type: "review" }
     | { type: "outro" };
 
+export type SurveyViewMode = "continuous" | "sections" | "question";
+
+export interface ResumeState {
+    destination: SurveyDestination;
+    viewMode?: SurveyViewMode;
+}
+
+/** Compact, non-sensitive representation used only to resume UI navigation. */
+export function serializeResumeDestination(destination: SurveyDestination, viewMode: SurveyViewMode): string {
+    const target = destination.type !== "question"
+        ? destination.type
+        : ["question", destination.sectionId, destination.questionId ?? ""].join(":");
+    return `${target}|${viewMode}`;
+}
+
+export function parseResumeDestination(value: string | null | undefined, survey: SurveyDefinition): ResumeState | null {
+    if (!value) return null;
+    const [target, mode] = value.split("|");
+    const viewMode = mode === "continuous" || mode === "sections" || mode === "question" ? mode : undefined;
+    const parts = target?.split(":") ?? [];
+    if (parts.length === 1 && ["introduction", "review", "outro"].includes(parts[0])) {
+        return {destination: {type: parts[0] as "introduction" | "review" | "outro"}, ...(viewMode ? {viewMode} : {})};
+    }
+    if (parts[0] !== "question" || parts.length !== 3) return null;
+    const section = survey.sections.find((candidate) => candidate.id === parts[1]);
+    if (!section) return null;
+    const questionId = parts[2] || undefined;
+    if (questionId && !section.itemIds.includes(questionId)) return null;
+    return {destination: {type: "question", sectionId: section.id, ...(questionId ? {questionId} : {})}, ...(viewMode ? {viewMode} : {})};
+}
+
 export type GuidanceKind = "tip" | "info" | "warning" | "error";
 
 export interface GuidanceItem {

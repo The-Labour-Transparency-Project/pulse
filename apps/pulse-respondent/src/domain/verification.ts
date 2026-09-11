@@ -50,14 +50,17 @@ export function verificationStorageKey(waveId: string, surveyId: string, surveyV
     return `pulse-respondent-verification:${waveId}:${surveyId}:${surveyVersion}:${strategyId}`;
 }
 
-export function consumeVerificationTokenUrl(currentUrl: string): { token: string; cleanUrl: string } | null {
+export function consumeVerificationTokenUrl(currentUrl: string): { token: string; resume?: string; cleanUrl: string } | null {
     const url = new URL(currentUrl);
     if (!url.searchParams.has("t")) return null;
 
     const token = url.searchParams.get("t")?.trim() ?? "";
+    const resume = url.searchParams.get("r")?.trim() || undefined;
     url.searchParams.delete("t");
+    url.searchParams.delete("r");
     return {
         token,
+        ...(resume ? {resume} : {}),
         cleanUrl: `${url.pathname}${url.search}${url.hash}`,
     };
 }

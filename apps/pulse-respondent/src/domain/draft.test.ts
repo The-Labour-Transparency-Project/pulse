@@ -10,6 +10,7 @@ import {
     parseSurveyPosition,
     positionStorageKey,
 } from "./draft";
+import {parseResumeDestination, serializeResumeDestination} from "./navigation";
 import {validateSurveyDefinition} from "./survey";
 
 const survey = validateSurveyDefinition(definitionJson);
@@ -33,6 +34,17 @@ describe("survey drafts", () => {
             type: "question", sectionId: survey.sections[0].id,
         });
         expect(parseSurveyDestination({type: "question", sectionId: "missing"}, survey)).toBeNull();
+    });
+
+    it("serializes and validates resume destinations using stable IDs", () => {
+        const destination = {type: "question", sectionId: survey.sections[0].id, questionId: survey.sections[0].itemIds[0]} as const;
+        const encoded = serializeResumeDestination(destination, "question");
+
+        expect(encoded).toBe(`question:${destination.sectionId}:${destination.questionId}|question`);
+        expect(parseResumeDestination(encoded, survey)).toEqual({destination, viewMode: "question"});
+        expect(parseResumeDestination("review|continuous", survey)).toEqual({destination: {type: "review"}, viewMode: "continuous"});
+        expect(parseResumeDestination("review", survey)).toEqual({destination: {type: "review"}});
+        expect(parseResumeDestination("question:missing:item", survey)).toBeNull();
     });
 
     it("accepts positions within the instrument and rejects invalid positions", () => {

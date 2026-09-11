@@ -66,6 +66,7 @@ only when it is implemented, tested, and usable in the relevant workflow.
 - [ ] Preserve the current position while navigating
 - [ ] Restore the respondent's last position when reopening
 - [x] Restore the Introduction, Review & submit, and Outro destination after refresh
+- [x] Restore the respondent's destination from a secure access link
 - [x] Save a recoverable local draft and support resuming
 - [x] Hydrate saved answers and progress after a browser refresh
 - [ ] Support keyboard- and screen-reader-friendly navigation

@@ -58,6 +58,7 @@ const {
   verification,
   verificationEmail, verificationCode, verificationRequested, verificationRequesting, verificationRequestMessage, verificationError, verificationVerified,
   setVerificationEmail, setVerificationCode,
+  requestVerificationCode,
   clearAnswers,
 } = experience;
 const workspaceColumns = computed(() => {
@@ -92,7 +93,7 @@ const workspaceColumns = computed(() => {
                                @select-outro="selectOutro"
                                @select-question="selectQuestion" @select-section="selectSection"
                                @update:email="setVerificationEmail" @update:code="setVerificationCode"
-                               @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                               @request-code="requestVerificationCode()" @confirm-code="verification.confirmCode()"
                                @use-another-email="verification.useAnotherEmail()"
                                @clear-verification="verification.clearVerification()"/>
       <div :class="['workspace-grid', { 'is-resizing': resizing }]"
@@ -128,7 +129,7 @@ const workspaceColumns = computed(() => {
                         @submit="submitResponse" @next-unanswered="findNextUnanswered"
                         @previous-unanswered="moveQuestion(-1, true)"
                         @question-in-view="setCurrentQuestionById" @update:email="setVerificationEmail"
-                        @update:code="setVerificationCode" @request-code="verification.requestCode()"
+                        @update:code="setVerificationCode" @request-code="requestVerificationCode()"
                         @confirm-code="verification.confirmCode()"
                         @use-another-email="verification.useAnotherEmail()"
                         @clear-verification="verification.clearVerification()"
@@ -147,7 +148,7 @@ const workspaceColumns = computed(() => {
                           :verification-requested="verificationRequested" :verification-requesting="verificationRequesting" :verification-request-message="verificationRequestMessage"
                           :verification-verified="verificationVerified"
                           @update:email="setVerificationEmail" @update:code="setVerificationCode"
-                          @request-code="verification.requestCode()" @confirm-code="verification.confirmCode()"
+                          @request-code="requestVerificationCode()" @confirm-code="verification.confirmCode()"
                           @use-another-email="verification.useAnotherEmail()"
                           @clear-verification="verification.clearVerification()"/>
       </div>

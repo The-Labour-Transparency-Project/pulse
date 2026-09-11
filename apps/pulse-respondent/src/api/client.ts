@@ -38,13 +38,13 @@ export interface TokenRequestResult {
     message?: string;
 }
 
-export async function requestToken(waveId: string, surveyId: string, surveyVersion: string, email: string): Promise<TokenRequestResult> {
+export async function requestToken(waveId: string, surveyId: string, surveyVersion: string, email: string, resume?: string): Promise<TokenRequestResult> {
     let response: Response;
     try {
         response = await fetch(endpoint("/token"), {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ waveId, surveyId, surveyVersion, email }),
+            body: JSON.stringify({ waveId, surveyId, surveyVersion, email, ...(resume ? {resume} : {}) }),
         });
     } catch (error) {
         console.error("Failed to request a respondent access token.", error);

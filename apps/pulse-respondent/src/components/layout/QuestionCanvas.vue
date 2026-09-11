@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {type ComponentPublicInstance, nextTick, onMounted, ref, watch} from "vue";
+import {type ComponentPublicInstance, nextTick, ref, watch} from "vue";
 import {useDisplay} from "vuetify";
 import SurveySection from "../SurveySection.vue";
 import SurveyIntroduction from "../SurveyIntroduction.vue";
@@ -157,9 +157,15 @@ async function bringDestinationIntoView(destination: SurveyDestination) {
   });
 }
 
-onMounted(updateQuestionInView);
-watch(() => [props.currentQuestionId, props.viewMode], ([id, mode], previous) => {
+// The current-question watcher is also the initial restoration path. Do not
+// measure the first viewport on mount: in continuous mode that would emit the
+// first question and overwrite the saved position before this scroll runs.
+watch(() => [props.currentQuestionId, props.viewMode, props.destination.type], ([id, mode, destinationType], previous) => {
   const [previousId, previousMode] = previous ?? [];
+  if (mode === "continuous" && destinationType !== "question") {
+    bringDestinationIntoView(props.destination);
+    return;
+  }
   const changedFromInteraction = interactionQuestionId.value === id
       && id !== previousId
       && mode === previousMode;
@@ -172,11 +178,6 @@ watch(() => [props.currentQuestionId, props.viewMode], ([id, mode], previous) =>
 }, {immediate: true});
 watch(() => props.sectionNavigationRequest?.token, () => {
   bringSelectedSectionIntoView(props.sectionNavigationRequest);
-});
-watch(() => props.destination.type, (type) => {
-  if (type === "introduction" || type === "review" || type === "outro") {
-    bringDestinationIntoView(props.destination);
-  }
 });
 </script>
 

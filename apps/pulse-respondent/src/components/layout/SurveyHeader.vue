@@ -36,6 +36,15 @@ const accessStatus = computed(() => props.verificationVerified
     <div class="header-copy mr-8">
       <div class="app-name">Labour Transparency Pulse</div>
       <div class="app-subtitle text-medium-emphasis">Confidence in Labour Supply Chains 2026</div>
+      <a
+        aria-label="Learn about The Labour Transparency Project"
+        class="project-link"
+        href="https://labourtransparency.com/pulse"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Learn about The Labour Transparency Project
+      </a>
     </div>
     <div class="progress-header mx-auto">
       <div class="d-flex justify-space-between ui-metadata mb-1"><span>Overall progress</span><span>{{ answeredCount }} of {{
@@ -139,9 +148,13 @@ const accessStatus = computed(() => props.verificationVerified
     font-size: 12px;
   }
 
+  .project-link {
+    font-size: 11px;
+  }
+
   .progress-header {
     position: absolute;
-    top: 62px;
+    top: 78px;
     left: 58px;
     width: calc(100% - 116px);
     transform: none;
@@ -164,6 +177,20 @@ const accessStatus = computed(() => props.verificationVerified
   .tips-toggle :deep(.v-btn__prepend) {
     margin-inline: 0;
   }
+}
+
+.project-link {
+  color: rgb(var(--v-theme-primary));
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.35;
+  margin-top: 2px;
+  text-decoration: none;
+}
+
+.project-link:hover,
+.project-link:focus-visible {
+  text-decoration: underline;
 }
 
 @media (min-width: 600px) and (max-width: 1279px) {
